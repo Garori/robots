@@ -5,8 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Canvas
-  - TopCollider
-  - BottomCollider
+  - Line
+  - Block
   layers:
   - Default
   - TransparentFX
@@ -43,4 +43,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Block
+    uniqueID: 924256865
+    locked: 0
+  - name: Line
+    uniqueID: 2920618663
     locked: 0
