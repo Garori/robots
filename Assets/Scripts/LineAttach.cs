@@ -19,6 +19,7 @@ public class LineAttach : MonoBehaviour, IDropHandler {
     }
 
     public void OnDrop(PointerEventData eventData) {
+        return;
         if (eventData.pointerDrag == null) return;
 
         panelManager.onBlockEnter(eventData.pointerDrag.gameObject, lineNumber);
