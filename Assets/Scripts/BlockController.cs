@@ -4,14 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler {
-    public PanelManager panelManager;
-
-    public GameObject hover;
-    //public GameObject lastHover;
+    [Header("Game Objects")]
+    [SerializeField] private PanelManager panelManager;
+    [SerializeField] private Canvas canvas;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
-    [SerializeField] private Canvas canvas;
 
     private int touchingLine;
 
@@ -28,15 +26,11 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
     public void OnBeginDrag(PointerEventData eventData) {
         canvasGroup.alpha = .8f;
-        //canvasGroup.blocksRaycasts = false;
-
         panelManager.onBlockExit(gameObject);
     }
 
     public void OnDrag(PointerEventData eventData) {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-        //lastHover = hover;
-        hover = eventData.pointerEnter;
     }
 
     public void OnEndDrag(PointerEventData eventData) {
@@ -46,18 +40,13 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
             return;
         }
         Debug.Log($"Soltou na linha {touchingLine}");
-        /*//canvasGroup.blocksRaycasts = true;
-        if (hover == null || !hover.CompareTag("Line")) {
-            Debug.Log("Soltou no nada");
-            return;
-        }
-        // panelmanager.blocoentrounalinha(hover);
-        Debug.Log($"Soltou na linha {hover.GetComponent<LineAttach>().lineNumber}");*/
+        panelManager.onBlockEnter(gameObject, touchingLine);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
         Debug.Log($"Entrou na linha {other.name}");
-        touchingLine = other.GetComponent<LineAttach>().lineNumber;
+        if (!other.CompareTag("BetweenLine")) return;
+        touchingLine = other.GetComponent<RectTransform>().GetSiblingIndex();
     }
 
     private void OnTriggerExit2D(Collider2D other) {

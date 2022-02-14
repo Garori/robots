@@ -7,6 +7,8 @@ TagManager:
   - Canvas
   - Line
   - Block
+  - EndLine
+  - BetweenLine
   layers:
   - Default
   - TransparentFX

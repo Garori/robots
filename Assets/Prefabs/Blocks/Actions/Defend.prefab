@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5563846908113277865}
   - component: {fileID: 167860765531314669}
   - component: {fileID: 6834370305089839629}
+  - component: {fileID: -663824562226858221}
   m_Layer: 5
   m_Name: Defend
   m_TagString: Block
@@ -28,7 +29,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6323505189803794317}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -37,8 +38,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -235.7, y: 70.7}
-  m_SizeDelta: {x: -193.737, y: -413.757}
+  m_AnchoredPosition: {x: 22.407227, y: 36}
+  m_SizeDelta: {x: -716.553, y: -412.718}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &512729637290929299
 CanvasRenderer:
@@ -91,7 +92,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelManager: {fileID: 0}
-  hover: {fileID: 0}
   canvas: {fileID: 0}
 --- !u!225 &167860765531314669
 CanvasGroup:
@@ -126,3 +126,29 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!61 &-663824562226858221
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6323505189803794317}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.046447754, y: -0.058612823}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 83.14897, y: 37.4168}
+  m_EdgeRadius: 0
