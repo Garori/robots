@@ -6,9 +6,10 @@ TagManager:
   tags:
   - Canvas
   - Line
-  - Block
-  - EndLine
-  - BetweenLine
+  - StructureBlock
+  - ActionBlock
+  - EndBlock
+  - ElseBlock
   layers:
   - Default
   - TransparentFX

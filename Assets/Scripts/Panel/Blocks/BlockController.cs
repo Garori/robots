@@ -11,10 +11,11 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
 
-    private int touchingLine;
+    private GameObject colliding;
+    private bool newBlock;
 
     private void Start() {
-        touchingLine = -1;
+        newBlock = true;
 
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
@@ -25,8 +26,14 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
+        if (newBlock) {
+            GameObject createdBlock = Instantiate(gameObject, gameObject.transform.parent);
+            createdBlock.name = gameObject.name;
+            gameObject.transform.SetSiblingIndex(gameObject.transform.parent.childCount - 1);
+            newBlock = false;
+        }
         canvasGroup.alpha = .8f;
-        panelManager.onBlockExit(gameObject);
+        EventManager.onBlockExit(gameObject);
     }
 
     public void OnDrag(PointerEventData eventData) {
@@ -35,22 +42,20 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
     public void OnEndDrag(PointerEventData eventData) {
         canvasGroup.alpha = 1f;
-        if (touchingLine == -1) {
-            Debug.Log("Soltou no nada");
+        if (colliding == null) {
+            Destroy(gameObject);
             return;
         }
-        Debug.Log($"Soltou na linha {touchingLine}");
-        panelManager.onBlockEnter(gameObject, touchingLine);
+        EventManager.onBlockEnter(gameObject, colliding);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log($"Entrou na linha {other.name}");
-        if (!other.CompareTag("BetweenLine")) return;
-        touchingLine = other.GetComponent<RectTransform>().GetSiblingIndex();
+        if (!other.CompareTag("Line")) return;
+        colliding = other.gameObject;
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-        Debug.Log($"Saiu da linha {other.name}");
-        touchingLine = -1;
+        if (!other.CompareTag("Line")) return;
+        colliding = null;
     }
 }
