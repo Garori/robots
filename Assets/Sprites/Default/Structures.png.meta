@@ -1,19 +1,16 @@
 fileFormatVersion: 2
-guid: a769152e24f2b954faaa29dd562a11b8
+guid: 81a45b5c7a7d5d74db1dab3bcb31f4b0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1515622694917723629
-    second: Blocks_0
+      213: 8796315183391316563
+    second: Structures_0
   - first:
-      213: 1503016370545623098
-    second: Blocks_1
+      213: -6859328083630855373
+    second: Structures_1
   - first:
-      213: 1489830567317918739
-    second: Blocks_2
-  - first:
-      213: 38433539612607256
-    second: Blocks_3
+      213: -5220548635511524404
+    second: Structures_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -44,7 +41,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -80,7 +77,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -92,19 +89,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -115,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Blocks_0
+      name: Structures_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
-        width: 32
-        height: 16
+        y: 400
+        width: 992
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,20 +114,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: de557189fc2980510800000000000000
-      internalID: 1515622694917723629
+      spriteID: 35a1a6eed0ac21a70800000000000000
+      internalID: 8796315183391316563
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Blocks_1
+      name: Structures_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 16
-        width: 32
-        height: 16
+        x: 0
+        y: 200
+        width: 992
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,20 +135,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a3008f9fc69cbd410800000000000000
-      internalID: 1503016370545623098
+      spriteID: 33b62514375cec0a0800000000000000
+      internalID: -6859328083630855373
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Blocks_2
+      name: Structures_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 16
+        width: 992
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,29 +156,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 314d08ce101fca410800000000000000
-      internalID: 1489830567317918739
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Blocks_3
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 0
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8130214c91b888000800000000000000
-      internalID: 38433539612607256
+      spriteID: cc37fa7fca2ec87b0800000000000000
+      internalID: -5220548635511524404
       vertices: []
       indices: 
       edges: []
