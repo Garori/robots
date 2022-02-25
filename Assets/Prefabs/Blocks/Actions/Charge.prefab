@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 211208859059888346}
   - component: {fileID: 8944089797891955017}
   - component: {fileID: 3249727549072658930}
-  - component: {fileID: 3905922575162582643}
   - component: {fileID: 8743178827137150015}
   - component: {fileID: 1824805728063154945}
   - component: {fileID: 4558015202854333777}
+  - component: {fileID: 3073126981320136280}
   m_Layer: 5
   m_Name: Charge
   m_TagString: ActionBlock
@@ -39,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 341, y: -209.79999}
-  m_SizeDelta: {x: 83.44702, y: 37.282013}
+  m_SizeDelta: {x: 472, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8944089797891955017
 CanvasRenderer:
@@ -79,20 +79,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3905922575162582643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3225638209708485207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da511eea744eca46b98b6149e387f4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!225 &8743178827137150015
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -152,3 +138,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 472, y: 200}
   m_EdgeRadius: 0
+--- !u!114 &3073126981320136280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3225638209708485207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728978c9eef8a104baed8025ebc58a9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelManager: {fileID: 0}
+  canvas: {fileID: 0}
+  commandName: 2

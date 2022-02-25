@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 1921481787683988448}
   - component: {fileID: 7231635995327519347}
   - component: {fileID: 3845367280743584456}
-  - component: {fileID: 3346380358376088905}
   - component: {fileID: 6994694978939039493}
   - component: {fileID: 78575446516181051}
   - component: {fileID: 2811783811037212267}
+  - component: {fileID: 7659043317245088176}
   m_Layer: 5
   m_Name: Else
   m_TagString: ElseBlock
@@ -79,20 +79,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3346380358376088905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3785240351615134061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da511eea744eca46b98b6149e387f4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!225 &6994694978939039493
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -152,3 +138,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 472, y: 200}
   m_EdgeRadius: 0
+--- !u!114 &7659043317245088176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785240351615134061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d6560473018014fb75a40bc3be52d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelManager: {fileID: 0}
+  canvas: {fileID: 0}
+  commandName: 8

@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 211064986110978501}
   - component: {fileID: 8943108045543526486}
   - component: {fileID: 3250155096021014765}
-  - component: {fileID: 3906618454219321196}
   - component: {fileID: 7552563042612749125}
   - component: {fileID: 980394163677981960}
   - component: {fileID: 8743041568835959337}
+  - component: {fileID: 3862845334491239920}
   m_Layer: 5
   m_Name: EnemyLife
   m_TagString: VariableBlock
@@ -29,7 +29,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3224652059313513288}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1875, y: 0.1875, z: 1}
   m_Children: []
@@ -79,20 +79,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3906618454219321196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3224652059313513288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da511eea744eca46b98b6149e387f4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!225 &7552563042612749125
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -152,3 +138,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 96, y: 96}
   m_EdgeRadius: 0
+--- !u!114 &3862845334491239920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3224652059313513288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4709e7d77e495084fa52db5fb77dddbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelManager: {fileID: 0}
+  canvas: {fileID: 0}
+  commandName: 20

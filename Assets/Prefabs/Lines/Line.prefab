@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.0000039777, y: 0}
-  m_SizeDelta: {x: 277.18, y: 41.441}
+  m_SizeDelta: {x: 273, y: 41.441}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4105494801157675884
 CanvasRenderer:
@@ -101,8 +101,8 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
+  m_ChildScaleWidth: 1
+  m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
 --- !u!61 &8760473381342902956
 BoxCollider2D:

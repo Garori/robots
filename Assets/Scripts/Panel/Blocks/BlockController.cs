@@ -10,15 +10,24 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
+    private BoxCollider2D boxCollider2D;
 
-    private GameObject colliding;
+    private float scaledWidth;
+
+    protected GameObject colliding;
     private bool newBlock;
+
+    [Header("Enum")]
+    public Commands commandName;
 
     private void Start() {
         newBlock = true;
 
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
+        boxCollider2D = GetComponent<BoxCollider2D>();
+
+        scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -33,11 +42,18 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
             newBlock = false;
         }
         canvasGroup.alpha = .8f;
-        EventManager.onBlockExit(gameObject);
+        OnBeginDragAction();
+    }
+
+    protected virtual void OnBeginDragAction() {
+
     }
 
     public void OnDrag(PointerEventData eventData) {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
+        Debug.Log(rectTransform.anchoredPosition.x);
+        Debug.Log(scaledWidth);
     }
 
     public void OnEndDrag(PointerEventData eventData) {
@@ -46,16 +62,28 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
             Destroy(gameObject);
             return;
         }
-        EventManager.onBlockEnter(gameObject, colliding);
+        OnEndDragAction();
+    }
+
+    protected virtual void OnEndDragAction() {
+
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        if (!other.CompareTag("Line")) return;
+        if (!OnValidTriggerEnter2D(other)) return;
         colliding = other.gameObject;
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-        if (!other.CompareTag("Line")) return;
+        if (!OnValidTriggerExit2D(other)) return;
         colliding = null;
+    }
+
+    protected virtual bool OnValidTriggerEnter2D(Collider2D other) {
+        return true;
+    }
+
+    protected virtual bool OnValidTriggerExit2D(Collider2D other) {
+        return true;
     }
 }

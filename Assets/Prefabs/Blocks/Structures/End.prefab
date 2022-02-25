@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 4530228048299008313}
   - component: {fileID: 4624930144693917866}
   - component: {fileID: 1236694128896987153}
-  - component: {fileID: 721799549840992144}
   - component: {fileID: 5000902067012267484}
   - component: {fileID: 2694212621514369762}
   - component: {fileID: 248143915440925874}
+  - component: {fileID: 6179719029786794228}
   m_Layer: 5
   m_Name: End
   m_TagString: EndBlock
@@ -79,20 +79,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &721799549840992144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1221324195098028980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da511eea744eca46b98b6149e387f4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!225 &5000902067012267484
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -152,3 +138,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 472, y: 200}
   m_EdgeRadius: 0
+--- !u!114 &6179719029786794228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221324195098028980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987f51294372891478c7342251d2a223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelManager: {fileID: 0}
+  canvas: {fileID: 0}
+  commandName: 9

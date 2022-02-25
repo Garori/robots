@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 2638953371112089587}
   - component: {fileID: 6516397524328193632}
   - component: {fileID: 822037437212284635}
-  - component: {fileID: 1172537540761362778}
   - component: {fileID: 5666285298094665075}
   - component: {fileID: 3164244017667515198}
   - component: {fileID: 6856499108160386079}
+  - component: {fileID: 4429124157705544387}
   m_Layer: 5
   m_Name: PlayerHalfLife
   m_TagString: VariableBlock
@@ -29,7 +29,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770937498024242558}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1875, y: 0.1875, z: 1}
   m_Children: []
@@ -79,20 +79,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1172537540761362778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770937498024242558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da511eea744eca46b98b6149e387f4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!225 &5666285298094665075
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -152,3 +138,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 96, y: 96}
   m_EdgeRadius: 0
+--- !u!114 &4429124157705544387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770937498024242558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4709e7d77e495084fa52db5fb77dddbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelManager: {fileID: 0}
+  canvas: {fileID: 0}
+  commandName: 15

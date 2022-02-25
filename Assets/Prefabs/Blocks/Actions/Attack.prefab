@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 8914980497928998120}
   - component: {fileID: 381056204785481083}
   - component: {fileID: 6075174671521627584}
-  - component: {fileID: 5720307318470953537}
   - component: {fileID: 1262588897243694696}
   - component: {fileID: 8416817275521812517}
   - component: {fileID: 432922372}
+  - component: {fileID: 1821781585}
   m_Layer: 5
   m_Name: Attack
   m_TagString: ActionBlock
@@ -39,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 341, y: -209.79999}
-  m_SizeDelta: {x: 83.44702, y: 37.282013}
+  m_SizeDelta: {x: 472, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &381056204785481083
 CanvasRenderer:
@@ -79,20 +79,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5720307318470953537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6167053025645954661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da511eea744eca46b98b6149e387f4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!225 &1262588897243694696
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -152,3 +138,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 472, y: 200}
   m_EdgeRadius: 0
+--- !u!114 &1821781585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6167053025645954661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728978c9eef8a104baed8025ebc58a9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelManager: {fileID: 0}
+  canvas: {fileID: 0}
+  commandName: 0

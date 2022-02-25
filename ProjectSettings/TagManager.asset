@@ -12,6 +12,12 @@ TagManager:
   - ElseBlock
   - ComparatorBlock
   - VariableBlock
+  - ForBlock
+  - VariableCollider
+  - StructureCondition
+  - ForCondition
+  - ComparatorCollider
+  - Void
   layers:
   - Default
   - TransparentFX
