@@ -38,7 +38,8 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
         if (newBlock) {
             GameObject createdBlock = Instantiate(gameObject, gameObject.transform.parent);
             createdBlock.name = gameObject.name;
-            gameObject.transform.SetSiblingIndex(gameObject.transform.parent.childCount - 1);
+            createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
+            //gameObject.transform.SetSiblingIndex(gameObject.transform.parent.childCount - 1);
             newBlock = false;
         }
         canvasGroup.alpha = .8f;
@@ -52,8 +53,6 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
     public void OnDrag(PointerEventData eventData) {
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
-        Debug.Log(rectTransform.anchoredPosition.x);
-        Debug.Log(scaledWidth);
     }
 
     public void OnEndDrag(PointerEventData eventData) {

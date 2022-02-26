@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PanelManager : MonoBehaviour {
+    public GameManager gameManager;
     [Header("Game Objects")]
     [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform linesContent;
@@ -162,11 +163,11 @@ public class PanelManager : MonoBehaviour {
     private void OrganizeBlocks() {
         int leftPadding = minPadding;
         float maxWidth = minLineWidth;
-        Debug.Log(maxWidth);
         for (int i = 0; i < lines.Count; i++) {
             HorizontalLayoutGroup line = linesLayout[i];
 
-            if (blocks[i].CompareTag("ElseBlock") || blocks[i].CompareTag("EndBlock") && leftPadding > minPadding) leftPadding -= tabPadding;
+            if (blocks[i].CompareTag("ElseBlock") || blocks[i].CompareTag("EndBlock")) leftPadding -= tabPadding;
+            leftPadding = Mathf.Max(leftPadding, minPadding);
 
             RectOffset padding = new RectOffset(
                 leftPadding,
@@ -192,5 +193,9 @@ public class PanelManager : MonoBehaviour {
         endLineSize.x = maxWidth;
         endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
         endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
+    }
+
+    public void onCompile() {
+        gameManager.compile(blocks);
     }
 }

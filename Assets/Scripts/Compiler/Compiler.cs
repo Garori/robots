@@ -6,12 +6,18 @@ public class Compiler : MonoBehaviour {
     [SerializeField] private int maxIterations = 100;
     [SerializeField] private int maxBlocks = 100;
     private int PC;
-    [SerializeField] private Cell[] memory;
+    private Cell[] memory;
 
     private List<ComparatorCell> conditions;
 
-    public bool Compile(List<GameObject> blocks) {
-        if (blocks.Count > maxBlocks) return false;
+    private void Start() {
+        memory = new Cell[maxBlocks * 2];
+    }
+
+    public string Compile(List<GameObject> blocks) {
+        if (blocks.Count > maxBlocks) {
+            return "ERRO DE COMPILAÇÃO: Passou do máximo de blocos";
+        }
         Stack<int> structuresStack = new Stack<int>();
         conditions = new List<ComparatorCell>();
         int conditionsIndex = 0;
@@ -30,37 +36,48 @@ public class Compiler : MonoBehaviour {
                     continue;
             }
             if (command == Commands.End) {
-                if (structuresStack.Count == 0) return false;
+                if (structuresStack.Count == 0) {
+                    return "ERRO DE COMPILAÇÃO: Bloco END sem estrutura correspondente";
+                }
                 memory[i] = new EndCell(0);
 
                 int lastStructureIndex = structuresStack.Pop();
+                Debug.Log(lastStructureIndex);
                 Cell lastStructure = memory[lastStructureIndex];
                 lastStructure.jmp = i - lastStructureIndex;
 
-                if (lastStructure is IfCell) continue;
+                if (lastStructure is IfCell || lastStructure is ElseCell) continue;
 
                 memory[i].jmp = lastStructureIndex - i - 1;
                 continue;
             }
             if (command == Commands.Else) {
-                if (structuresStack.Count == 0) return false;
+                if (structuresStack.Count == 0) {
+                    return "ERRO DE COMPILAÇÃO: Bloco ELSE começando condição";
+                }
 
                 int lastStructureIndex = structuresStack.Pop();
                 Cell lastStructure = memory[lastStructureIndex];
-                if (!(lastStructure is IfCell)) return false;
+                if (!(lastStructure is IfCell)) {
+                    return "ERRO DE COMPILAÇÃO: Bloco ELSE sem bloco IF correspondente";
+                }
 
                 memory[i] = new EndCell(0);
                 lastStructure.jmp = i - lastStructureIndex;
 
                 i++;
                 memory[i] = new ElseCell(((IfCell)lastStructure).condId);
+                structuresStack.Push(i);
+
                 continue;
             }
             if (command == Commands.For) {
-                return false;
+                return "ERRO DE COMPILAÇÃO: Bloco FOR ainda não foi implementado";
             }
             ComparatorController comparatorController = block.GetComponentInChildren<ComparatorController>();
-            if (comparatorController == null) return false;
+            if (comparatorController == null) {
+                return "ERRO DE COMPILAÇÃO: Bloco WHILE ou IF sem condição";
+            }
 
             Commands comparatorCommand = comparatorController.commandName;
             Transform comparatorTransform = comparatorController.gameObject.GetComponent<RectTransform>();
@@ -69,13 +86,17 @@ public class Compiler : MonoBehaviour {
 
             if (comparatorCommand == Commands.Even) {
                 VariableController variableController = comparatorTransform.GetComponentInChildren<VariableController>();
-                if (variableController == null) return false;
+                if (variableController == null) {
+                    return "ERRO DE COMPILAÇÃO: Comparador EVEN sem variável";
+                }
 
                 comparatorCell = new EvenCell(variableController.commandName);
             } else {
                 VariableController variable1Controller = comparatorTransform.GetChild(0).GetComponentInChildren<VariableController>();
                 VariableController variable2Controller = comparatorTransform.GetChild(1).GetComponentInChildren<VariableController>();
-                if (variable1Controller == null || variable2Controller == null) return false;
+                if (variable1Controller == null || variable2Controller == null) {
+                    return $"ERRO DE COMPILAÇÃO: Comparador {comparatorTransform.gameObject.name.ToUpper()} sem estrutura correspondente";
+                }
 
                 switch (comparatorCommand) {
                     case Commands.Equals:
@@ -95,14 +116,17 @@ public class Compiler : MonoBehaviour {
             if (command == Commands.If) {
                 structureStart = new IfCell(conditionsIndex);
             } else {
-                new WhileCell(conditionsIndex);
+                structureStart = new WhileCell(conditionsIndex);
             }
             memory[i] = structureStart;
             structuresStack.Push(i);
 
             conditionsIndex++;
         }
+        if (structuresStack.Count != 0) {
+            return "ERRO DE COMPILAÇÃO: As estruturas não foram todas devidamente finalizadas";
+        }
         memory[i + 1] = null;
-        return true;
+        return "COMPILADO COM SUCESSO!!!";
     }
 }
