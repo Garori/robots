@@ -7,7 +7,7 @@ public class GreaterCell : ComparatorCell {
         this.variable2 = variable2;
     }
 
-    public override bool getCond() {
-        return CompilerUtils.GetVariableValue(variable1) > CompilerUtils.GetVariableValue(variable2);
+    public override bool Evaluate(BattleStatus battleStatus) {
+        return battleStatus.values[variable1] > battleStatus.values[variable2];
     }
 }

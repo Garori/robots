@@ -1,12 +1,11 @@
-class IfCell : Cell {
-    public int condId { get; set; }
+class IfCell : Cell, IConditionCell {
+    public ComparatorCell comparatorCell { get; set; }
 
-    public IfCell(int condId) : base() {
-        this.condId = condId;
+    public IfCell(ComparatorCell comparatorCell) : base() {
+        this.comparatorCell = comparatorCell;
     }
 
-    public override bool getCond() {
-        // return Utils.getCond(condId);
-        return true;
+    public bool Evaluate(BattleStatus battleStatus) {
+        return comparatorCell.Evaluate(battleStatus);
     }
 }

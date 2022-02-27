@@ -3,5 +3,5 @@ public abstract class ComparatorCell {
 
     }
 
-    public abstract bool getCond();
+    public abstract bool Evaluate(BattleStatus battleStatus);
 }

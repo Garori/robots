@@ -5,7 +5,7 @@ public class EvenCell : ComparatorCell {
         this.variable = variable;
     }
 
-    public override bool getCond() {
-        return CompilerUtils.GetVariableValue(variable) % 2 == 0;
+    public override bool Evaluate(BattleStatus battleStatus) {
+        return battleStatus.values[variable] % 2 == 0;
     }
 }

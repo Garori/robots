@@ -9,11 +9,11 @@ class ForCell : Cell {
         firstTime = true;
     }
 
-    public override bool getCond() {
+    /*public override bool Evaluate() {
         if (firstTime) {
-            count = (int)CompilerUtils.GetVariableValue(variable);
+            count = Com.GetVariableValue(variable);
         }
         count--;
         return count >= 0;
-    }
+    }*/
 }

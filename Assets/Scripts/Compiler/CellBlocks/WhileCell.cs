@@ -1,12 +1,11 @@
-class WhileCell : Cell {
-    public int condId { get; set; }
+class WhileCell : Cell, IConditionCell {
+    public ComparatorCell comparatorCell { get; set; }
 
-    public WhileCell(int condId) : base() {
-        this.condId = condId;
+    public WhileCell(ComparatorCell comparatorCell) : base() {
+        this.comparatorCell = comparatorCell;
     }
 
-    public override bool getCond() {
-        //return Utils.getCond(condId);
-        return true;
+    public bool Evaluate(BattleStatus battleStatus) {
+        return comparatorCell.Evaluate(battleStatus);
     }
 }

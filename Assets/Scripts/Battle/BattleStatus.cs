@@ -2,24 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleStatus : MonoBehaviour {
-  public bool isOver = false;
-  public float playerLife { get; set; }
-  public float playerDefense { get; set; }
-  public float playerAttack { get; set; }
-  public float enemyLife { get; set; }
-  public float enemyDefense { get; set; }
-  public float enemyAttack { get; set; }
+public class BattleStatus {
+    public bool isOver { get; set; } = false;
+    public Dictionary<Commands, int> values { get; set; }
+    public Commands playerAction { get; set; }
+    public Commands enemyAction { get; set; }
 
-  public void setBattleStatus(Fighter player, Fighter enemy, bool isOver) {
-    playerLife = player.GetLife();
-    playerDefense = player.defensePoints;
-    playerAttack = player.attackPoints;
+    public void setBattleStatus(Fighter player, Fighter enemy, bool isOver) {
+        values[Commands.PLAYER_ACTUAL_HEALTH] = enemy.lifePoints;
+        values[Commands.PLAYER_ACTUAL_HEALTH_HALF] = enemy.lifePoints / 2;
+        values[Commands.PLAYER_ACTUAL_HEALTH_DOUBLE] = enemy.lifePoints * 2;
+        values[Commands.PLAYER_ACTUAL_SHIELD] = enemy.lifePoints;
+        values[Commands.PLAYER_ACTUAL_SHIELD_HALF] = enemy.lifePoints / 2;
+        values[Commands.PLAYER_ACTUAL_SHIELD_DOUBLE] = enemy.lifePoints * 2;
 
-    enemyLife = enemy.GetLife();
-    enemyDefense = enemy.defensePoints;
-    enemyAttack = enemy.attackPoints;
+        values[Commands.ENEMY_ACTUAL_HEALTH] = enemy.lifePoints;
+        values[Commands.ENEMY_ACTUAL_HEALTH_HALF] = enemy.lifePoints / 2;
+        values[Commands.ENEMY_ACTUAL_HEALTH_DOUBLE] = enemy.lifePoints * 2;
+        values[Commands.ENEMY_ACTUAL_SHIELD] = enemy.lifePoints;
+        values[Commands.ENEMY_ACTUAL_SHIELD_HALF] = enemy.lifePoints / 2;
+        values[Commands.ENEMY_ACTUAL_SHIELD_DOUBLE] = enemy.lifePoints * 2;
 
-    this.isOver = isOver;
-  }
+        this.isOver = isOver;
+    }
 }

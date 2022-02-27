@@ -9,27 +9,27 @@ public class PanelManager : MonoBehaviour {
     [Header("Game Objects")]
     [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform linesContent;
-
-    public GameObject lineObject;
+    public GameObject lineObjectPrefab;
     public GameObject endLineObject;
 
+    // Line info
     private float minLineWidth;
     private float lineHeight;
     private float colliderHeight;
-
     private Vector2 endLineSize;
+    private RectOffset linePadding;
+    private List<HorizontalLayoutGroup> linesLayout;
 
     [Header("Padding")]
     [SerializeField] private int minPadding;
     [SerializeField] private int tabPadding;
 
+    // Blocks and lines arrays
     private int activeLines;
     private List<GameObject> lines;
     private List<GameObject> blocks;
 
-    private RectOffset linePadding;
-    private List<HorizontalLayoutGroup> linesLayout;
-
+    // Panel size
     public float panelX { get; set; }
 
     private void Awake() {
@@ -41,21 +41,21 @@ public class PanelManager : MonoBehaviour {
     }
 
     private void Start() {
-        RectTransform lineObjectTransform = lineObject.GetComponent<RectTransform>();
-        minLineWidth = lineObjectTransform.sizeDelta.x;
-        lineHeight = lineObjectTransform.sizeDelta.y;
-        colliderHeight = lineObject.GetComponent<BoxCollider2D>().size.y;
+        RectTransform lineObjectPrefabTransform = lineObjectPrefab.GetComponent<RectTransform>();
+        minLineWidth = lineObjectPrefabTransform.sizeDelta.x;
+        lineHeight = lineObjectPrefabTransform.sizeDelta.y;
+        colliderHeight = lineObjectPrefab.GetComponent<BoxCollider2D>().size.y;
 
         panelX = canvas.sizeDelta.x - GetComponent<RectTransform>().sizeDelta.x;
 
         endLineSize = endLineObject.GetComponent<RectTransform>().sizeDelta;
 
-        RectOffset lineObjectPadding = lineObject.GetComponent<HorizontalLayoutGroup>().padding;
+        RectOffset lineObjectPrefabPadding = lineObjectPrefab.GetComponent<HorizontalLayoutGroup>().padding;
         linePadding = new RectOffset(
-            lineObjectPadding.left,
-            lineObjectPadding.right,
-            lineObjectPadding.top,
-            lineObjectPadding.bottom
+            lineObjectPrefabPadding.left,
+            lineObjectPrefabPadding.right,
+            lineObjectPrefabPadding.top,
+            lineObjectPrefabPadding.bottom
         );
 
         EventManager.BlockEnter += InsertBlock;
@@ -74,7 +74,7 @@ public class PanelManager : MonoBehaviour {
 
         blocks.Insert(index, block);
 
-        GameObject newLine = Instantiate(lineObject, linesContent);
+        GameObject newLine = Instantiate(lineObjectPrefab, linesContent);
         lines.Insert(index, newLine);
         linesLayout.Insert(index, newLine.GetComponent<HorizontalLayoutGroup>());
         newLine.transform.SetSiblingIndex(index);
@@ -195,7 +195,8 @@ public class PanelManager : MonoBehaviour {
         endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
     }
 
+    // TO-DO: PASSAR ISSO PARA O UIMANAGER
     public void onCompile() {
-        gameManager.compile(blocks);
+        gameManager.Compile(blocks);
     }
 }

@@ -1,56 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class GameManager : MonoBehaviour {
-  [Header("Managers")]
-  public Compiler compiler;
-  public PanelManager panelManager;
-  public BattleManager battleManager;
+    [Header("Managers")]
+    public Compiler compiler;
+    public PanelManager panelManager;
+    public BattleManager battleManager;
 
+    [Header("Game Objects")]
+    public TMP_Text compilePopupText;
 
-  [Header("Game Objects")]
-  public TMP_Text compilePopupText;
+    [Header("Fighters Scripts")]
+    [SerializeField] private Compiler playerCompiler;
+    [SerializeField] private Compiler enemyCompiler;
 
-  [Header("Fighters Scripts")]
-  [SerializeField] private Fighter playerScript;
-  [SerializeField] private Fighter enemyScript;
+    public void Compile(List<GameObject> blocks) {
+        compilePopupText.SetText("Compilando...");
+        compilePopupText.SetText(compiler.Compile(blocks));
+    }
 
-  public void compile(List<GameObject> blocks) {
-    compilePopupText.SetText("Compilando...");
-    compilePopupText.SetText(compiler.Compile(blocks));
-  }
-
-
-
-  public Commands[] playerActions = new Commands[]{
-      Commands.ATTACK,
-      Commands.ATTACK,
-      Commands.ATTACK,
-      Commands.ATTACK,
-      Commands.ATTACK,
-      Commands.ATTACK
-    };
-  public Commands[] enemyActions = new Commands[]{
-      Commands.HEAL,
-      Commands.CHARGE,
-      Commands.HEAL,
-      Commands.HEAL,
-      Commands.CHARGE,
-      Commands.ATTACK,
-    };
-
-
-
-
-  public Commands getPlayerAction() {
-    return playerActions[battleManager.round - 1];
-  }
-
-  public Commands getEnemyAction() {
-    return enemyActions[battleManager.round - 1];
-  }
-
-
+    public void RunBattle() {
+        BattleStatus status = battleManager.RunBattle();
+        try {
+            do {
+                Commands[] actions = new Commands[2];
+                actions[0] = playerCompiler.Run(status);
+                actions[1] = enemyCompiler.Run(status);
+                status = battleManager.PlayRound(actions);
+            } while (!status.isOver);
+        } catch (ActionTookTooLongException) {
+            Debug.Log("ERRO NA BATALHA: O jogador demorou muito para escolher uma ação");
+        } catch (MaxNumberOfRoundsException) {
+            Debug.Log("ERRO NA BATALHA: A batalha está demorando muito para acabar");
+        }
+        // Passa para o animador o que aconteceu
+    }
 }

@@ -1,12 +1,11 @@
-class ElseCell : Cell {
-    private int condId;
+class ElseCell : Cell, IConditionCell {
+    public ComparatorCell comparatorCell { get; set; }
 
-    public ElseCell(int condId) : base() {
-        this.condId = condId;
+    public ElseCell(ComparatorCell comparatorCell) : base() {
+        this.comparatorCell = comparatorCell;
     }
 
-    public override bool getCond() {
-        //return !Utils.getCond(condId);
-        return false;
+    public bool Evaluate(BattleStatus battleStatus) {
+        return !comparatorCell.Evaluate(battleStatus);
     }
 }

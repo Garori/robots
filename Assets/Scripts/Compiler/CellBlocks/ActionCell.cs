@@ -1,5 +1,5 @@
 class ActionCell : Cell {
-    private Commands action;
+    public Commands action { get; set; }
 
     public ActionCell(Commands action) : base() {
         this.action = action;
