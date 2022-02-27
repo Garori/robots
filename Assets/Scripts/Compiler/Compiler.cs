@@ -150,7 +150,7 @@ public class Compiler : MonoBehaviour {
     }
 
     private void JumpCond(IConditionCell cell, BattleStatus status) {
-        if (!cell.Evaluate(status)) jump((Cell)cell);
+        if (!cell.Evaluate(status)) Jump((Cell)cell);
     }
 
     private void Jump(Cell cell) {
