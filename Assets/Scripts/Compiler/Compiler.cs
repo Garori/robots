@@ -135,14 +135,11 @@ public class Compiler : MonoBehaviour {
             switch (cell) {
                 case ActionCell c:
                     return c.action;
-                case IfCell:
-                case ElseCell:
-                case WhileCell:
-                case ForCell:
-                    JumpCond((IConditionCell)cell, status);
+                case IConditionCell c:
+                    JumpCond(c, status);
                     break;
-                case EndCell:
-                    Jump(cell);
+                case EndCell c:
+                    Jump(c);
                     break;
             }
         }
