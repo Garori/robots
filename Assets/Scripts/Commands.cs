@@ -1,8 +1,8 @@
 public enum Commands {
-  ATTACK,
   DEFEND,
-  CHARGE,
   DODGE,
+  CHARGE,
+  ATTACK,
   HEAL,
   IF,
   FOR,

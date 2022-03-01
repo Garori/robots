@@ -9,6 +9,7 @@ public class BattleStatus {
     public Commands enemyAction { get; set; }
 
     public void setBattleStatus(Fighter player, Fighter enemy, bool isOver) {
+        values = new Dictionary<Commands, int>();
         values[Commands.PLAYER_ACTUAL_HEALTH] = enemy.lifePoints;
         values[Commands.PLAYER_ACTUAL_HEALTH_HALF] = enemy.lifePoints / 2;
         values[Commands.PLAYER_ACTUAL_HEALTH_DOUBLE] = enemy.lifePoints * 2;

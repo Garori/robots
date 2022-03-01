@@ -20,6 +20,10 @@ public class BattleManager : MonoBehaviour {
 
     private BattleStatus status;
 
+    private void Start() {
+        status = new BattleStatus();
+    }
+
     public BattleStatus RunBattle() {
         isOver = false;
         round = 1;
@@ -41,10 +45,17 @@ public class BattleManager : MonoBehaviour {
     }
 
     private void execute() {
-        player.executeAction(playerAction, enemy);
-        enemy.executeAction(enemyAction, player);
-        Debug.Log("PLAYER USED " + playerAction);
-        Debug.Log("ENEMY USED " + enemyAction);
+        if ((int) playerAction <= (int) enemyAction) {
+            player.executeAction(playerAction, enemy);
+            enemy.executeAction(enemyAction, player);
+            Debug.Log("PLAYER USED " + playerAction);
+            Debug.Log("ENEMY USED " + enemyAction);
+        } else {
+            enemy.executeAction(enemyAction, player);
+            player.executeAction(playerAction, enemy);
+            Debug.Log("ENEMY USED " + enemyAction);
+            Debug.Log("PLAYER USED " + playerAction);
+        }      
         Debug.Log("=====================================");
         Debug.Log("");
     }
