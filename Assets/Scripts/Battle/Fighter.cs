@@ -24,40 +24,47 @@ public class Fighter : MonoBehaviour, IFighter {
         healedLastRound = chargedLastRound = isDefending = isDodging = dodgedLastRound = false;
     }
 
-    public void attack(Fighter enemy) {
-        if (!enemy.isDefending || !enemy.isDodging || !this.dodgedLastRound) {
+    public bool attack(Fighter enemy) {
+        if (this.dodgedLastRound) return false;
+        if (!enemy.isDefending && !enemy.isDodging) {
             enemy.lifePoints -= Mathf.Max(this.attackPoints, 1);
             this.attackPoints = 1;
         }
+        return true;
     }
 
-    public void defend() {
+    public bool defend() {
         if (defensePoints > 0) {
             defensePoints -= 1;
             isDefending = true;
+            return true;
         }
+        return false;
     }
 
-    public void charge() {
+    public bool charge() {
         attackPoints += chargedLastRound ? 2 : 1;
+        return true;
     }
-    public void dodge() {
-        isDodging = true;
+    public bool dodge() {
+        return isDodging = true;
     }
 
-    public void heal() {
+    public bool heal() {
         lifePoints += healedLastRound ? 2 : 1;
         lifePoints = Mathf.Min(lifePoints, maxLifePoints);
+        return true;
     }
 
-    public void executeAction(Commands action, Fighter enemy) {
+    public bool executeAction(Commands action, Fighter enemy) {
+        bool success = true;
         switch (action) {
             case Commands.ATTACK:
-                attack(enemy);
+                success = attack(enemy);
                 dodgedLastRound = healedLastRound = chargedLastRound = false;
                 break;
             case Commands.DEFEND:
-                defend();
+                success = defend();
                 dodgedLastRound = healedLastRound = chargedLastRound = false;
                 break;
             case Commands.CHARGE:
@@ -76,7 +83,7 @@ public class Fighter : MonoBehaviour, IFighter {
                 healedLastRound = !healedLastRound;
                 break;
         }
-
+        return success;
     }
 
     public bool isDead() {
