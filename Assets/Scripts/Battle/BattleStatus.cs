@@ -26,4 +26,24 @@ public class BattleStatus {
 
         this.isOver = isOver;
     }
+
+    public BattleStatus(Fighter player, Fighter enemy, bool isOver, Commands playerAction, Commands enemyAction) {
+        values[Commands.PLAYER_ACTUAL_HEALTH] = enemy.lifePoints;
+        values[Commands.PLAYER_ACTUAL_HEALTH_HALF] = enemy.lifePoints / 2;
+        values[Commands.PLAYER_ACTUAL_HEALTH_DOUBLE] = enemy.lifePoints * 2;
+        values[Commands.PLAYER_ACTUAL_SHIELD] = enemy.lifePoints;
+        values[Commands.PLAYER_ACTUAL_SHIELD_HALF] = enemy.lifePoints / 2;
+        values[Commands.PLAYER_ACTUAL_SHIELD_DOUBLE] = enemy.lifePoints * 2;
+
+        values[Commands.ENEMY_ACTUAL_HEALTH] = enemy.lifePoints;
+        values[Commands.ENEMY_ACTUAL_HEALTH_HALF] = enemy.lifePoints / 2;
+        values[Commands.ENEMY_ACTUAL_HEALTH_DOUBLE] = enemy.lifePoints * 2;
+        values[Commands.ENEMY_ACTUAL_SHIELD] = enemy.lifePoints;
+        values[Commands.ENEMY_ACTUAL_SHIELD_HALF] = enemy.lifePoints / 2;
+        values[Commands.ENEMY_ACTUAL_SHIELD_DOUBLE] = enemy.lifePoints * 2;
+
+        this.isOver = isOver;
+        this.playerAction = playerAction;
+        this.enemyAction = enemyAction;
+    }
 }

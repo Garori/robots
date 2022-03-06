@@ -95,7 +95,7 @@ public class Compiler : MonoBehaviour {
                 VariableController variable1Controller = comparatorTransform.GetChild(0).GetComponentInChildren<VariableController>();
                 VariableController variable2Controller = comparatorTransform.GetChild(1).GetComponentInChildren<VariableController>();
                 if (variable1Controller == null || variable2Controller == null) {
-                    return $"ERRO DE COMPILAÇÃO: Comparador {comparatorTransform.gameObject.name.ToUpper()} sem estrutura correspondente";
+                    return $"ERRO DE COMPILAÇÃO: Comparador {comparatorTransform.gameObject.name.ToUpper()} sem variáveis";
                 }
 
                 switch (comparatorCommand) {
