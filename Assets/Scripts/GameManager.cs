@@ -24,14 +24,14 @@ public class GameManager : MonoBehaviour {
     }
 
     public void RunBattle() {
+        Debug.Log("Começou batalha");
         List<BattleStatus> battleStatuses = new List<BattleStatus>();
         BattleStatus status = battleManager.RunBattle();
-        battleStatuses.Add(status);
 
         List<Commands[]> actions = new List<Commands[]>();
         actions.Add(new Commands[] { Commands.ATTACK, Commands.DEFEND });
         actions.Add(new Commands[] { Commands.CHARGE, Commands.HEAL });
-        actions.Add(new Commands[] { Commands.DODGE, Commands.DEFEND });
+        actions.Add(new Commands[] { Commands.DODGE, Commands.ATTACK });
         int i = 0;
         try {
             do {
@@ -40,13 +40,15 @@ public class GameManager : MonoBehaviour {
                 //actions[1] = enemyCompiler.Run(status);
                 status = battleManager.PlayRound(actions[i++]);
                 battleStatuses.Add(status);
-                if (i == 2) break;
+                if (i > 2) break;
             } while (!status.isOver);
         } catch (ActionTookTooLongException) {
             Debug.Log("ERRO NA BATALHA: O jogador demorou muito para escolher uma ação");
         } catch (MaxNumberOfRoundsException) {
             Debug.Log("ERRO NA BATALHA: A batalha está demorando muito para acabar");
         }
-        animationManager.AnimBattle(battleStatuses);
+        Debug.Log("Acabou batalha");
+        animationManager.StartAnimation(battleStatuses);
+        Debug.Log("Acabou batalha2");
     }
 }

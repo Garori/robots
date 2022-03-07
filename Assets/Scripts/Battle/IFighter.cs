@@ -1,7 +1,7 @@
 interface IFighter {
-  void attack(Fighter enemy);
-  void defend();
-  void charge();
-  void dodge();
-  void heal();
+    bool attack(Fighter enemy);
+    bool defend();
+    bool charge();
+    bool dodge();
+    bool heal();
 }

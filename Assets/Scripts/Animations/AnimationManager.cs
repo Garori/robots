@@ -6,41 +6,50 @@ public class AnimationManager : MonoBehaviour {
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Animator enemyAnimator;
 
-    public IEnumerator AnimBattle(List<BattleStatus> battleStatuses) {
+    public void StartAnimation(List<BattleStatus> battleStatuses) {
+        StartCoroutine(CO_AnimateStatus(battleStatuses));
+    }
+
+    public IEnumerator CO_AnimateStatus(List<BattleStatus> battleStatuses) {
+        Debug.Log("a");
+        int i = 0;
         foreach (BattleStatus battleStatus in battleStatuses) {
-            IEnumerator roundCorountine = AnimateRound(battleStatus);
+            Debug.Log($"Animando round {i++}");
+            IEnumerator roundCorountine = CO_AnimateRound(battleStatus);
             yield return StartCoroutine(roundCorountine);
         }
     }
 
-    IEnumerator AnimateRound(BattleStatus battleStatus) {
-        if (battleStatus.playerAction == Commands.DEFEND) playerAnimator.SetBool("Defending", true);
-        if (battleStatus.enemyAction == Commands.DEFEND) enemyAnimator.SetBool("Defending", true);
-        yield return null;
+    IEnumerator CO_AnimateRound(BattleStatus battleStatus) {
+        float waitTime = 0f;
 
-        if (battleStatus.playerAction == Commands.DODGE) playerAnimator.SetTrigger("Dodge");
-        if (battleStatus.enemyAction == Commands.DODGE) enemyAnimator.SetTrigger("Dodge");
-        yield return null;
+        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, true)) yield return new WaitForSeconds(1.375f + 0.292f);
 
-        if (battleStatus.playerAction == Commands.CHARGE) playerAnimator.SetTrigger("Charge");
-        if (battleStatus.enemyAction == Commands.CHARGE) enemyAnimator.SetTrigger("Charge");
-        yield return null;
+        if (AnimateMoveTrigger(battleStatus, "Charge", Commands.CHARGE)) yield return new WaitForSeconds(1.375f + 1.875f);
 
-        if (battleStatus.playerAction == Commands.ATTACK) playerAnimator.SetTrigger("Attack");
-        if (battleStatus.enemyAction == Commands.ATTACK) enemyAnimator.SetTrigger("Attack");
-        yield return null;
+        if (AnimateMoveTrigger(battleStatus, "Dodge", Commands.DODGE)) waitTime = (1.375f + 0.792f);
+        if (AnimateMoveTrigger(battleStatus, "Attack", Commands.ATTACK)) waitTime = (1.375f + 0.708f);
+        yield return new WaitForSeconds(waitTime);
+
+        if (AnimateMoveTrigger(battleStatus, "Heal", Commands.HEAL)) yield return new WaitForSeconds(1.375f + 2.792f);
+
+        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, false)) yield return new WaitForSeconds(1.375f + 0.292f);
 
         // LEVAR DANO
         /*if (battleStatus.playerAction == Commands.DODGE) playerAnimator.SetTrigger("Dodge");
         if (battleStatus.enemyAction == Commands.DODGE) enemyAnimator.SetTrigger("Dodge");
-        yield return null;*/
+        yield return new WaitForSeconds(2f);*/
+    }
 
-        if (battleStatus.playerAction == Commands.HEAL) playerAnimator.SetTrigger("Heal");
-        if (battleStatus.enemyAction == Commands.HEAL) enemyAnimator.SetTrigger("Heal");
-        yield return null;
+    private bool AnimateMoveTrigger(BattleStatus battleStatus, string variableName, Commands action) {
+        if (battleStatus.playerAction == action) playerAnimator.SetTrigger(variableName);
+        if (battleStatus.enemyAction == action) enemyAnimator.SetTrigger(variableName);
+        return (battleStatus.playerAction == action || battleStatus.enemyAction == action);
+    }
 
-        if (battleStatus.playerAction == Commands.DEFEND) playerAnimator.SetBool("Defending", false);
-        if (battleStatus.enemyAction == Commands.DEFEND) enemyAnimator.SetBool("Defending", false);
-        yield return null;
+    private bool AnimateMoveBool(BattleStatus battleStatus, string variableName, Commands action, bool value) {
+        if (battleStatus.playerAction == action) playerAnimator.SetBool(variableName, value);
+        if (battleStatus.enemyAction == action) enemyAnimator.SetBool(variableName, value);
+        return (battleStatus.playerAction == action || battleStatus.enemyAction == action);
     }
 }

@@ -18,29 +18,22 @@ public class BattleManager : MonoBehaviour {
     private Commands playerAction;
     private Commands enemyAction;
 
-    private BattleStatus status;
-
-    private void Start() {
-        status = new BattleStatus();
-    }
-
     public BattleStatus RunBattle() {
         isOver = false;
         round = 1;
-        return new BattleStatus(player, enemy, isOver);
+        return new BattleStatus(player, enemy, isOver, Commands.START, Commands.START);
     }
 
     public BattleStatus PlayRound(Commands[] actions) {
-        if (isOver) return status;
+        round++;
+        if (round > maxRounds) throw new MaxNumberOfRoundsException();
 
         playerAction = actions[0];
         enemyAction = actions[1];
-        execute();
-        checkWin();
-        round++;
-        status.setBattleStatus(player, enemy, isOver);
-        if (round > maxRounds) throw new MaxNumberOfRoundsException();
-        return status;
+        //execute();
+        //checkWin();
+
+        return new BattleStatus(player, enemy, isOver, playerAction, enemyAction);
     }
 
     private void execute() {
@@ -56,16 +49,12 @@ public class BattleManager : MonoBehaviour {
             Debug.Log("ENEMY USED " + enemyAction);
             Debug.Log("PLAYER USED " + playerAction);
         }
-        Debug.Log("=====================================");
-        Debug.Log("");
     }
 
     private void checkWin() {
         if (!player.isDead() && !enemy.isDead()) return;
 
-        printBattle();
-        Debug.Log("=====================================");
-        Debug.Log("");
+        //printBattle();
 
         isOver = true;
         if (enemy.isDead()) Debug.Log("YOU WIN!!! =)");

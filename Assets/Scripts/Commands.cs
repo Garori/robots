@@ -1,9 +1,10 @@
 public enum Commands {
-    ATTACK,
     DEFEND,
-    CHARGE,
     DODGE,
+    CHARGE,
+    ATTACK,
     HEAL,
+    START,
     IF,
     FOR,
     WHILE,
