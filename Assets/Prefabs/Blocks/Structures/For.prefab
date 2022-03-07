@@ -189,7 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelManager: {fileID: 0}
   canvas: {fileID: 0}
-  commandName: 6
+  commandName: 7
 --- !u!1 &8541204230430764520
 GameObject:
   m_ObjectHideFlags: 0

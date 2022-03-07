@@ -8,7 +8,7 @@ public class Compiler : MonoBehaviour {
 
     private int PC;
 
-    private Cell[] memory;
+    public Cell[] memory {get; set;}
     private int totalCells;
 
     private void Start() {

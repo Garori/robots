@@ -152,4 +152,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelManager: {fileID: 0}
   canvas: {fileID: 0}
-  commandName: 1
+  commandName: 0

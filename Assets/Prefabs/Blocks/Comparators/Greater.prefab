@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelManager: {fileID: 0}
   canvas: {fileID: 0}
-  commandName: 12
+  commandName: 13
 --- !u!1001 &854369455646681188
 PrefabInstance:
   m_ObjectHideFlags: 0

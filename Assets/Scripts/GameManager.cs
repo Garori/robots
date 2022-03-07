@@ -17,6 +17,52 @@ public class GameManager : MonoBehaviour {
     [Header("Fighters Scripts")]
     [SerializeField] private Compiler playerCompiler;
     [SerializeField] private Compiler enemyCompiler;
+    private Cell[][] memories;
+
+    private void Start() {	
+        Cell[] memory1 = new Cell[] 
+        {
+            new ActionCell(Commands.DEFEND)
+        };
+
+        Cell[] memory2 = new Cell[] 
+        {
+            new IfCell (new GreaterCell(Commands.ENEMY_MAX_HEALTH_HALF, Commands.ENEMY_ACTUAL_HEALTH), 1), 
+            new ActionCell(Commands.CHARGE), new EndCell(), 
+            new ElseCell (new GreaterCell(Commands.ENEMY_MAX_HEALTH_HALF, Commands.ENEMY_ACTUAL_HEALTH), 1), 
+            new ActionCell(Commands.ATTACK), 
+            new EndCell()
+        };
+
+        Cell[] memory3 = new Cell[] 
+        {		
+            new IfCell (new NotEqualsCell(Commands.ENEMY_ACTUAL_SHIELD, 0), 5),
+            new ActionCell(Commands.DEFEND),		
+            new ActionCell(Commands.DEFEND),			
+            new ActionCell(Commands.CHARGE),		
+            new ActionCell(Commands.CHARGE),		
+            new ActionCell(Commands.ATTACK),					
+            new EndCell(),
+            new IfCell (new EqualsCell(Commands.ENEMY_ACTUAL_HEALTH, Commands.ENEMY_MAX_HEALTH), 5),			
+            new ActionCell(Commands.DODGE),
+            new ActionCell(Commands.CHARGE),
+            new ActionCell(Commands.CHARGE),
+            new ActionCell(Commands.ATTACK),
+            new ActionCell(Commands.ATTACK),
+            new EndCell(),
+            new ActionCell(Commands.HEAL),
+            new ActionCell(Commands.HEAL),
+            new ActionCell(Commands.CHARGE),
+            new ActionCell(Commands.CHARGE),
+            new ActionCell(Commands.ATTACK),
+            new EndCell()
+        };
+
+        memories = new Cell[3][];
+        memories[0] = memory1;
+        memories[1] = memory2;
+        memories[2] = memory3;
+    }
 
     public void Compile(List<GameObject> blocks) {
         compilePopupText.SetText("Compilando...");
@@ -50,5 +96,9 @@ public class GameManager : MonoBehaviour {
         Debug.Log("Acabou batalha");
         animationManager.StartAnimation(battleStatuses);
         Debug.Log("Acabou batalha2");
+    }
+
+    public void SetEnemyMemory(int num) {
+        enemyCompiler.memory = memories[num];
     }
 }
