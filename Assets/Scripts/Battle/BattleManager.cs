@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour {
     public BattleStatus RunBattle() {
         isOver = false;
         round = 1;
-        return new BattleStatus(player, enemy, isOver, Commands.START, Commands.START);
+        return new BattleStatus(player, enemy);
     }
 
     public BattleStatus PlayRound(Commands[] actions) {
@@ -30,13 +30,13 @@ public class BattleManager : MonoBehaviour {
 
         playerAction = actions[0];
         enemyAction = actions[1];
-        //execute();
+        bool[] attacks = execute();
         //checkWin();
 
-        return new BattleStatus(player, enemy, isOver, playerAction, enemyAction);
+        return new BattleStatus(player, enemy, isOver, playerAction, enemyAction, attacks[0], attacks[1]);
     }
 
-    private void execute() {
+    private bool[] execute() {
         bool playerSuccess, enemySuccess;
         if ((int)playerAction <= (int)enemyAction) {
             playerSuccess = player.executeAction(playerAction, enemy);
@@ -49,6 +49,11 @@ public class BattleManager : MonoBehaviour {
             Debug.Log("ENEMY USED " + enemyAction);
             Debug.Log("PLAYER USED " + playerAction);
         }
+
+        bool[] attacks = new bool[2];
+        attacks[1] = (playerAction == Commands.ATTACK) && playerSuccess;
+        attacks[0] = (enemyAction == Commands.ATTACK) && enemySuccess;
+        return attacks;
     }
 
     private void checkWin() {

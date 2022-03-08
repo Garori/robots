@@ -24,16 +24,26 @@ public class Fighter : MonoBehaviour, IFighter {
         healedLastRound = chargedLastRound = isDefending = isDodging = dodgedLastRound = false;
     }
 
+    private void Reset() {
+        healedLastRound = chargedLastRound = isDefending = isDodging = dodgedLastRound = false;
+    }
+
+    public int getMaxLifePoints() {
+        return maxLifePoints;
+    }
+
     public bool attack(Fighter enemy) {
         if (this.dodgedLastRound) return false;
         if (!enemy.isDefending && !enemy.isDodging) {
             enemy.lifePoints -= Mathf.Max(this.attackPoints, 1);
             this.attackPoints = 1;
         }
+        Reset();
         return true;
     }
 
     public bool defend() {
+        Reset();
         if (defensePoints > 0) {
             defensePoints -= 1;
             isDefending = true;
@@ -44,15 +54,21 @@ public class Fighter : MonoBehaviour, IFighter {
 
     public bool charge() {
         attackPoints += chargedLastRound ? 2 : 1;
+        Reset();
+        chargedLastRound = true;
         return true;
     }
     public bool dodge() {
-        return isDodging = true;
+        Reset();
+        dodgedLastRound = true;
+        return true;
     }
 
     public bool heal() {
         lifePoints += healedLastRound ? 2 : 1;
         lifePoints = Mathf.Min(lifePoints, maxLifePoints);
+        Reset();
+        healedLastRound = true;
         return true;
     }
 

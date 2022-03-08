@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour {
 
         List<Commands[]> actions = new List<Commands[]>();
         actions.Add(new Commands[] { Commands.ATTACK, Commands.DEFEND });
-        actions.Add(new Commands[] { Commands.CHARGE, Commands.HEAL });
+        actions.Add(new Commands[] { Commands.ATTACK, Commands.HEAL });
         actions.Add(new Commands[] { Commands.DODGE, Commands.ATTACK });
         int i = 0;
         try {

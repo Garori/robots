@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnimationManager : MonoBehaviour {
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Animator enemyAnimator;
-    public float animationSpeed {get; set;}
+    public float animationSpeed { get; set; }
 
     private void Start() {
         animationSpeed = 1;
@@ -28,22 +28,37 @@ public class AnimationManager : MonoBehaviour {
     IEnumerator CO_AnimateRound(BattleStatus battleStatus) {
         float waitTime = 0f;
 
-        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, true)) yield return new WaitForSeconds((1.375f + 0.292f)*animationSpeed);
+        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, true)) yield return new WaitForSeconds((1.375f + 0.292f) * animationSpeed);
 
-        if (AnimateMoveTrigger(battleStatus, "Charge", Commands.CHARGE)) yield return new WaitForSeconds((1.375f + 0.292f)*animationSpeed);
+        if (AnimateMoveTrigger(battleStatus, "Charge", Commands.CHARGE)) yield return new WaitForSeconds((1.375f + 0.292f) * animationSpeed);
 
-        if (AnimateMoveTrigger(battleStatus, "Dodge", Commands.DODGE)) waitTime = (1.375f + 0.292f)*animationSpeed;
-        if (AnimateMoveTrigger(battleStatus, "Attack", Commands.ATTACK)) waitTime = (1.375f + 0.292f)*animationSpeed;
-        yield return new WaitForSeconds(waitTime);
+        if (battleStatus.playerAction == Commands.ATTACK) {
+            playerAnimator.SetTrigger("Attack");
+            waitTime = (1.375f + 0.708f);
+        }
+        if (battleStatus.enemyAction == Commands.DODGE) {
+            enemyAnimator.SetTrigger("Dodge");
+            waitTime = (1.375f + 0.792f);
+        }
+        yield return new WaitForSeconds(waitTime / 2);
+        if (battleStatus.enemyHit) enemyAnimator.SetTrigger("Hit");
+        yield return new WaitForSeconds(waitTime / 2);
 
-        if (AnimateMoveTrigger(battleStatus, "Heal", Commands.HEAL)) yield return new WaitForSeconds((1.375f + 0.292f)*animationSpeed);
+        if (battleStatus.enemyAction == Commands.ATTACK) {
+            enemyAnimator.SetTrigger("Attack");
+            waitTime = (1.375f + 0.708f);
+        }
+        if (battleStatus.playerAction == Commands.DODGE) {
+            playerAnimator.SetTrigger("Dodge");
+            waitTime = (1.375f + 0.792f);
+        }
+        yield return new WaitForSeconds(waitTime / 2);
+        if (battleStatus.playerHit) playerAnimator.SetTrigger("Hit");
+        yield return new WaitForSeconds(waitTime / 2);
 
-        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, false)) yield return new WaitForSeconds((1.375f + 0.292f)*animationSpeed);
+        if (AnimateMoveTrigger(battleStatus, "Heal", Commands.HEAL)) yield return new WaitForSeconds((1.375f + 0.292f) * animationSpeed);
 
-        // LEVAR DANO
-        /*if (battleStatus.playerAction == Commands.DODGE) playerAnimator.SetTrigger("Dodge");
-        if (battleStatus.enemyAction == Commands.DODGE) enemyAnimator.SetTrigger("Dodge");
-        yield return new WaitForSeconds(2f);*/
+        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, false)) yield return new WaitForSeconds(1.375f + 0.292f);
     }
 
     private bool AnimateMoveTrigger(BattleStatus battleStatus, string variableName, Commands action) {
