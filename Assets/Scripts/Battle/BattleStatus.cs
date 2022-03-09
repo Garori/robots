@@ -9,11 +9,11 @@ public class BattleStatus {
     public Commands enemyAction { get; set; }
     public bool playerHit { get; set; }
     public bool enemyHit { get; set; }
-    public int round { get; set; }
 
     public BattleStatus(Fighter player, Fighter enemy, int round = 1, int isOver = 0, Commands playerAction = Commands.START, Commands enemyAction = Commands.START, bool playerHit = false, bool enemyHit = false) {
         values = new Dictionary<Commands, int>();
         values[Commands.ZERO] = 0;
+        values[Commands.ROUND] = round;
 
         values[Commands.PLAYER_ACTUAL_HEALTH] = player.GetLifePoints();
         values[Commands.PLAYER_ACTUAL_HEALTH_HALF] = player.GetLifePoints() / 2;
@@ -41,11 +41,14 @@ public class BattleStatus {
         values[Commands.ENEMY_ACTUAL_CHARGE_HALF] = enemy.GetChargePoints() / 2;
         values[Commands.ENEMY_ACTUAL_CHARGE_DOUBLE] = enemy.GetChargePoints() * 2;
 
-        this.round = round;
         this.isOver = isOver;
         this.playerAction = playerAction;
         this.enemyAction = enemyAction;
         this.playerHit = playerHit;
         this.enemyHit = enemyHit;
+    }
+
+    public override string ToString() {
+        return $"ROUND:{values[Commands.ROUND]}\nplayerAction:{playerAction}\nenemyAction:{enemyAction}\nPLAYER_ACTUAL_HEALTH:{values[Commands.PLAYER_ACTUAL_HEALTH]}\nPLAYER_ACTUAL_HEALTH_HALF:{values[Commands.PLAYER_ACTUAL_HEALTH_HALF]}\nPLAYER_ACTUAL_HEALTH_DOUBLE:{values[Commands.PLAYER_ACTUAL_HEALTH_DOUBLE]}\nPLAYER_MAX_HEALTH:{values[Commands.PLAYER_MAX_HEALTH]}\nPLAYER_MAX_HEALTH_HALF:{values[Commands.PLAYER_MAX_HEALTH_HALF]}\nPLAYER_MAX_HEALTH_DOUBLE:{values[Commands.PLAYER_MAX_HEALTH_DOUBLE]}\nPLAYER_ACTUAL_SHIELD:{values[Commands.PLAYER_ACTUAL_SHIELD]}\nPLAYER_ACTUAL_SHIELD_HALF:{values[Commands.PLAYER_ACTUAL_SHIELD_HALF]}\nPLAYER_ACTUAL_SHIELD_DOUBLE:{values[Commands.PLAYER_ACTUAL_SHIELD_DOUBLE]}\nPLAYER_ACTUAL_CHARGE:{values[Commands.PLAYER_ACTUAL_CHARGE]}\nPLAYER_ACTUAL_CHARGE_HALF:{values[Commands.PLAYER_ACTUAL_CHARGE_HALF]}\nPLAYER_ACTUAL_CHARGE_DOUBLE:{values[Commands.PLAYER_ACTUAL_CHARGE_DOUBLE]}\nENEMY_ACTUAL_HEALTH:{values[Commands.ENEMY_ACTUAL_HEALTH]}\nENEMY_ACTUAL_HEALTH_HALF:{values[Commands.ENEMY_ACTUAL_HEALTH_HALF]}\nENEMY_ACTUAL_HEALTH_DOUBLE:{values[Commands.ENEMY_ACTUAL_HEALTH_DOUBLE]}\nENEMY_MAX_HEALTH:{values[Commands.ENEMY_MAX_HEALTH]}\nENEMY_MAX_HEALTH_HALF:{values[Commands.ENEMY_MAX_HEALTH_HALF]}\nENEMY_MAX_HEALTH_DOUBLE:{values[Commands.ENEMY_MAX_HEALTH_DOUBLE]}\nENEMY_ACTUAL_SHIELD:{values[Commands.ENEMY_ACTUAL_SHIELD]}\nENEMY_ACTUAL_SHIELD_HALF:{values[Commands.ENEMY_ACTUAL_SHIELD_HALF]}\nENEMY_ACTUAL_SHIELD_DOUBLE:{values[Commands.ENEMY_ACTUAL_SHIELD_DOUBLE]}\nENEMY_ACTUAL_CHARGE:{values[Commands.ENEMY_ACTUAL_CHARGE]}\nENEMY_ACTUAL_CHARGE_HALF:{values[Commands.ENEMY_ACTUAL_CHARGE_HALF]}\nENEMY_ACTUAL_CHARGE_DOUBLE:{values[Commands.ENEMY_ACTUAL_CHARGE_DOUBLE]}\n";
     }
 }

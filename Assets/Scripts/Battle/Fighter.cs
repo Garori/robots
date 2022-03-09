@@ -33,8 +33,8 @@ public class Fighter : MonoBehaviour, IFighter {
     }
 
     public bool attack(Fighter enemy) {
-        if (!this.dodgedLastRound && !enemy.isDefending && !enemy.isDodging) {
-            enemy.lifePoints -= Mathf.Max(this.attackPoints, 1);
+        if (!this.dodgedLastRound) {
+            enemy.ReceiveAttack(attackPoints);
         }
         this.attackPoints = minAttackPoints;
         if (this.dodgedLastRound) return false;
@@ -43,7 +43,6 @@ public class Fighter : MonoBehaviour, IFighter {
 
     public bool defend() {
         if (defensePoints > 0) {
-            defensePoints -= 1;
             isDefending = true;
             return true;
         }
@@ -57,12 +56,24 @@ public class Fighter : MonoBehaviour, IFighter {
         return true;
     }
     public bool dodge() {
+        dodgedLastRound = true;
         return true;
     }
 
     public bool heal() {
         lifePoints += healedLastRound ? 2 : 1;
         lifePoints = Mathf.Min(lifePoints, maxLifePoints);
+        healedLastRound = !healedLastRound;
+        return true;
+    }
+
+    public bool ReceiveAttack(int attackPoints) {
+        if (isDodging) return false;
+        if (isDefending) {
+            defensePoints -= 1;
+            return false;
+        }
+        this.lifePoints -= Mathf.Max(attackPoints, 0);
         return true;
     }
 
@@ -84,12 +95,10 @@ public class Fighter : MonoBehaviour, IFighter {
             case Commands.DODGE:
                 dodge();
                 isDefending = healedLastRound = chargedLastRound = false;
-                dodgedLastRound = true;
                 break;
             case Commands.HEAL:
                 heal();
                 isDefending = dodgedLastRound = chargedLastRound = false;
-                healedLastRound = !healedLastRound;
                 break;
         }
         return success;
@@ -100,7 +109,7 @@ public class Fighter : MonoBehaviour, IFighter {
     }
 
     public int GetChargePoints() {
-        return attackPoints - minAttackPoints;
+        return Mathf.Max(attackPoints - minAttackPoints);
     }
 
     public int GetLifePoints() {

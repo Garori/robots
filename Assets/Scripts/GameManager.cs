@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour {
                 status = battleManager.PlayRound(actions);
                 actualRoundPanel = Instantiate(roundPanel, roundContent);
                 actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-                actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.round}");
+                actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND]}");
                 actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PlayerStatus(status));
                 actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(EnemyStatus(status));
                 //battleStatuses.Add(status);
@@ -114,16 +114,15 @@ public class GameManager : MonoBehaviour {
             actualRoundPanel = Instantiate(roundPanel, roundContent);
             actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
             actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE PLAYER TOOK TOO LONG TO CHOOSE AN ACTION");
-            actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("");
-            actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText("");
+            actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
+            actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
         } catch (MaxNumberOfRoundsException) {
             actualRoundPanel = Instantiate(roundPanel, roundContent);
             actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
             actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE BATTLE IS TAKING TOO LONG TO FINISH");
-            actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("");
-            actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText("");
+            actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
+            actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
         }
-        roundScrollbar.value = 1;
         playerCompiled = false;
         /*
         Debug.Log("Acabou batalha");

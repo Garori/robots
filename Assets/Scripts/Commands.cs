@@ -38,5 +38,6 @@ public enum Commands {
     ENEMY_ACTUAL_CHARGE,
     ENEMY_ACTUAL_CHARGE_HALF,
     ENEMY_ACTUAL_CHARGE_DOUBLE,
-    ZERO
+    ZERO,
+    ROUND
 }

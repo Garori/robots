@@ -43,13 +43,9 @@ public class BattleManager : MonoBehaviour {
         if ((int)playerAction <= (int)enemyAction) {
             playerSuccess = player.executeAction(playerAction, enemy);
             enemySuccess = enemy.executeAction(enemyAction, player);
-            Debug.Log("PLAYER USED " + playerAction);
-            Debug.Log("ENEMY USED " + enemyAction);
         } else {
             enemySuccess = enemy.executeAction(enemyAction, player);
             playerSuccess = player.executeAction(playerAction, enemy);
-            Debug.Log("ENEMY USED " + enemyAction);
-            Debug.Log("PLAYER USED " + playerAction);
         }
 
         bool[] attacks = new bool[2];
