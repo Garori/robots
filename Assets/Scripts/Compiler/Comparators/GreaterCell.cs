@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class GreaterCell : ComparatorCell {
     private Commands variable1;
     private Commands variable2;
@@ -8,6 +10,7 @@ public class GreaterCell : ComparatorCell {
     }
 
     public override bool Evaluate(BattleStatus battleStatus) {
+        Debug.Log($"Evaluating:\n{variable1}:{battleStatus.values[variable1]}\n{variable2}:{battleStatus.values[variable2]}");
         return battleStatus.values[variable1] > battleStatus.values[variable2];
     }
 }

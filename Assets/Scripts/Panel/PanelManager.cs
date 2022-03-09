@@ -27,7 +27,7 @@ public class PanelManager : MonoBehaviour {
     // Blocks and lines arrays
     private int activeLines;
     private List<GameObject> lines;
-    private List<GameObject> blocks;
+    public List<GameObject> blocks { get; set; }
 
     // Panel size
     public float panelX { get; set; }
@@ -200,5 +200,15 @@ public class PanelManager : MonoBehaviour {
     // TO-DO: PASSAR ISSO PARA O UIMANAGER
     public void onCompile() {
         gameManager.Compile(blocks);
+    }
+
+    public void Clear() {
+        foreach (GameObject line in lines) {
+            Destroy(line);
+        }
+        activeLines = 0;
+        lines.Clear();
+        blocks.Clear();
+        OrganizeBlocks();
     }
 }

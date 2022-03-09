@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
     [Header("Game Objects")]
     public TMP_Text compilePopupText;
     public GameObject roundPanel;
+    public GameObject roundError;
     public RectTransform roundContent;
     public Scrollbar roundScrollbar;
 
@@ -24,13 +25,11 @@ public class GameManager : MonoBehaviour {
     private Cell[][] memories;
 
     private void Start() {
-        Cell[] memory1 = new Cell[]
-        {
+        Cell[] memory1 = new Cell[]{
             new ActionCell(Commands.DEFEND)
         };
 
-        Cell[] memory2 = new Cell[]
-        {
+        Cell[] memory2 = new Cell[]{
             new IfCell (new GreaterCell(Commands.ENEMY_ACTUAL_HEALTH, Commands.ENEMY_MAX_HEALTH_HALF), 1),
             new ActionCell(Commands.CHARGE),
             new EndCell(),
@@ -39,8 +38,7 @@ public class GameManager : MonoBehaviour {
             new EndCell()
         };
 
-        Cell[] memory3 = new Cell[]
-        {
+        Cell[] memory3 = new Cell[]{
             new IfCell (new NotEqualsCell(Commands.ENEMY_ACTUAL_SHIELD, Commands.ZERO), 5),
             new ActionCell(Commands.DEFEND),
             new ActionCell(Commands.DEFEND),
@@ -79,9 +77,12 @@ public class GameManager : MonoBehaviour {
     }
 
     public void RunBattle() {
+        string compileResult = "";
+        List<GameObject> blocks = panelManager.blocks;
+        playerCompiled = playerCompiler.Compile(blocks, ref compileResult);
         if (!playerCompiled) {
             compilePopupText.transform.parent.gameObject.SetActive(true);
-            compilePopupText.SetText("Please compile your code first");
+            compilePopupText.SetText(compileResult);
             return;
         }
         Debug.Log("Começou batalha");
@@ -98,6 +99,7 @@ public class GameManager : MonoBehaviour {
                 actions[0] = playerCompiler.Run(status);
                 actions[1] = enemyCompiler.Run(status);
                 status = battleManager.PlayRound(actions);
+                Debug.Log(status);
                 actualRoundPanel = Instantiate(roundPanel, roundContent);
                 actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
                 actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND]}");
@@ -111,17 +113,13 @@ public class GameManager : MonoBehaviour {
             actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == 1 ? "WINNER" : "LOSER");
             actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "WINNER" : "LOSER");
         } catch (ActionTookTooLongException) {
-            actualRoundPanel = Instantiate(roundPanel, roundContent);
+            actualRoundPanel = Instantiate(roundError, roundContent);
             actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
             actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE PLAYER TOOK TOO LONG TO CHOOSE AN ACTION");
-            actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
-            actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
         } catch (MaxNumberOfRoundsException) {
-            actualRoundPanel = Instantiate(roundPanel, roundContent);
+            actualRoundPanel = Instantiate(roundError, roundContent);
             actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
             actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE BATTLE IS TAKING TOO LONG TO FINISH");
-            actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
-            actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText("ERROR");
         }
         playerCompiled = false;
         /*
@@ -148,10 +146,18 @@ public class GameManager : MonoBehaviour {
     }
 
     private string PlayerStatus(BattleStatus battleStatus) {
-        return $"ACTION: {battleStatus.playerAction}\nLIFE: {battleStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\nDEFENSE: {battleStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\nCHARGE: {battleStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
+        return $"ACTION:\n{battleStatus.playerAction}\nLIFE: {battleStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\nDEFENSE: {battleStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\nCHARGE: {battleStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
     }
 
     private string EnemyStatus(BattleStatus battleStatus) {
-        return $"ACTION: {battleStatus.enemyAction}\nLIFE: {battleStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\nDEFENSE: {battleStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\nCHARGE: {battleStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
+        return $"ACTION:\n{battleStatus.enemyAction}\nLIFE: {battleStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\nDEFENSE: {battleStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\nCHARGE: {battleStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
+    }
+
+    public void QuitGame() {
+        Application.Quit();
+    }
+
+    public void ClearBlocks() {
+        panelManager.Clear();
     }
 }

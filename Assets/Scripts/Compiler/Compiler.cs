@@ -10,6 +10,7 @@ public class Compiler : MonoBehaviour {
 
     private Cell[] memory;
     private int totalCells;
+    [SerializeField] private bool debug;
 
     private void Start() {
         memory = new Cell[maxBlocks * 2];
@@ -48,7 +49,7 @@ public class Compiler : MonoBehaviour {
                     compileResult = "COMPILATION ERROR: END block without corresponding structure";
                     return false;
                 }
-                memory[PC] = new EndCell(0);
+                memory[PC] = new EndCell();
 
                 int lastStructureIndex = structuresStack.Pop();
                 Debug.Log(lastStructureIndex);
@@ -73,7 +74,7 @@ public class Compiler : MonoBehaviour {
                     return false;
                 }
 
-                memory[PC] = new EndCell(0);
+                memory[PC] = new EndCell();
                 lastStructure.jmp = PC - lastStructureIndex;
 
                 PC++;
@@ -152,6 +153,7 @@ public class Compiler : MonoBehaviour {
         for (int iter = 0; iter < maxIterations; iter++) {
             PC = (PC + 1) % totalCells;
             Cell cell = memory[PC];
+            if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
 
             switch (cell) {
                 case ActionCell c:
@@ -172,6 +174,7 @@ public class Compiler : MonoBehaviour {
     }
 
     private void Jump(Cell cell) {
+        if (debug) Debug.Log($"Jumping {cell.jmp} cells");
         PC += cell.jmp;
     }
 }
