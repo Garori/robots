@@ -20,7 +20,9 @@ public class BattleManager : MonoBehaviour {
 
     public BattleStatus RunBattle() {
         isOver = false;
-        round = 1;
+        round = 0;
+        player.ResetAttributes();
+        enemy.ResetAttributes();
         return new BattleStatus(player, enemy);
     }
 
@@ -31,9 +33,9 @@ public class BattleManager : MonoBehaviour {
         playerAction = actions[0];
         enemyAction = actions[1];
         bool[] attacks = execute();
-        //checkWin();
+        checkWin();
 
-        return new BattleStatus(player, enemy, isOver, playerAction, enemyAction, attacks[0], attacks[1]);
+        return new BattleStatus(player, enemy, round, isOver, playerAction, enemyAction, attacks[0], attacks[1]);
     }
 
     private bool[] execute() {
@@ -59,26 +61,8 @@ public class BattleManager : MonoBehaviour {
     private void checkWin() {
         if (!player.isDead() && !enemy.isDead()) return;
 
-        //printBattle();
-
         isOver = true;
-        if (enemy.isDead()) Debug.Log("YOU WIN!!! =)");
-        else Debug.Log("YOU LOSE. =(");
+        if (player.isDead()) Debug.Log("YOU LOSE. =(");
+        else Debug.Log("YOU WIN!!! =)");
     }
-
-    private void printBattle() {
-        Debug.Log("ROUND " + round);
-        Debug.Log("");
-        Debug.Log("PLAYER ");
-        Debug.Log("LIFE: " + player.lifePoints);
-        Debug.Log("ATTACK: " + player.attackPoints);
-        Debug.Log("DEFENSE: " + player.defensePoints);
-        Debug.Log("");
-        Debug.Log("ENEMY ");
-        Debug.Log("LIFE: " + enemy.lifePoints);
-        Debug.Log("ATTACK: " + enemy.attackPoints);
-        Debug.Log("DEFENSE: " + enemy.defensePoints);
-        Debug.Log("");
-    }
-
 }

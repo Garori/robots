@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: 81a45b5c7a7d5d74db1dab3bcb31f4b0
+guid: d0a675bd23721f84bb6169f8f00fe1ab
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8796315183391316563
-    second: Structures_0
+      213: 7531046529554702819
+    second: Structures1_0
   - first:
-      213: -6859328083630855373
-    second: Structures_1
+      213: -8181378551808215441
+    second: Structures1_1
   - first:
-      213: -5220548635511524404
-    second: Structures_2
+      213: 1861773751860264772
+    second: Structures1_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Structures_0
+      name: Structures1_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 400
-        width: 992
-        height: 200
+        y: 124
+        width: 234
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -114,20 +114,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 35a1a6eed0ac21a70800000000000000
-      internalID: 8796315183391316563
+      spriteID: 3e1eb0ddae6a38860800000000000000
+      internalID: 7531046529554702819
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Structures_1
+      name: Structures1_1
       rect:
         serializedVersion: 2
         x: 0
-        y: 200
-        width: 992
-        height: 200
+        y: 62
+        width: 234
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -135,20 +135,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 33b62514375cec0a0800000000000000
-      internalID: -6859328083630855373
+      spriteID: f66b87ecd87e57e80800000000000000
+      internalID: -8181378551808215441
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Structures_2
+      name: Structures1_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 992
-        height: 200
+        width: 234
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,8 +156,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cc37fa7fca2ec87b0800000000000000
-      internalID: -5220548635511524404
+      spriteID: 44ff6cbfc5956d910800000000000000
+      internalID: 1861773751860264772
       vertices: []
       indices: 
       edges: []

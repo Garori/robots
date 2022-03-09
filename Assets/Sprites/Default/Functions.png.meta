@@ -110,9 +110,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 800
-        width: 472
-        height: 200
+        y: 62
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,10 +130,10 @@ TextureImporter:
       name: Functions_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 600
-        width: 472
-        height: 200
+        x: 118
+        y: 62
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,10 +151,10 @@ TextureImporter:
       name: Functions_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 400
-        width: 472
-        height: 200
+        x: 236
+        y: 62
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,9 +173,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 200
-        width: 472
-        height: 200
+        y: 0
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -193,10 +193,10 @@ TextureImporter:
       name: Functions_4
       rect:
         serializedVersion: 2
-        x: 0
+        x: 118
         y: 0
-        width: 472
-        height: 200
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

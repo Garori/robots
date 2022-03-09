@@ -70,7 +70,6 @@ public class PanelManager : MonoBehaviour {
 
     private void InsertBlock(GameObject block, GameObject line) {
         int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
-        Debug.Log(index);
 
         blocks.Insert(index, block);
 
@@ -90,7 +89,6 @@ public class PanelManager : MonoBehaviour {
     private void RemoveBlock(GameObject block) {
         int index = blocks.IndexOf(block);
         if (index == -1) return;
-        Debug.Log($"Removendo indice {index}");
 
         blocks.RemoveAt(index);
         block.GetComponent<RectTransform>().SetParent(canvas);
@@ -161,10 +159,12 @@ public class PanelManager : MonoBehaviour {
     }
 
     private void OrganizeBlocks() {
+        string blocksPrint = "BLOCKS ARRAY\n";
         int leftPadding = minPadding;
         float maxWidth = minLineWidth;
         for (int i = 0; i < lines.Count; i++) {
             HorizontalLayoutGroup line = linesLayout[i];
+            blocksPrint += $"{blocks[i].name}\n";
 
             if (blocks[i].CompareTag("ElseBlock") || blocks[i].CompareTag("EndBlock")) leftPadding -= tabPadding;
             leftPadding = Mathf.Max(leftPadding, minPadding);
@@ -193,6 +193,8 @@ public class PanelManager : MonoBehaviour {
         endLineSize.x = maxWidth;
         endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
         endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
+
+        Debug.Log(blocksPrint);
     }
 
     // TO-DO: PASSAR ISSO PARA O UIMANAGER

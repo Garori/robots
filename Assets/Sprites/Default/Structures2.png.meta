@@ -1,19 +1,16 @@
 fileFormatVersion: 2
-guid: 82334e40063fc6044a93f67714f4bc58
+guid: ea3b4cf88449003489eff3b30c7512ea
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2536415058306031850
-    second: Comparators_0
+      213: -1411704899896429253
+    second: Structures2_0
   - first:
-      213: 3353628160831453452
-    second: Comparators_1
+      213: -1685911686017853808
+    second: Structures2_1
   - first:
-      213: 6684068419764712340
-    second: Comparators_2
-  - first:
-      213: -5259256195907818088
-    second: Comparators_3
+      213: 6131645226013114349
+    second: Structures2_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Comparators_0
+      name: Structures2_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 42
-        width: 112
-        height: 42
+        y: 124
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,20 +114,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 61f97b661f7dcccd0800000000000000
-      internalID: -2536415058306031850
+      spriteID: b35bef18fdd986ce0800000000000000
+      internalID: -1411704899896429253
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Comparators_1
+      name: Structures2_1
       rect:
         serializedVersion: 2
-        x: 112
-        y: 42
-        width: 112
-        height: 42
+        x: 0
+        y: 62
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -138,20 +135,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c09fa134b0b7a8e20800000000000000
-      internalID: 3353628160831453452
+      spriteID: 096d93001407a98e0800000000000000
+      internalID: -1685911686017853808
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Comparators_2
+      name: Structures2_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 112
-        height: 42
+        width: 118
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,29 +156,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4937b7660d492cc50800000000000000
-      internalID: 6684068419764712340
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Comparators_3
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 0
-        width: 112
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 89d6424ca5e5307b0800000000000000
-      internalID: -5259256195907818088
+      spriteID: def3b31a8daf71550800000000000000
+      internalID: 6131645226013114349
       vertices: []
       indices: 
       edges: []

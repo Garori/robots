@@ -8,11 +8,17 @@ public class Compiler : MonoBehaviour {
 
     private int PC;
 
-    public Cell[] memory {get; set;}
+    private Cell[] memory;
     private int totalCells;
 
     private void Start() {
         memory = new Cell[maxBlocks * 2];
+        PC = -1;
+    }
+
+    public void Compile(Cell[] memory) {
+        this.memory = memory;
+        totalCells = memory.Length;
     }
 
     public string Compile(List<GameObject> blocks) {
@@ -20,7 +26,6 @@ public class Compiler : MonoBehaviour {
             return "ERRO DE COMPILAÇÃO: Passou do máximo de blocos";
         }
         Stack<int> structuresStack = new Stack<int>();
-        PC = -1;
 
         int i = -1;
         foreach (GameObject block in blocks) {
