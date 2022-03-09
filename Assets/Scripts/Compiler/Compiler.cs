@@ -21,15 +21,17 @@ public class Compiler : MonoBehaviour {
         totalCells = memory.Length;
     }
 
-    public string Compile(List<GameObject> blocks) {
+    public bool Compile(List<GameObject> blocks, ref string compileResult) {
         if (blocks.Count > maxBlocks) {
-            return "ERRO DE COMPILAÇÃO: Passou do máximo de blocos";
+            compileResult = $"COMPILATION ERROR: Can't have more than {maxBlocks} blocks";
+            return false;
         }
         Stack<int> structuresStack = new Stack<int>();
+        bool hasAction = false;
 
-        int i = -1;
+        PC = -1;
         foreach (GameObject block in blocks) {
-            i++;
+            PC++;
             Commands command = block.GetComponent<BlockController>().commandName;
             switch (command) {
                 case Commands.ATTACK:
@@ -37,51 +39,57 @@ public class Compiler : MonoBehaviour {
                 case Commands.CHARGE:
                 case Commands.DODGE:
                 case Commands.HEAL:
-                    memory[i] = new ActionCell(command);
+                    memory[PC] = new ActionCell(command);
+                    hasAction = true;
                     continue;
             }
             if (command == Commands.END) {
                 if (structuresStack.Count == 0) {
-                    return "ERRO DE COMPILAÇÃO: Bloco END sem estrutura correspondente";
+                    compileResult = "COMPILATION ERROR: END block without corresponding structure";
+                    return false;
                 }
-                memory[i] = new EndCell(0);
+                memory[PC] = new EndCell(0);
 
                 int lastStructureIndex = structuresStack.Pop();
                 Debug.Log(lastStructureIndex);
                 Cell lastStructure = memory[lastStructureIndex];
-                lastStructure.jmp = i - lastStructureIndex;
+                lastStructure.jmp = PC - lastStructureIndex;
 
                 if (lastStructure is IfCell || lastStructure is ElseCell) continue;
 
-                memory[i].jmp = lastStructureIndex - i - 1;
+                memory[PC].jmp = lastStructureIndex - PC - 1;
                 continue;
             }
             if (command == Commands.ELSE) {
                 if (structuresStack.Count == 0) {
-                    return "ERRO DE COMPILAÇÃO: Bloco ELSE começando condição";
+                    compileResult = "COMPILATION ERROR: ELSE block without corresponding IF";
+                    return false;
                 }
 
                 int lastStructureIndex = structuresStack.Pop();
                 Cell lastStructure = memory[lastStructureIndex];
                 if (!(lastStructure is IfCell)) {
-                    return "ERRO DE COMPILAÇÃO: Bloco ELSE sem bloco IF correspondente";
+                    compileResult = "COMPILATION ERROR: ELSE block without corresponding IF";
+                    return false;
                 }
 
-                memory[i] = new EndCell(0);
-                lastStructure.jmp = i - lastStructureIndex;
+                memory[PC] = new EndCell(0);
+                lastStructure.jmp = PC - lastStructureIndex;
 
-                i++;
-                memory[i] = new ElseCell(((IfCell)lastStructure).comparatorCell);
-                structuresStack.Push(i);
+                PC++;
+                memory[PC] = new ElseCell(((IfCell)lastStructure).comparatorCell);
+                structuresStack.Push(PC);
 
                 continue;
             }
             if (command == Commands.FOR) {
-                return "ERRO DE COMPILAÇÃO: Bloco FOR ainda não foi implementado";
+                compileResult = "COMPILATION ERROR: FOR still not implemented";
+                return false;
             }
             ComparatorController comparatorController = block.GetComponentInChildren<ComparatorController>();
             if (comparatorController == null) {
-                return "ERRO DE COMPILAÇÃO: Bloco WHILE ou IF sem condição";
+                compileResult = "COMPILATION ERROR: WHILE or IF block without condition";
+                return false;
             }
 
             Commands comparatorCommand = comparatorController.commandName;
@@ -92,7 +100,8 @@ public class Compiler : MonoBehaviour {
             if (comparatorCommand == Commands.EVEN) {
                 VariableController variableController = comparatorTransform.GetComponentInChildren<VariableController>();
                 if (variableController == null) {
-                    return "ERRO DE COMPILAÇÃO: Comparador EVEN sem variável";
+                    compileResult = "COMPILATION ERROR: EVEN comparator without variable";
+                    return false;
                 }
 
                 comparatorCell = new EvenCell(variableController.commandName);
@@ -100,7 +109,8 @@ public class Compiler : MonoBehaviour {
                 VariableController variable1Controller = comparatorTransform.GetChild(0).GetComponentInChildren<VariableController>();
                 VariableController variable2Controller = comparatorTransform.GetChild(1).GetComponentInChildren<VariableController>();
                 if (variable1Controller == null || variable2Controller == null) {
-                    return $"ERRO DE COMPILAÇÃO: Comparador {comparatorTransform.gameObject.name.ToUpper()} sem variáveis";
+                    compileResult = $"COMPILATION ERROR: {comparatorTransform.gameObject.name.ToUpper()} comparator without variables";
+                    return false;
                 }
 
                 switch (comparatorCommand) {
@@ -122,14 +132,20 @@ public class Compiler : MonoBehaviour {
             } else {
                 structureStart = new WhileCell(comparatorCell);
             }
-            memory[i] = (Cell)structureStart;
-            structuresStack.Push(i);
+            memory[PC] = (Cell)structureStart;
+            structuresStack.Push(PC);
         }
         if (structuresStack.Count != 0) {
-            return "ERRO DE COMPILAÇÃO: As estruturas não foram todas devidamente finalizadas";
+            compileResult = "COMPILATION ERROR: The structures were not properly ended";
+            return false;
         }
-        totalCells = i + 1;
-        return "COMPILADO COM SUCESSO!!!";
+        if (!hasAction) {
+            compileResult = "COMPILATION ERROR: There isn't an action to be done";
+            return false;
+        }
+        totalCells = PC + 1;
+        compileResult = "COMPILED SUCCESSFULLY!!!";
+        return true;
     }
 
     public Commands Run(BattleStatus status) {

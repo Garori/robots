@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleStatus {
-    public bool isOver { get; set; } = false;
+    public int isOver { get; set; }
     public Dictionary<Commands, int> values { get; set; }
     public Commands playerAction { get; set; }
     public Commands enemyAction { get; set; }
@@ -11,7 +11,7 @@ public class BattleStatus {
     public bool enemyHit { get; set; }
     public int round { get; set; }
 
-    public BattleStatus(Fighter player, Fighter enemy, int round = 1, bool isOver = false, Commands playerAction = Commands.START, Commands enemyAction = Commands.START, bool playerHit = false, bool enemyHit = false) {
+    public BattleStatus(Fighter player, Fighter enemy, int round = 1, int isOver = 0, Commands playerAction = Commands.START, Commands enemyAction = Commands.START, bool playerHit = false, bool enemyHit = false) {
         values = new Dictionary<Commands, int>();
         values[Commands.ZERO] = 0;
 

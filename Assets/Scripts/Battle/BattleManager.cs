@@ -13,13 +13,13 @@ public class BattleManager : MonoBehaviour {
     [Header("Battle Parameters")]
     [SerializeField] private int maxRounds;
     private int round;
-    private bool isOver;
+    private int isOver;
 
     private Commands playerAction;
     private Commands enemyAction;
 
     public BattleStatus RunBattle() {
-        isOver = false;
+        isOver = 0;
         round = 0;
         player.ResetAttributes();
         enemy.ResetAttributes();
@@ -61,8 +61,7 @@ public class BattleManager : MonoBehaviour {
     private void checkWin() {
         if (!player.isDead() && !enemy.isDead()) return;
 
-        isOver = true;
-        if (player.isDead()) Debug.Log("YOU LOSE. =(");
-        else Debug.Log("YOU WIN!!! =)");
+        if (player.isDead()) isOver = -1;
+        else isOver = 1;
     }
 }
