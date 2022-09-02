@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour {
 
         memories = new Cell[3][];
         memories[0] = memory1;
-        memories[1] = memory2;
+        memories[1] = memory2; 
         memories[2] = memory3;
         SetEnemyMemory(0);
 
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour {
             return;
         }
         Debug.Log("Começou batalha");
-        //List<BattleStatus> battleStatuses = new List<BattleStatus>();
+        List<BattleStatus> battleStatuses = new List<BattleStatus>();
         BattleStatus status = battleManager.RunBattle();
         foreach (Transform child in roundContent.transform) {
             Destroy(child.gameObject);
@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour {
                 actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND]}");
                 actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PlayerStatus(status));
                 actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(EnemyStatus(status));
-                //battleStatuses.Add(status);
+                battleStatuses.Add(status);
             } while (status.isOver == 0);
             actualRoundPanel = Instantiate(roundPanel, roundContent);
             actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
@@ -122,11 +122,8 @@ public class GameManager : MonoBehaviour {
             actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE BATTLE IS TAKING TOO LONG TO FINISH");
         }
         playerCompiled = false;
-        /*
-        Debug.Log("Acabou batalha");
-        animationManager.StartAnimation(battleStatuses);
-        Debug.Log("Acabou batalha2");
-        */
+        
+        StartCoroutine(animationManager.CO_StartAnimation(battleStatuses));
     }
 
     public void SetEnemyMemory(int num) {

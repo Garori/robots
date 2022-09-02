@@ -1,75 +1,62 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DragonBones;
 
 public class AnimationManager : MonoBehaviour {
-    [SerializeField] private Animator playerAnimator;
-    [SerializeField] private Animator enemyAnimator;
-    public float animationSpeed { get; set; }
+    [SerializeField] private UnityArmatureComponent playerArmature;
+    [SerializeField] private UnityArmatureComponent enemyArmature;
 
-    private void Start() {
-        animationSpeed = 1;
-    }
-
-    public void StartAnimation(List<BattleStatus> battleStatuses) {
-        StartCoroutine(CO_AnimateStatus(battleStatuses));
-    }
-
-    public IEnumerator CO_AnimateStatus(List<BattleStatus> battleStatuses) {
-        Debug.Log("a");
-        int i = 0;
-        foreach (BattleStatus battleStatus in battleStatuses) {
-            Debug.Log($"Animando round {i++}");
-            IEnumerator roundCorountine = CO_AnimateRound(battleStatus);
-            yield return StartCoroutine(roundCorountine);
+    private string[] GetAnimations(Commands command, bool isHit, int attackOrder){
+        string[] animations = new string[] {"Idle", "Idle", "Idle", "Idle"};
+        int attackPosition = attackOrder + 1;
+        int defendPosition = 2 - attackOrder;
+        switch(command){
+            case Commands.DEFEND:
+                animations[defendPosition] = isHit ? "Defense_onHit" : "Defense";
+                return animations;
+            case Commands.DODGE:
+                animations[defendPosition] = "Dodge";
+                return animations;
+            case Commands.CHARGE:
+                animations[0] = "Charge";
+                if(isHit) animations[defendPosition] = "Damaged";
+                return animations;
+            case Commands.HEAL:
+                animations[3] = "Heal";
+                if(isHit) animations[defendPosition] = "Damaged";
+                return animations;
+            case Commands.ATTACK:
+                animations[attackPosition] = "Attack_punch";
+                return animations;
+            default:
+                return null;
         }
     }
-
-    IEnumerator CO_AnimateRound(BattleStatus battleStatus) {
-        float waitTime = 0f;
-
-        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, true)) yield return new WaitForSeconds((1.375f + 0.292f) * animationSpeed);
-
-        if (AnimateMoveTrigger(battleStatus, "Charge", Commands.CHARGE)) yield return new WaitForSeconds((1.375f + 0.292f) * animationSpeed);
-
-        if (battleStatus.playerAction == Commands.ATTACK) {
-            playerAnimator.SetTrigger("Attack");
-            waitTime = (1.375f + 0.708f);
-        }
-        if (battleStatus.enemyAction == Commands.DODGE) {
-            enemyAnimator.SetTrigger("Dodge");
-            waitTime = (1.375f + 0.792f);
-        }
-        yield return new WaitForSeconds(waitTime / 2);
-        if (battleStatus.enemyHit) enemyAnimator.SetTrigger("Hit");
-        yield return new WaitForSeconds(waitTime / 2);
-
-        if (battleStatus.enemyAction == Commands.ATTACK) {
-            enemyAnimator.SetTrigger("Attack");
-            waitTime = (1.375f + 0.708f);
-        }
-        if (battleStatus.playerAction == Commands.DODGE) {
-            playerAnimator.SetTrigger("Dodge");
-            waitTime = (1.375f + 0.792f);
-        }
-        yield return new WaitForSeconds(waitTime / 2);
-        if (battleStatus.playerHit) playerAnimator.SetTrigger("Hit");
-        yield return new WaitForSeconds(waitTime / 2);
-
-        if (AnimateMoveTrigger(battleStatus, "Heal", Commands.HEAL)) yield return new WaitForSeconds((1.375f + 0.292f) * animationSpeed);
-
-        if (AnimateMoveBool(battleStatus, "Defending", Commands.DEFEND, false)) yield return new WaitForSeconds(1.375f + 0.292f);
+    
+    public IEnumerator CO_PlayAnimation(UnityArmatureComponent armature, string animationName){
+        DragonBones.AnimationState animationState = armature.animation.Play(animationName, 1);
+        yield return new WaitForSeconds(animationState.totalTime);
+        armature.animation.Play("Idle", 0);
     }
 
-    private bool AnimateMoveTrigger(BattleStatus battleStatus, string variableName, Commands action) {
-        if (battleStatus.playerAction == action) playerAnimator.SetTrigger(variableName);
-        if (battleStatus.enemyAction == action) enemyAnimator.SetTrigger(variableName);
-        return (battleStatus.playerAction == action || battleStatus.enemyAction == action);
-    }
+    public IEnumerator CO_StartAnimation(List<BattleStatus> battleStatuses) {
+        foreach(BattleStatus battleStatus in battleStatuses){
+            string[] playerAnimations = GetAnimations(battleStatus.playerAction, battleStatus.playerHit, 0);
+            string[] enemyAnimations = GetAnimations(battleStatus.enemyAction, battleStatus.enemyHit, 1);
 
-    private bool AnimateMoveBool(BattleStatus battleStatus, string variableName, Commands action, bool value) {
-        if (battleStatus.playerAction == action) playerAnimator.SetBool(variableName, value);
-        if (battleStatus.enemyAction == action) enemyAnimator.SetBool(variableName, value);
-        return (battleStatus.playerAction == action || battleStatus.enemyAction == action);
+            Debug.Log("Starting animations");
+
+            for(int i = 0; i < playerAnimations.Length; i++){
+                Debug.Log("Player animation "+i+": "+playerAnimations[i]);
+                Debug.Log("Enemy animation "+i+": "+enemyAnimations[i]);
+                Coroutine playerCoroutine = StartCoroutine(CO_PlayAnimation(playerArmature, playerAnimations[i]));
+                Coroutine enemyCoroutine = StartCoroutine(CO_PlayAnimation(enemyArmature, enemyAnimations[i]));
+
+                yield return playerCoroutine;
+                yield return enemyCoroutine;
+            }
+        }
     }
 }
