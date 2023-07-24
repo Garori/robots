@@ -91,7 +91,7 @@ public class PanelManager : MonoBehaviour {
         if (index == -1) return;
 
         blocks.RemoveAt(index);
-        block.GetComponent<RectTransform>().SetParent(canvas);
+        block.GetComponent<RectTransform>().SetParent(canvas); // Volta o bloco como filho de canvas para poder arrastar
 
         GameObject line = lines[index];
         lines.RemoveAt(index);
@@ -105,7 +105,7 @@ public class PanelManager : MonoBehaviour {
 
     private void InsertComparator(GameObject comparator, GameObject blockCondition) {
         Transform blockConditionTransform = blockCondition.GetComponent<RectTransform>();
-        if (blockConditionTransform.parent.parent.CompareTag("Canvas") ||
+        if (blockConditionTransform.parent.parent.CompareTag("Canvas") || // verifica se o bloco comparador está fora do painel (parece desnecessário)
             blockConditionTransform.childCount != 0) {
             Destroy(comparator);
             return;
@@ -195,11 +195,6 @@ public class PanelManager : MonoBehaviour {
         endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
 
         Debug.Log(blocksPrint);
-    }
-
-    // TO-DO: PASSAR ISSO PARA O UIMANAGER
-    public void onCompile() {
-        gameManager.Compile(blocks);
     }
 
     public void Clear() {

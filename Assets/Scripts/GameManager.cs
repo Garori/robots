@@ -69,13 +69,6 @@ public class GameManager : MonoBehaviour {
         playerCompiled = false;
     }
 
-    public void Compile(List<GameObject> blocks) {
-        string compileResult = "";
-        compilePopupText.SetText("Compilando...");
-        playerCompiled = playerCompiler.Compile(blocks, ref compileResult);
-        compilePopupText.SetText(compileResult);
-    }
-
     public void RunBattle() {
         string compileResult = "";
         List<GameObject> blocks = panelManager.blocks;
@@ -95,11 +88,13 @@ public class GameManager : MonoBehaviour {
         RectTransform actualRoundPanelTransform;
         try {
             do {
+                // Turno a turno da batalha
                 Commands[] actions = new Commands[2];
                 actions[0] = playerCompiler.Run(status);
                 actions[1] = enemyCompiler.Run(status);
                 status = battleManager.PlayRound(actions);
                 Debug.Log(status);
+                // Imprime os textos dos rounds
                 actualRoundPanel = Instantiate(roundPanel, roundContent);
                 actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
                 actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND]}");
