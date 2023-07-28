@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PanelManager : MonoBehaviour {
-    public GameManager gameManager;
     [Header("Game Objects")]
     [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform linesContent;

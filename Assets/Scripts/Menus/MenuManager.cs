@@ -5,20 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    
-    public void PlayGame() {
-        SceneManager.LoadScene("LevelSelect");
-    }
+	
+	public void PlayGame() {
+		SceneManager.LoadScene("LevelSelect");
+	}
 
-    public void CreateMode() {
-        SceneManager.LoadScene("CreatorMode");
-    }
+	public void CreateMode() {
+		SceneManager.LoadScene("CreatorMode");
+	}
 
-    public void QuitGame() {
-        Application.Quit();
-
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-    }
+	public void QuitGame() {
+		#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+		#endif
+		
+		Application.Quit();
+	}
 }
