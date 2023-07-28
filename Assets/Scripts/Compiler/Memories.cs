@@ -1,20 +1,10 @@
 using UnityEngine;
 
-public class Memories
-{
-	public static Memories instance { get; private set; }
+public static class Memories
+{	
+	private static Cell[][] memories;
 	
-	private void Awake() {
-		if (instance == null) {
-			instance = this;
-		} else {
-			Destroy(gameObject);
-		}
-	}
-	
-	private Cell[][] memories;
-	
-	private void Start() {
+	static Memories(){
 		memories = new Cell[3][];
 		memories[0] = new Cell[]{
 			new ActionCell(Commands.DEFEND)
@@ -52,7 +42,7 @@ public class Memories
 		};
 	}
 	
-	public Cell[] GetMemory(int index) {
+	public static Cell[] GetMemory(int index) {
 		return memories[index];
 	}
 }
