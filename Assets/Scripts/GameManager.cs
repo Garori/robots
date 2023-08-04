@@ -28,11 +28,7 @@ public class GameManager : MonoBehaviour {
 	private void Start() {
 		memory = Memories.GetMemory(UserData.Instance.Level);
 		SetEnemyMemory(memory);
-		Reset();
-	}
-	
-	public void Reset(){
-		panelManager.Reset();
+
 		foreach (Transform child in roundContent.transform) {
 			Destroy(child.gameObject);
 		}
@@ -108,6 +104,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void QuitGame() {
+		panelManager.KillEvents();
 		SceneManager.LoadScene("LevelSelect");
 	}
 

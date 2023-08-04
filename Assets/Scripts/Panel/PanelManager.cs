@@ -32,10 +32,6 @@ public class PanelManager : MonoBehaviour {
 	public float panelX { get; set; }
 
 	private void Awake() {
-		Reset();
-	}
-	
-	public void Reset() {
 		activeLines = 0;
 
 		blocks = new List<GameObject>();
@@ -210,5 +206,16 @@ public class PanelManager : MonoBehaviour {
 		lines.Clear();
 		blocks.Clear();
 		OrganizeBlocks();
+	}
+
+	public void KillEvents() {
+		EventManager.BlockEnter -= InsertBlock;
+		EventManager.BlockExit -= RemoveBlock;
+
+		EventManager.ComparatorEnter -= InsertComparator;
+		EventManager.ComparatorExit -= RemoveComparator;
+
+		EventManager.VariableEnter -= InsertVariable;
+		EventManager.VariableExit -= RemoveVariable;
 	}
 }
