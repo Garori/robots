@@ -186,6 +186,7 @@ public class Compiler : MonoBehaviour
             return false;
         }
         totalCells = PC + 1;
+        PC = -1;
         compileResult = "COMPILED SUCCESSFULLY!!!";
         return true;
     }
@@ -194,7 +195,8 @@ public class Compiler : MonoBehaviour
     {
         for (int iter = 0; iter < maxIterations; iter++)
         {
-            PC = (PC + 1) % totalCells;
+            PC++;
+            if (PC >= totalCells) throw new PlayerOutOfActionsException();
             Cell cell = memory[PC];
             if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
 

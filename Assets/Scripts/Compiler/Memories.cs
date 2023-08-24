@@ -1,13 +1,16 @@
 using UnityEngine;
 
 public static class Memories
-{	
+{
 	private static Cell[][] memories;
-	
-	static Memories(){
+
+	static Memories()
+	{
 		memories = new Cell[3][];
 		memories[0] = new Cell[]{
-			new ActionCell(Commands.DEFEND)
+			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 1),
+			new ActionCell(Commands.DEFEND),
+			new EndCell(-3)
 		};
 
 		memories[1] = new Cell[]{
@@ -41,8 +44,9 @@ public static class Memories
 			new ActionCell(Commands.ATTACK)
 		};
 	}
-	
-	public static Cell[] GetMemory(int index) {
+
+	public static Cell[] GetMemory(int index)
+	{
 		return memories[index];
 	}
 }
