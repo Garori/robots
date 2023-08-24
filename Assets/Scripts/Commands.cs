@@ -1,4 +1,5 @@
-public enum Commands {
+public enum Commands
+{
     DEFEND,
     DODGE,
     CHARGE,
@@ -39,5 +40,14 @@ public enum Commands {
     ENEMY_ACTUAL_CHARGE_HALF,
     ENEMY_ACTUAL_CHARGE_DOUBLE,
     ZERO,
-    ROUND
+    ROUND,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE
 }

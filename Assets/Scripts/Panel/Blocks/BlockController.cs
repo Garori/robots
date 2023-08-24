@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler {
+public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+{
 	[Header("Game Objects")]
 	[SerializeField] private PanelManager panelManager;
 	[SerializeField] private Canvas canvas;
@@ -20,7 +21,8 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	[Header("Enum")]
 	public Commands commandName;
 
-	private void Start() {
+	private void Start()
+	{
 		newBlock = true;
 
 		rectTransform = GetComponent<RectTransform>();
@@ -30,12 +32,15 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;
 	}
 
-	public void OnPointerDown(PointerEventData eventData) {
+	public void OnPointerDown(PointerEventData eventData)
+	{
 
 	}
 
-	public void OnBeginDrag(PointerEventData eventData) {
-		if (newBlock) {
+	public void OnBeginDrag(PointerEventData eventData)
+	{
+		if (newBlock)
+		{
 			GameObject createdBlock = Instantiate(gameObject, gameObject.transform.parent);
 			createdBlock.name = gameObject.name;
 			createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
@@ -46,18 +51,22 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		OnBeginDragAction();
 	}
 
-	protected virtual void OnBeginDragAction() {
+	protected virtual void OnBeginDragAction()
+	{
 
 	}
 
-	public void OnDrag(PointerEventData eventData) {
+	public void OnDrag(PointerEventData eventData)
+	{
 		rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
 		boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
 	}
 
-	public void OnEndDrag(PointerEventData eventData) {
+	public void OnEndDrag(PointerEventData eventData)
+	{
 		canvasGroup.alpha = 1f;
-		if (colliding == null) {
+		if (colliding == null)
+		{
 			Destroy(gameObject);
 			return;
 		}
@@ -65,25 +74,30 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		OnEndDragAction();
 	}
 
-	protected virtual void OnEndDragAction() {
+	protected virtual void OnEndDragAction()
+	{
 
 	}
 
-	private void OnTriggerEnter2D(Collider2D other) {
+	private void OnTriggerEnter2D(Collider2D other)
+	{
 		if (!OnValidTriggerEnter2D(other)) return;
 		colliding = other.gameObject;
 	}
 
-	private void OnTriggerExit2D(Collider2D other) {
+	private void OnTriggerExit2D(Collider2D other)
+	{
 		if (!OnValidTriggerExit2D(other)) return;
 		colliding = null;
 	}
 
-	protected virtual bool OnValidTriggerEnter2D(Collider2D other) {
+	protected virtual bool OnValidTriggerEnter2D(Collider2D other)
+	{
 		return true;
 	}
 
-	protected virtual bool OnValidTriggerExit2D(Collider2D other) {
+	protected virtual bool OnValidTriggerExit2D(Collider2D other)
+	{
 		return true;
 	}
 }

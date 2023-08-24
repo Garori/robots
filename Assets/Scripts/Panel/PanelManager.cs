@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System;
 
-public class PanelManager : MonoBehaviour {
+public class PanelManager : MonoBehaviour
+{
 	[Header("Game Objects")]
 	[SerializeField] private RectTransform canvas;
 	[SerializeField] private RectTransform linesContent;
@@ -31,7 +33,8 @@ public class PanelManager : MonoBehaviour {
 	// Panel size
 	public float panelX { get; set; }
 
-	private void Awake() {
+	private void Awake()
+	{
 		activeLines = 0;
 
 		blocks = new List<GameObject>();
@@ -39,7 +42,8 @@ public class PanelManager : MonoBehaviour {
 		linesLayout = new List<HorizontalLayoutGroup>();
 	}
 
-	private void Start() {
+	private void Start()
+	{
 		RectTransform lineObjectPrefabTransform = lineObjectPrefab.GetComponent<RectTransform>();
 		minLineWidth = lineObjectPrefabTransform.sizeDelta.x;
 		lineHeight = lineObjectPrefabTransform.sizeDelta.y;
@@ -67,7 +71,8 @@ public class PanelManager : MonoBehaviour {
 		EventManager.VariableExit += RemoveVariable;
 	}
 
-	private void InsertBlock(GameObject block, GameObject line) {
+	private void InsertBlock(GameObject block, GameObject line)
+	{
 		int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
 		Debug.Log(index);
 		Debug.Log(activeLines);
@@ -87,7 +92,8 @@ public class PanelManager : MonoBehaviour {
 		OrganizeBlocks();
 	}
 
-	private void RemoveBlock(GameObject block) {
+	private void RemoveBlock(GameObject block)
+	{
 		int index = blocks.IndexOf(block);
 		if (index == -1) return;
 
@@ -104,16 +110,18 @@ public class PanelManager : MonoBehaviour {
 		OrganizeBlocks();
 	}
 
-	private void InsertComparator(GameObject comparator, GameObject blockCondition) {
+	private void InsertComparator(GameObject comparator, GameObject blockCondition)
+	{
 		Transform blockConditionTransform = blockCondition.GetComponent<RectTransform>();
-		if (blockConditionTransform.parent.parent.CompareTag("Canvas") || // verifica se o bloco comparador está fora do painel (parece desnecessário)
-			blockConditionTransform.childCount != 0) {
+		if (blockConditionTransform.childCount != 0)
+		{
 			Destroy(comparator);
 			return;
 		}
 
 		GameObject block = blockConditionTransform.parent.gameObject;
-		if (!blocks.Contains(block)) {
+		if (!blocks.Contains(block))
+		{
 			Destroy(comparator);
 			return;
 		}
@@ -121,7 +129,8 @@ public class PanelManager : MonoBehaviour {
 		comparator.GetComponent<RectTransform>().SetParent(blockConditionTransform);
 	}
 
-	private void RemoveComparator(GameObject comparator) {
+	private void RemoveComparator(GameObject comparator)
+	{
 		Transform comparatorTransform = comparator.GetComponent<RectTransform>();
 		if (comparatorTransform.parent.CompareTag("Canvas")) return;
 
@@ -131,17 +140,19 @@ public class PanelManager : MonoBehaviour {
 		comparatorTransform.SetParent(canvas);
 	}
 
-	private void InsertVariable(GameObject variable, GameObject conditionVariable) {
+	private void InsertVariable(GameObject variable, GameObject conditionVariable)
+	{
 		Transform conditionVariableTransform = conditionVariable.GetComponent<RectTransform>();
-		if (conditionVariableTransform.parent.parent.CompareTag("Canvas") ||
-			conditionVariableTransform.parent.parent.parent.parent.CompareTag("Canvas") ||
-			conditionVariableTransform.childCount != 0) {
+		Debug.Log(conditionVariableTransform.childCount);
+		if (conditionVariableTransform.childCount != 0)
+		{
 			Destroy(variable);
 			return;
 		}
 
-		GameObject block = conditionVariableTransform.parent.parent.parent.gameObject;
-		if (!blocks.Contains(block)) {
+		if (!blocks.Contains(conditionVariableTransform.parent.parent.parent.gameObject) &&
+			!blocks.Contains(conditionVariableTransform.parent.gameObject))
+		{
 			Destroy(variable);
 			return;
 		}
@@ -149,7 +160,8 @@ public class PanelManager : MonoBehaviour {
 		variable.GetComponent<RectTransform>().SetParent(conditionVariableTransform);
 	}
 
-	private void RemoveVariable(GameObject variable) {
+	private void RemoveVariable(GameObject variable)
+	{
 		Transform variableTransform = variable.GetComponent<RectTransform>();
 		if (variableTransform.parent.CompareTag("Canvas")) return;
 
@@ -159,11 +171,13 @@ public class PanelManager : MonoBehaviour {
 		variableTransform.SetParent(canvas);
 	}
 
-	private void OrganizeBlocks() {
+	private void OrganizeBlocks()
+	{
 		string blocksPrint = "BLOCKS ARRAY\n";
 		int leftPadding = minPadding;
 		float maxWidth = minLineWidth;
-		for (int i = 0; i < lines.Count; i++) {
+		for (int i = 0; i < lines.Count; i++)
+		{
 			HorizontalLayoutGroup line = linesLayout[i];
 			blocksPrint += $"{blocks[i].name}\n";
 
@@ -184,7 +198,8 @@ public class PanelManager : MonoBehaviour {
 			if (blocks[i].CompareTag("ElseBlock") || blocks[i].CompareTag("StructureBlock") || blocks[i].CompareTag("ForBlock")) leftPadding += tabPadding;
 		}
 
-		foreach (GameObject line in lines) {
+		foreach (GameObject line in lines)
+		{
 			Vector2 transformSize = new Vector2(maxWidth, lineHeight);
 			line.GetComponent<RectTransform>().sizeDelta = transformSize;
 
@@ -198,8 +213,10 @@ public class PanelManager : MonoBehaviour {
 		Debug.Log(blocksPrint);
 	}
 
-	public void Clear() {
-		foreach (GameObject line in lines) {
+	public void Clear()
+	{
+		foreach (GameObject line in lines)
+		{
 			Destroy(line);
 		}
 		activeLines = 0;
@@ -208,7 +225,8 @@ public class PanelManager : MonoBehaviour {
 		OrganizeBlocks();
 	}
 
-	public void KillEvents() {
+	public void KillEvents()
+	{
 		EventManager.BlockEnter -= InsertBlock;
 		EventManager.BlockExit -= RemoveBlock;
 

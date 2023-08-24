@@ -1,19 +1,26 @@
-class ForCell : Cell {
+class ForCell : Cell, IConditionCell
+{
     private Commands variable;
+    private int maxCount;
     private int count;
-    private bool firstTime;
 
-    public ForCell(Commands variable) : base() {
-        this.variable = variable;
+    public ForCell(Commands varible) : base()
+    {
+        this.variable = varible;
+        maxCount = -1;
         count = -1;
-        firstTime = true;
     }
 
-    /*public override bool Evaluate() {
-        if (firstTime) {
-            count = Com.GetVariableValue(variable);
+    public bool Evaluate(BattleStatus battleStatus)
+    {
+        if (maxCount == -1)
+        {
+            maxCount = battleStatus.values[variable];
+            count = maxCount;
         }
         count--;
-        return count >= 0;
-    }*/
+        bool mustContinue = count >= 0;
+        if (count < 0) count = maxCount;
+        return mustContinue;
+    }
 }
