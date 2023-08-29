@@ -8,9 +8,12 @@ public static class Memories
 	{
 		memories = new Cell[3][];
 		memories[0] = new Cell[]{
-			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 1),
+			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 4),
+			new IfCell(new EvenCell(Commands.ROUND),1),
+			new ActionCell(Commands.ATTACK),
+			new ElseCell(new EvenCell(Commands.ROUND),1),
 			new ActionCell(Commands.DEFEND),
-			new EndCell(-3)
+			new EndCell(-6)
 		};
 
 		memories[1] = new Cell[]{
