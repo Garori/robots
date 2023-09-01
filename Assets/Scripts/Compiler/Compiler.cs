@@ -16,7 +16,7 @@ public class Compiler : MonoBehaviour
     private void Start()
     {
         memory = new Cell[maxBlocks * 2];
-        PC = -1;
+        ResetAttributes();
     }
 
     public void Compile(Cell[] memory)
@@ -24,6 +24,11 @@ public class Compiler : MonoBehaviour
         this.memory = memory;
         totalCells = memory.Length;
     }
+
+    public void ResetAttributes() 
+    {
+        PC = -1;
+    } 
 
     public bool Compile(List<GameObject> blocks, ref string compileResult)
     {
@@ -35,7 +40,7 @@ public class Compiler : MonoBehaviour
         Stack<int> structuresStack = new Stack<int>();
         bool hasAction = false;
 
-        PC = -1;
+        ResetAttributes();
         foreach (GameObject block in blocks)
         {
             PC++;
@@ -186,7 +191,7 @@ public class Compiler : MonoBehaviour
             return false;
         }
         totalCells = PC + 1;
-        PC = -1;
+        ResetAttributes();
         compileResult = "COMPILED SUCCESSFULLY!!!";
         return true;
     }

@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
 			compilePopupText.SetText(compileResult);
 			return;
 		}
+		enemyCompiler.ResetAttributes();
 		Debug.Log("Começou batalha");
 		List<BattleStatus> battleStatuses = new List<BattleStatus>();
 		BattleStatus status = battleManager.RunBattle();
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
 				// Imprime os textos dos rounds
 				actualRoundPanel = Instantiate(roundPanel, roundContent);
 				actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-				actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND]}");
+				actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND]-1}");
 				actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PlayerStatus(status));
 				actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(EnemyStatus(status));
 				battleStatuses.Add(status);

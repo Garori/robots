@@ -20,7 +20,7 @@ public class BattleManager : MonoBehaviour {
 
     public BattleStatus RunBattle() {
         isOver = 0;
-        round = 0;
+        round = 1;
         player.ResetAttributes();
         enemy.ResetAttributes();
         return new BattleStatus(player, enemy);

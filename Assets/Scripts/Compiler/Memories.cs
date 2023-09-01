@@ -7,13 +7,29 @@ public static class Memories
 	static Memories()
 	{
 		memories = new Cell[3][];
+		// memories[0] = new Cell[]{
+		// 	new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 4),
+		// 	new IfCell(new EvenCell(Commands.ROUND),1),
+		// 	new ActionCell(Commands.ATTACK),
+		// 	new ElseCell(new EvenCell(Commands.ROUND),1),
+		// 	new ActionCell(Commands.DEFEND),
+		// 	new EndCell(-6)
+		// };
+
+		// memories[0] = new Cell[]{
+		// 	new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 1),
+		// 	new ActionCell(Commands.ATTACK),
+		// 	new EndCell(-3)
+		// };
+
 		memories[0] = new Cell[]{
-			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 4),
-			new IfCell(new EvenCell(Commands.ROUND),1),
+			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 5),
 			new ActionCell(Commands.ATTACK),
-			new ElseCell(new EvenCell(Commands.ROUND),1),
 			new ActionCell(Commands.DEFEND),
-			new EndCell(-6)
+			new ActionCell(Commands.CHARGE),
+			new ActionCell(Commands.DODGE),
+			new ActionCell(Commands.HEAL),
+			new EndCell(-7)
 		};
 
 		memories[1] = new Cell[]{
