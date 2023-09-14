@@ -456,8 +456,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 797283227}
   m_HandleRect: {fileID: 797283226}
   m_Direction: 2
-  m_Value: 1.0000784
-  m_Size: 0.9788384
+  m_Value: 1.0000769
+  m_Size: 0.9788383
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12682,6 +12682,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 2719661090857773778, guid: 484f15dfa4c90c2458848b373ed50401, type: 3}
+      propertyPath: commandName
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 2719661090857773778, guid: 484f15dfa4c90c2458848b373ed50401, type: 3}
       propertyPath: panelManager
       value: 

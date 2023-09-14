@@ -25,10 +25,10 @@ public class Compiler : MonoBehaviour
         totalCells = memory.Length;
     }
 
-    public void ResetAttributes() 
+    public void ResetAttributes()
     {
         PC = -1;
-    } 
+    }
 
     public bool Compile(List<GameObject> blocks, ref string compileResult)
     {
@@ -133,39 +133,43 @@ public class Compiler : MonoBehaviour
 
             ComparatorCell comparatorCell = null;
 
-            if (comparatorCommand == Commands.EVEN)
+            switch (comparatorCommand)
             {
-                VariableController variableController = comparatorTransform.GetComponentInChildren<VariableController>();
-                if (variableController == null)
-                {
-                    compileResult = "COMPILATION ERROR: EVEN comparator without variable";
-                    return false;
-                }
+                case Commands.TRUE:
+                    comparatorCell = new TrueCell();
+                    break;
+                case Commands.EVEN:
+                    VariableController variableController = comparatorTransform.GetComponentInChildren<VariableController>();
+                    if (variableController == null)
+                    {
+                        compileResult = "COMPILATION ERROR: EVEN comparator without variable";
+                        return false;
+                    }
 
-                comparatorCell = new EvenCell(variableController.commandName);
-            }
-            else
-            {
-                VariableController variable1Controller = comparatorTransform.GetChild(0).GetComponentInChildren<VariableController>();
-                VariableController variable2Controller = comparatorTransform.GetChild(1).GetComponentInChildren<VariableController>();
-                if (variable1Controller == null || variable2Controller == null)
-                {
-                    compileResult = $"COMPILATION ERROR: {comparatorTransform.gameObject.name.ToUpper()} comparator without variables";
-                    return false;
-                }
+                    comparatorCell = new EvenCell(variableController.commandName);
+                    break;
+                default:
+                    VariableController variable1Controller = comparatorTransform.GetChild(0).GetComponentInChildren<VariableController>();
+                    VariableController variable2Controller = comparatorTransform.GetChild(1).GetComponentInChildren<VariableController>();
+                    if (variable1Controller == null || variable2Controller == null)
+                    {
+                        compileResult = $"COMPILATION ERROR: {comparatorTransform.gameObject.name.ToUpper()} comparator without variables";
+                        return false;
+                    }
 
-                switch (comparatorCommand)
-                {
-                    case Commands.EQUALS:
-                        comparatorCell = new EqualsCell(variable1Controller.commandName, variable2Controller.commandName);
-                        break;
-                    case Commands.NOT_EQUALS:
-                        comparatorCell = new NotEqualsCell(variable1Controller.commandName, variable2Controller.commandName);
-                        break;
-                    case Commands.GREATER:
-                        comparatorCell = new GreaterCell(variable1Controller.commandName, variable2Controller.commandName);
-                        break;
-                }
+                    switch (comparatorCommand)
+                    {
+                        case Commands.EQUALS:
+                            comparatorCell = new EqualsCell(variable1Controller.commandName, variable2Controller.commandName);
+                            break;
+                        case Commands.NOT_EQUALS:
+                            comparatorCell = new NotEqualsCell(variable1Controller.commandName, variable2Controller.commandName);
+                            break;
+                        case Commands.GREATER:
+                            comparatorCell = new GreaterCell(variable1Controller.commandName, variable2Controller.commandName);
+                            break;
+                    }
+                    break;
             }
 
             IConditionCell structureStart = null;

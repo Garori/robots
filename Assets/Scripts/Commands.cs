@@ -49,5 +49,6 @@ public enum Commands
     SIX,
     SEVEN,
     EIGHT,
-    NINE
+    NINE,
+    TRUE
 }
