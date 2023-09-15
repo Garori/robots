@@ -1,15 +1,20 @@
-public abstract class Cell {
+[System.Serializable]
+public abstract class Cell
+{
     public int jmp { get; set; }
 
-    public Cell() {
+    public Cell()
+    {
 
     }
 
-    public Cell(int jmp) {
+    public Cell(int jmp)
+    {
         this.jmp = jmp;
     }
 
-    public virtual bool getCond() {
+    public virtual bool getCond()
+    {
         return false;
     }
 }

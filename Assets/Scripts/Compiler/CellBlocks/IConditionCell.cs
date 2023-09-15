@@ -1,3 +1,4 @@
-public interface IConditionCell {
+public interface IConditionCell
+{
     public bool Evaluate(BattleStatus battleStatus);
 }

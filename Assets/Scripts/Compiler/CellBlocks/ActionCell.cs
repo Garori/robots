@@ -1,11 +1,15 @@
-class ActionCell : Cell {
+[System.Serializable]
+class ActionCell : Cell
+{
     public Commands action { get; set; }
 
-    public ActionCell(Commands action) : base() {
+    public ActionCell(Commands action) : base()
+    {
         this.action = action;
     }
 
-    public override string ToString() {
+    public override string ToString()
+    {
         return action.ToString();
     }
 }

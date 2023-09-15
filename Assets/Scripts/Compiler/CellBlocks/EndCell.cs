@@ -1,9 +1,13 @@
-class EndCell : Cell {
-    public EndCell(int jmp) : base(jmp) {
+[System.Serializable]
+class EndCell : Cell
+{
+    public EndCell(int jmp) : base(jmp)
+    {
 
     }
 
-    public EndCell() : base(0) {
+    public EndCell() : base(0)
+    {
 
     }
 }

@@ -1037,6 +1037,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b6eaafa79b26c49bc47dededc2816d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelSelectSceneName: LevelSelect
+  creatorModeSceneName: CustomCode
 --- !u!1 &1420707167
 GameObject:
   m_ObjectHideFlags: 0

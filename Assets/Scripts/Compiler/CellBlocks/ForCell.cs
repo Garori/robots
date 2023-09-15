@@ -1,3 +1,4 @@
+[System.Serializable]
 class ForCell : Cell, IConditionCell
 {
     private Commands variable;

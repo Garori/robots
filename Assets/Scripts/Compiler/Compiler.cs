@@ -10,7 +10,9 @@ public class Compiler : MonoBehaviour
     private int PC;
 
     private Cell[] memory;
+    public Cell[] Memory { get => memory; }
     private int totalCells;
+    public int TotalCells { get => totalCells; }
     [SerializeField] private bool debug;
 
     private void Start()
