@@ -10,9 +10,14 @@ public class LevelManager : MonoBehaviour
 			Debug.Log(medal.levelName + " " + medal.roundsMedal + " " + medal.sizeMedal);
 		}
 	}
+
 	public void LoadLevel(int level)
 	{
 		UserData.Instance.Level = level;
 		SceneManager.LoadScene("Battle");
+	}
+
+	public void BackButton() {
+		SceneManager.LoadScene("Menu");
 	}
 }
