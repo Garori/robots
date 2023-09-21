@@ -17,19 +17,19 @@ public class CellsContainer
         memory = compiler.Memory;
     }
 
-    public void Serialize()
+    public void Serialize(string fileName)
     {
         IFormatter formatter = new BinaryFormatter();
-        using (Stream stream = new FileStream("CellsContainer.bin", FileMode.Create, FileAccess.Write))
+        using (Stream stream = new FileStream("CustomCodes/" + fileName, FileMode.Create, FileAccess.Write))
         {
             formatter.Serialize(stream, this);
         }
     }
 
-    public static CellsContainer Deserialize()
+    public static CellsContainer Deserialize(string fileName)
     {
         IFormatter formatter = new BinaryFormatter();
-        using (Stream stream = new FileStream("CellsContainer.bin", FileMode.Open, FileAccess.Read))
+        using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
         {
             return (CellsContainer)formatter.Deserialize(stream);
         }

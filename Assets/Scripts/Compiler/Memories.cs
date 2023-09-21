@@ -3,6 +3,9 @@ using UnityEngine;
 public static class Memories
 {
 	private static Cell[][] memories;
+	private static Cell[][] customMemories;
+	public static int memoriesLength { get { return memories.Length; } }
+	public static int customMemoriesLength { get { return customMemories.Length; } }
 
 	static Memories()
 	{
@@ -62,10 +65,26 @@ public static class Memories
 			new ActionCell(Commands.CHARGE),
 			new ActionCell(Commands.ATTACK)
 		};
+
+		string[] customCodeFileNames = System.IO.Directory.GetFiles("CustomCodes");
+		customMemories = new Cell[customCodeFileNames.Length][];
+
+		for (int i = 0; i < customCodeFileNames.Length; i++)
+		{
+			CellsContainer cellsContainer = CellsContainer.Deserialize(customCodeFileNames[i]);
+			customMemories[i] = cellsContainer.memory;
+		}
 	}
 
-	public static Cell[] GetMemory(int index)
+	public static Cell[] GetMemory(int level)
 	{
-		return memories[index];
+		if (level < memoriesLength)
+		{
+			return memories[level];
+		}
+		else
+		{
+			return customMemories[level - memoriesLength];
+		}
 	}
 }

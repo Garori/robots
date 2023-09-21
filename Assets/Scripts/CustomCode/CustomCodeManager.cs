@@ -30,14 +30,16 @@ public class CustomCodeManager : MonoBehaviour
             compilePopupText.SetText(compileResult);
             return;
         }
+        string fileName = "1.bin";
         CellsContainer cellsContainer = new CellsContainer(compiler);
-        cellsContainer.Serialize();
+        cellsContainer.Serialize(fileName);
         Debug.Log("Código exportado");
     }
 
     public void ImportCode()
     {
-        CellsContainer cellsContainer = CellsContainer.Deserialize();
+        string fileName = "1.bin";
+        CellsContainer cellsContainer = CellsContainer.Deserialize(fileName);
         // panelManager.LoadCells();
         Debug.Log("Código importado");
         Debug.Log(cellsContainer.memory.Length);
