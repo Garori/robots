@@ -1,5 +1,8 @@
-public abstract class ComparatorCell {
-    public ComparatorCell() {
+[System.Serializable]
+public abstract class ComparatorCell
+{
+    public ComparatorCell()
+    {
 
     }
 

@@ -1,13 +1,17 @@
-public class EqualsCell : ComparatorCell {
+[System.Serializable]
+public class EqualsCell : ComparatorCell
+{
     private Commands variable1;
     private Commands variable2;
 
-    public EqualsCell(Commands variable1, Commands variable2) : base() {
+    public EqualsCell(Commands variable1, Commands variable2) : base()
+    {
         this.variable1 = variable1;
         this.variable2 = variable2;
     }
 
-    public override bool Evaluate(BattleStatus battleStatus) {
+    public override bool Evaluate(BattleStatus battleStatus)
+    {
         return battleStatus.values[variable1] == battleStatus.values[variable2];
     }
 }
