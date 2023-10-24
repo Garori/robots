@@ -163,10 +163,17 @@ public class PanelManager : MonoBehaviour
 	private void RemoveVariable(GameObject variable)
 	{
 		Transform variableTransform = variable.GetComponent<RectTransform>();
-		if (variableTransform.parent.CompareTag("Canvas")) return;
+		GameObject blockParent = variableTransform.parent.gameObject;
+		
+		while(!blockParent.CompareTag("Canvas") && !blockParent.CompareTag("StructureBlock"))
+		{
+			blockParent = blockParent.transform.parent.gameObject;
+		}
 
-		GameObject block = variableTransform.parent.parent.parent.parent.gameObject;
-		if (!blocks.Contains(block)) return;
+		if(blockParent.CompareTag("Canvas")) return;
+
+		Debug.Log(blockParent.name);
+		if (!blocks.Contains(blockParent)) return;
 
 		variableTransform.SetParent(canvas);
 	}
