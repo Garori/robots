@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
 				// Imprime os textos dos rounds
 				actualRoundPanel = Instantiate(roundPanel, roundContent);
 				actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-				actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND]-1}");
+				actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND] - 1}");
 				actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PlayerStatus(status));
 				actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(EnemyStatus(status));
 				battleStatuses.Add(status);
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
 		}
 		playerCompiled = false;
 
-		// StartCoroutine(animationManager.CO_StartAnimation(battleStatuses));
+		animationManager.StartAnimation(battleStatuses);
 	}
 
 	public void SetEnemyMemory(Cell[] memory)
@@ -134,5 +134,10 @@ public class GameManager : MonoBehaviour
 	public void ClearBlocks()
 	{
 		panelManager.Clear();
+	}
+
+	public void SkipAnimation()
+	{
+		animationManager.SkipAnimation();
 	}
 }
