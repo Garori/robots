@@ -185,7 +185,6 @@ public class PanelManager : MonoBehaviour
 		float maxWidth = minLineWidth;
 		for (int i = 0; i < lines.Count; i++)
 		{
-			Debug.Log(blocks[i].GetType());
 			GameObject blockGameObject = blocks[i].gameObject;
 			HorizontalLayoutGroup line = linesLayout[i];
 			blocksPrint += $"{blockGameObject.name}\n";

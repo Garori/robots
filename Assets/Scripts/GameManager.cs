@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour
 	{
 		string compileResult = "";
 		List<BlockController> blocks = panelManager.blocks;
-		Debug.Log(blocks[0].GetType());
 		playerCompiled = playerCompiler.Compile(blocks, ref compileResult);
 		if (!playerCompiled)
 		{
@@ -52,7 +51,7 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 		enemyCompiler.ResetAttributes();
-		Debug.Log("Começou batalha");
+		Debug.Log("Starting Battle");
 		List<BattleStatus> battleStatuses = new List<BattleStatus>();
 		BattleStatus status = battleManager.RunBattle();
 		foreach (Transform child in roundContent.transform)

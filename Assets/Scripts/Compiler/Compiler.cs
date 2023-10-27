@@ -45,7 +45,6 @@ public class Compiler : MonoBehaviour
         ResetAttributes();
         foreach (BlockController block in blocks)
         {
-            Debug.Log(block.GetType());
             PC++;
             Commands command = block.commandName;
             switch (command)
@@ -69,7 +68,6 @@ public class Compiler : MonoBehaviour
                 memory[PC] = new EndCell();
 
                 int lastStructureIndex = structuresStack.Pop();
-                Debug.Log(lastStructureIndex);
                 Cell lastStructure = memory[lastStructureIndex];
                 lastStructure.jmp = PC - lastStructureIndex;
 
