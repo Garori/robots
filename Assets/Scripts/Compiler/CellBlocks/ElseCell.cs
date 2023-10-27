@@ -1,20 +1,13 @@
 [System.Serializable]
-class ElseCell : Cell, IConditionCell
+class ElseCell : Cell
 {
-    public ComparatorCell comparatorCell { get; set; }
-
-    public ElseCell(ComparatorCell comparatorCell, int jmp) : base(jmp)
+    public ElseCell(int jmp) : base(jmp)
     {
-        this.comparatorCell = comparatorCell;
+
     }
 
-    public ElseCell(ComparatorCell comparatorCell) : base()
+    public ElseCell() : base(0)
     {
-        this.comparatorCell = comparatorCell;
-    }
 
-    public bool Evaluate(BattleStatus battleStatus)
-    {
-        return !comparatorCell.Evaluate(battleStatus);
     }
 }

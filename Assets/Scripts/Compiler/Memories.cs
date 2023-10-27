@@ -36,14 +36,13 @@ public static class Memories
 		};
 
 		memories[1] = new Cell[]{
-			new WhileCell (new TrueCell(), 6),
-			new IfCell (new GreaterCell(Commands.ENEMY_ACTUAL_HEALTH, Commands.ENEMY_MAX_HEALTH_HALF), 1),
+			new WhileCell (new TrueCell(), 5),
+			new IfCell (new GreaterCell(Commands.ENEMY_ACTUAL_HEALTH, Commands.ENEMY_MAX_HEALTH_HALF), 2),
 			new ActionCell(Commands.CHARGE),
-			new EndCell(),
-			new ElseCell (new GreaterCell(Commands.ENEMY_ACTUAL_HEALTH, Commands.ENEMY_MAX_HEALTH_HALF), 1),
+			new ElseCell (1),
 			new ActionCell(Commands.ATTACK),
 			new EndCell(),
-			new EndCell(-8)
+			new EndCell(-7)
 		};
 
 		memories[2] = new Cell[]{

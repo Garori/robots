@@ -93,11 +93,8 @@ public class Compiler : MonoBehaviour
                     return false;
                 }
 
-                memory[PC] = new EndCell();
                 lastStructure.jmp = PC - lastStructureIndex;
-
-                PC++;
-                memory[PC] = new ElseCell(((IfCell)lastStructure).comparatorCell);
+                memory[PC] = new ElseCell();
                 structuresStack.Push(PC);
 
                 continue;
@@ -219,6 +216,9 @@ public class Compiler : MonoBehaviour
                     JumpCond(c, status);
                     break;
                 case EndCell c:
+                    Jump(c);
+                    break;
+                case ElseCell c:
                     Jump(c);
                     break;
             }
