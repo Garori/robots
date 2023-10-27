@@ -5,15 +5,16 @@ using UnityEngine.EventSystems;
 
 public class VariableController : BlockController
 {
+    public BlockSlotController blockSlot;
     public bool canUseInFor;
     protected override void OnBeginDragAction()
     {
-        EventManager.onVariableExit(gameObject);
+        EventManager.onVariableExit(this);
     }
 
     protected override void OnEndDragAction()
     {
-        EventManager.onVariableEnter(gameObject, colliding);
+        EventManager.onVariableEnter(this, colliding.GetComponent<BlockSlotController>());
     }
 
     protected override bool OnValidTriggerEnter2D(Collider2D other)

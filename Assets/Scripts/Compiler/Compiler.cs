@@ -32,7 +32,7 @@ public class Compiler : MonoBehaviour
         PC = -1;
     }
 
-    public bool Compile(List<GameObject> blocks, ref string compileResult)
+    public bool Compile(List<BlockController> blocks, ref string compileResult)
     {
         if (blocks.Count > maxBlocks)
         {
@@ -43,10 +43,11 @@ public class Compiler : MonoBehaviour
         bool hasAction = false;
 
         ResetAttributes();
-        foreach (GameObject block in blocks)
+        foreach (BlockController block in blocks)
         {
+            Debug.Log(block.GetType());
             PC++;
-            Commands command = block.GetComponent<BlockController>().commandName;
+            Commands command = block.commandName;
             switch (command)
             {
                 case Commands.ATTACK:
@@ -104,7 +105,8 @@ public class Compiler : MonoBehaviour
             }
             if (command == Commands.FOR)
             {
-                VariableController variableController = block.GetComponentInChildren<VariableController>();
+                // Log the type of block object
+                VariableController variableController = ((block as ForController).variableSlot.childBlock) as VariableController;
                 if (variableController == null)
                 {
                     compileResult = "COMPILATION ERROR: FOR block without number";
@@ -123,7 +125,7 @@ public class Compiler : MonoBehaviour
                 structuresStack.Push(PC);
                 continue;
             }
-            ComparatorController comparatorController = block.GetComponentInChildren<ComparatorController>();
+            ComparatorController comparatorController = ((block as StructureController).comparatorSlot.childBlock) as ComparatorController;
             if (comparatorController == null)
             {
                 compileResult = "COMPILATION ERROR: WHILE or IF block without condition";
@@ -131,7 +133,6 @@ public class Compiler : MonoBehaviour
             }
 
             Commands comparatorCommand = comparatorController.commandName;
-            Transform comparatorTransform = comparatorController.gameObject.GetComponent<RectTransform>();
 
             ComparatorCell comparatorCell = null;
 
@@ -141,7 +142,7 @@ public class Compiler : MonoBehaviour
                     comparatorCell = new TrueCell();
                     break;
                 case Commands.EVEN:
-                    VariableController variableController = comparatorTransform.GetComponentInChildren<VariableController>();
+                    VariableController variableController = comparatorController.variableSlot1.childBlock as VariableController;
                     if (variableController == null)
                     {
                         compileResult = "COMPILATION ERROR: EVEN comparator without variable";
@@ -151,11 +152,11 @@ public class Compiler : MonoBehaviour
                     comparatorCell = new EvenCell(variableController.commandName);
                     break;
                 default:
-                    VariableController variable1Controller = comparatorTransform.GetChild(0).GetComponentInChildren<VariableController>();
-                    VariableController variable2Controller = comparatorTransform.GetChild(1).GetComponentInChildren<VariableController>();
+                    VariableController variable1Controller = comparatorController.variableSlot1.childBlock as VariableController;
+                    VariableController variable2Controller = comparatorController.variableSlot2.childBlock as VariableController;
                     if (variable1Controller == null || variable2Controller == null)
                     {
-                        compileResult = $"COMPILATION ERROR: {comparatorTransform.gameObject.name.ToUpper()} comparator without variables";
+                        compileResult = $"COMPILATION ERROR: {comparatorController.gameObject.name.ToUpper()} comparator without variables";
                         return false;
                     }
 

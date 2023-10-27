@@ -8,6 +8,7 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	[Header("Game Objects")]
 	[SerializeField] private PanelManager panelManager;
 	[SerializeField] private Canvas canvas;
+	private RectTransform canvasTransform;
 
 	private RectTransform rectTransform;
 	private CanvasGroup canvasGroup;
@@ -17,6 +18,7 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
 	protected GameObject colliding;
 	private bool newBlock;
+	public bool isInPanel;
 
 	[Header("Enum")]
 	public Commands commandName;
@@ -24,10 +26,13 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	private void Start()
 	{
 		newBlock = true;
+		isInPanel = false;
 
 		rectTransform = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 		boxCollider2D = GetComponent<BoxCollider2D>();
+
+		canvasTransform = canvas.GetComponent<RectTransform>();
 
 		scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;
 	}
@@ -48,6 +53,7 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 			newBlock = false;
 		}
 		canvasGroup.alpha = .8f;
+		ResetParent();
 		OnBeginDragAction();
 	}
 
@@ -99,5 +105,16 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	protected virtual bool OnValidTriggerExit2D(Collider2D other)
 	{
 		return true;
+	}
+
+	public void SetParent(Transform parent)
+	{
+		rectTransform.SetParent(parent);
+		rectTransform.anchoredPosition = Vector2.zero;
+	}
+
+	protected void ResetParent()
+	{
+		rectTransform.SetParent(canvasTransform);
 	}
 }

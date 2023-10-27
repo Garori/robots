@@ -15330,6 +15330,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1717061594}
     m_Modifications:
+    - target: {fileID: 473922330357844380, guid: 8da332259dd0e3447970a6a81b6cdef5, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 1717061593}
+    - target: {fileID: 473922330357844380, guid: 8da332259dd0e3447970a6a81b6cdef5, type: 3}
+      propertyPath: panelManager
+      value: 
+      objectReference: {fileID: 2125954514}
     - target: {fileID: 582141179446007082, guid: 8da332259dd0e3447970a6a81b6cdef5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
