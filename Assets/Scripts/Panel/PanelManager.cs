@@ -28,7 +28,7 @@ public class PanelManager : MonoBehaviour
 	// Blocks and lines arrays
 	private int activeLines;
 	private List<GameObject> lines;
-	public List<GameObject> blocks { get; set; }
+	public List<BlockController> blocks { get; set; }
 
 	// Panel size
 	public float panelX { get; set; }
@@ -37,7 +37,7 @@ public class PanelManager : MonoBehaviour
 	{
 		activeLines = 0;
 
-		blocks = new List<GameObject>();
+		blocks = new List<BlockController>();
 		lines = new List<GameObject>();
 		linesLayout = new List<HorizontalLayoutGroup>();
 	}
@@ -71,111 +71,111 @@ public class PanelManager : MonoBehaviour
 		EventManager.VariableExit += RemoveVariable;
 	}
 
-	private void InsertBlock(GameObject block, GameObject line)
+	private void InsertBlock(BlockController block, GameObject line)
 	{
+		// Pega o index da linha e adiciona o bloco na lista
 		int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
-		Debug.Log(index);
-		Debug.Log(activeLines);
-
 		blocks.Insert(index, block);
 
+		// Cria a linha para o bloco
 		GameObject newLine = Instantiate(lineObjectPrefab, linesContent);
 		lines.Insert(index, newLine);
+		activeLines++;
 		linesLayout.Insert(index, newLine.GetComponent<HorizontalLayoutGroup>());
 		newLine.transform.SetSiblingIndex(index);
 
-		RectTransform blockTransform = block.GetComponent<RectTransform>();
-		blockTransform.SetParent(newLine.GetComponent<RectTransform>());
-
-		activeLines++;
+		// Adiciona o bloco na linha
+		block.SetParent(newLine.GetComponent<RectTransform>());
+		block.isInPanel = true;
 
 		OrganizeBlocks();
 	}
 
-	private void RemoveBlock(GameObject block)
+	private void RemoveBlock(BlockController block)
 	{
+		// Verifica se o bloco está no painel
+		if (!block.isInPanel) return;
+		block.isInPanel = false;
+
+		// Remove da lista de blocos
 		int index = blocks.IndexOf(block);
-		if (index == -1) return;
-
 		blocks.RemoveAt(index);
-		block.GetComponent<RectTransform>().SetParent(canvas); // Volta o bloco como filho de canvas para poder arrastar
 
+		// Remove a linha correspondente do painel 
 		GameObject line = lines[index];
 		lines.RemoveAt(index);
 		linesLayout.RemoveAt(index);
-
 		Destroy(line);
 		activeLines--;
 
 		OrganizeBlocks();
 	}
 
-	private void InsertComparator(GameObject comparator, GameObject blockCondition)
+	private void InsertComparator(ComparatorController comparator, BlockSlotController blockSlot)
 	{
-		Transform blockConditionTransform = blockCondition.GetComponent<RectTransform>();
-		if (blockConditionTransform.childCount != 0)
+		// Verifica se o espaco esta ocupado
+		if (blockSlot.isOccupied())
 		{
-			Destroy(comparator);
+			Destroy(comparator.gameObject);
 			return;
 		}
 
-		GameObject block = blockConditionTransform.parent.gameObject;
-		if (!blocks.Contains(block))
+		// Verifica se o bloco esta no painel
+		if (!blockSlot.isInPanel)
 		{
-			Destroy(comparator);
+			Destroy(comparator.gameObject);
 			return;
 		}
 
-		comparator.GetComponent<RectTransform>().SetParent(blockConditionTransform);
+		// Define parent de comparador
+		comparator.isInPanel = true;
+		Transform blockSlotTransform = blockSlot.GetComponent<RectTransform>();
+		comparator.SetParent(blockSlotTransform);
+
+		// Define espaco parent de comparador como blockSlot
+		comparator.structureSlot = blockSlot;
+		// E espaco child de blockSlot como comparador
+		blockSlot.setChildBlock(comparator);
 	}
 
-	private void RemoveComparator(GameObject comparator)
+	private void RemoveComparator(ComparatorController comparator)
 	{
-		Transform comparatorTransform = comparator.GetComponent<RectTransform>();
-		if (comparatorTransform.parent.CompareTag("Canvas")) return;
+		if (!comparator.isInPanel) return;
+		comparator.isInPanel = false;
 
-		GameObject block = comparatorTransform.parent.parent.gameObject;
-		if (!blocks.Contains(block)) return;
-
-		comparatorTransform.SetParent(canvas);
+		comparator.structureSlot.removeChildBlock();
 	}
 
-	private void InsertVariable(GameObject variable, GameObject conditionVariable)
+	private void InsertVariable(VariableController variable, BlockSlotController variableSlot)
 	{
-		Transform conditionVariableTransform = conditionVariable.GetComponent<RectTransform>();
-		Debug.Log(conditionVariableTransform.childCount);
-		if (conditionVariableTransform.childCount != 0)
+		if (variableSlot.isOccupied())
 		{
-			Destroy(variable);
+			Destroy(variable.gameObject);
 			return;
 		}
 
-		if (!blocks.Contains(conditionVariableTransform.parent.parent.parent.gameObject) &&
-			!blocks.Contains(conditionVariableTransform.parent.gameObject))
+		if (!variableSlot.isInPanel)
 		{
-			Destroy(variable);
+			Destroy(variable.gameObject);
 			return;
 		}
 
-		variable.GetComponent<RectTransform>().SetParent(conditionVariableTransform);
+		// Define parent da variavel
+		variable.isInPanel = true;
+		Transform variableSlotTransform = variableSlot.GetComponent<RectTransform>();
+		variable.SetParent(variableSlotTransform);
+
+		variable.blockSlot = variableSlot;
+		variableSlot.setChildBlock(variable);
 	}
 
-	private void RemoveVariable(GameObject variable)
+	private void RemoveVariable(VariableController variable)
 	{
-		Transform variableTransform = variable.GetComponent<RectTransform>();
-		GameObject blockParent = variableTransform.parent.gameObject;
-		
-		while(!blockParent.CompareTag("Canvas") && !blockParent.CompareTag("StructureBlock"))
-		{
-			blockParent = blockParent.transform.parent.gameObject;
-		}
+		// Verifica se o bloco esta no painel
+		if (!variable.isInPanel) return;
+		variable.isInPanel = false;
 
-		if(blockParent.CompareTag("Canvas")) return;
-
-		Debug.Log(blockParent.name);
-		if (!blocks.Contains(blockParent)) return;
-
-		variableTransform.SetParent(canvas);
+		variable.blockSlot.removeChildBlock();
 	}
 
 	private void OrganizeBlocks()
@@ -185,10 +185,12 @@ public class PanelManager : MonoBehaviour
 		float maxWidth = minLineWidth;
 		for (int i = 0; i < lines.Count; i++)
 		{
+			Debug.Log(blocks[i].GetType());
+			GameObject blockGameObject = blocks[i].gameObject;
 			HorizontalLayoutGroup line = linesLayout[i];
-			blocksPrint += $"{blocks[i].name}\n";
+			blocksPrint += $"{blockGameObject.name}\n";
 
-			if (blocks[i].CompareTag("ElseBlock") || blocks[i].CompareTag("EndBlock")) leftPadding -= tabPadding;
+			if (blockGameObject.CompareTag("ElseBlock") || blockGameObject.CompareTag("EndBlock")) leftPadding -= tabPadding;
 			leftPadding = Mathf.Max(leftPadding, minPadding);
 
 			RectOffset padding = new RectOffset(
@@ -199,10 +201,10 @@ public class PanelManager : MonoBehaviour
 			);
 			line.padding = padding;
 
-			RectTransform blockTransform = blocks[i].GetComponent<RectTransform>();
+			RectTransform blockTransform = blockGameObject.GetComponent<RectTransform>();
 			maxWidth = Mathf.Max(maxWidth, leftPadding + blockTransform.sizeDelta.x * blockTransform.localScale.x);
 
-			if (blocks[i].CompareTag("ElseBlock") || blocks[i].CompareTag("StructureBlock") || blocks[i].CompareTag("ForBlock")) leftPadding += tabPadding;
+			if (blockGameObject.CompareTag("ElseBlock") || blockGameObject.CompareTag("StructureBlock") || blockGameObject.CompareTag("ForBlock")) leftPadding += tabPadding;
 		}
 
 		foreach (GameObject line in lines)

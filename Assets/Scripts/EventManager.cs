@@ -2,51 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventManager : MonoBehaviour {
+public class EventManager : MonoBehaviour
+{
     /*
         ====================
                 PANEL
         ====================
     */
-    public delegate void InsertBlock(GameObject block, GameObject line);
+    public delegate void InsertBlock(BlockController block, GameObject line);
     public static event InsertBlock BlockEnter;
 
-    public delegate void RemoveBlock(GameObject block);
+    public delegate void RemoveBlock(BlockController block);
     public static event RemoveBlock BlockExit;
 
-    public delegate void InsertComparator(GameObject comparator, GameObject blockCondition);
+    public delegate void InsertComparator(ComparatorController comparator, BlockSlotController blockCondition);
     public static event InsertComparator ComparatorEnter;
 
-    public delegate void RemoveComparator(GameObject comparator);
+    public delegate void RemoveComparator(ComparatorController comparator);
     public static event RemoveComparator ComparatorExit;
 
-    public delegate void InsertVariable(GameObject variable, GameObject conditionVariable);
+    public delegate void InsertVariable(VariableController variable, BlockSlotController conditionVariable);
     public static event InsertVariable VariableEnter;
 
-    public delegate void RemoveVariable(GameObject variable);
+    public delegate void RemoveVariable(VariableController variable);
     public static event RemoveVariable VariableExit;
 
-    public static void onBlockEnter(GameObject block, GameObject line) {
+    public static void onBlockEnter(BlockController block, GameObject line)
+    {
         if (BlockEnter != null) BlockEnter(block, line);
     }
 
-    public static void onBlockExit(GameObject block) {
+    public static void onBlockExit(BlockController block)
+    {
         if (BlockExit != null) BlockExit(block);
     }
 
-    public static void onComparatorEnter(GameObject comparator, GameObject blockCondition) {
+    public static void onComparatorEnter(ComparatorController comparator, BlockSlotController blockCondition)
+    {
         if (ComparatorEnter != null) ComparatorEnter(comparator, blockCondition);
     }
 
-    public static void onComparatorExit(GameObject comparator) {
+    public static void onComparatorExit(ComparatorController comparator)
+    {
         if (ComparatorExit != null) ComparatorExit(comparator);
     }
 
-    public static void onVariableEnter(GameObject variable, GameObject conditionVariable) {
+    public static void onVariableEnter(VariableController variable, BlockSlotController conditionVariable)
+    {
         if (VariableEnter != null) VariableEnter(variable, conditionVariable);
     }
 
-    public static void onVariableExit(GameObject variable) {
+    public static void onVariableExit(VariableController variable)
+    {
         if (VariableExit != null) VariableExit(variable);
     }
 }
