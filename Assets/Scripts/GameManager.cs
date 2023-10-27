@@ -42,7 +42,8 @@ public class GameManager : MonoBehaviour
 	public void RunBattle()
 	{
 		string compileResult = "";
-		List<GameObject> blocks = panelManager.blocks;
+		List<BlockController> blocks = panelManager.blocks;
+		Debug.Log(blocks[0].GetType());
 		playerCompiled = playerCompiler.Compile(blocks, ref compileResult);
 		if (!playerCompiled)
 		{

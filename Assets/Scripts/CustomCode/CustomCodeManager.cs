@@ -22,7 +22,7 @@ public class CustomCodeManager : MonoBehaviour
     public void ExportCode()
     {
         string compileResult = "";
-        List<GameObject> blocks = panelManager.blocks;
+        List<BlockController> blocks = panelManager.blocks;
         bool compiled = compiler.Compile(blocks, ref compileResult);
         if (!compiled)
         {
