@@ -18,6 +18,9 @@ public class CustomCodeManager : MonoBehaviour
 
     [Header("Game Objects")]
     public TMP_Text compilePopupText;
+    public TMP_InputField[] inputFields;
+
+    public Dictionary<string, int> variables;
 
     public void ExportCode()
     {
@@ -34,7 +37,15 @@ public class CustomCodeManager : MonoBehaviour
         int memoryCount = Directory.GetFiles("CustomCodes").Length;
         string fileName = (memoryCount + 1) + ".bin";
 
-        CellsContainer cellsContainer = new CellsContainer(compiler);
+        variables = new Dictionary<string, int>();
+        foreach (TMP_InputField inputField in inputFields)
+        {
+            string inputFieldName = inputField.name;
+            int inputFieldValue = int.Parse(inputField.text);
+            variables.Add(inputFieldName, inputFieldValue);
+        }
+
+        CellsContainer cellsContainer = new CellsContainer(compiler, variables);
         cellsContainer.Serialize(fileName);
         Debug.Log("Código exportado");
     }
