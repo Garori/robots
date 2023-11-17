@@ -12,11 +12,6 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] private ButtonController customLevelButtonPrefab;
 	private void Start()
 	{
-		foreach (Medal medal in UserData.Instance.medals)
-		{
-			Debug.Log(medal.levelName + " " + medal.roundsMedal + " " + medal.sizeMedal);
-		}
-
 		for (int i = 0; i < Memories.memoriesLength; i++)
 		{
 			ButtonController button = Instantiate(levelButtonPrefab, transform);
@@ -32,7 +27,7 @@ public class LevelManager : MonoBehaviour
 
 	public void LoadLevel(int level)
 	{
-		UserData.Instance.Level = level;
+		BattleData.selectedLevel = level;
 		SceneManager.LoadScene("Battle");
 	}
 

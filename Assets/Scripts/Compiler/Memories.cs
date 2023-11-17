@@ -2,28 +2,31 @@ using UnityEngine;
 
 public static class Memories
 {
-	private static Cell[][] memories;
-	private static Cell[][] customMemories;
+	private static CellsContainer[] memories;
+	private static CellsContainer[] customMemories;
 	public static int memoriesLength { get { return memories.Length; } }
 	public static int customMemoriesLength { get { return customMemories.Length; } }
 
 	static Memories()
 	{
+		memories = GetFiles("Memories");
+		customMemories = GetFiles("CustomMemories");
+		/*
 		memories = new Cell[3][];
-		// memories[0] = new Cell[]{
-		// 	new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 4),
-		// 	new IfCell(new EvenCell(Commands.ROUND),1),
-		// 	new ActionCell(Commands.ATTACK),
-		// 	new ElseCell(new EvenCell(Commands.ROUND),1),
-		// 	new ActionCell(Commands.DEFEND),
-		// 	new EndCell(-6)
-		// };
+		memories[0] = new Cell[]{
+			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 4),
+			new IfCell(new EvenCell(Commands.ROUND),1),
+			new ActionCell(Commands.ATTACK),
+			new ElseCell(new EvenCell(Commands.ROUND),1),
+			new ActionCell(Commands.DEFEND),
+			new EndCell(-6)
+		};
 
-		// memories[0] = new Cell[]{
-		// 	new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 1),
-		// 	new ActionCell(Commands.ATTACK),
-		// 	new EndCell(-3)
-		// };
+		memories[0] = new Cell[]{
+			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 1),
+			new ActionCell(Commands.ATTACK),
+			new EndCell(-3)
+		};
 
 		memories[0] = new Cell[]{
 			new WhileCell(new EqualsCell(Commands.ZERO, Commands.ZERO), 5),
@@ -65,19 +68,23 @@ public static class Memories
 			new ActionCell(Commands.CHARGE),
 			new ActionCell(Commands.CHARGE),
 			new ActionCell(Commands.ATTACK)
-		};
-
-		string[] customCodeFileNames = System.IO.Directory.GetFiles("CustomCodes");
-		customMemories = new Cell[customCodeFileNames.Length][];
-
-		for (int i = 0; i < customCodeFileNames.Length; i++)
-		{
-			CellsContainer cellsContainer = CellsContainer.Deserialize(customCodeFileNames[i]);
-			customMemories[i] = cellsContainer.memory;
-		}
+		};*/
 	}
 
-	public static Cell[] GetMemory(int level)
+	public static CellsContainer[] GetFiles(string folderName)
+	{
+		string[] fileNames = System.IO.Directory.GetFiles(folderName);
+		CellsContainer[] memories = new CellsContainer[fileNames.Length];
+
+		for (int i = 0; i < fileNames.Length; i++)
+		{
+			memories[i] = CellsContainer.Deserialize(fileNames[i]);
+		}
+
+		return memories;
+	}
+
+	public static CellsContainer GetMemory(int level)
 	{
 		if (level < memoriesLength)
 		{

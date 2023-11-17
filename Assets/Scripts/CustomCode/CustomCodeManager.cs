@@ -45,7 +45,7 @@ public class CustomCodeManager : MonoBehaviour
             variables.Add(inputFieldName, inputFieldValue);
         }
 
-        CellsContainer cellsContainer = new CellsContainer(compiler, variables);
+        CellsContainer cellsContainer = new CellsContainer(compiler, variables, null);
         cellsContainer.Serialize(fileName);
         Debug.Log("Código exportado");
     }

@@ -24,11 +24,11 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private Compiler playerCompiler;
 	[SerializeField] private Compiler enemyCompiler;
 	private bool playerCompiled;
-	private Cell[] memory;
+	private CellsContainer memory;
 
 	private void Start()
 	{
-		memory = Memories.GetMemory(UserData.Instance.Level);
+		memory = Memories.GetMemory(BattleData.selectedLevel);
 		SetEnemyMemory(memory);
 
 		foreach (Transform child in roundContent.transform)
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
 			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "WINNER" : "LOSER");
 
 			// Atualiza as medalhas
-			UserData.Instance.SetMedals(status.values[Commands.ROUND], blocks.Count);
+			memory.SetMedals(status.values[Commands.ROUND], blocks.Count);
 		}
 		catch (ActionTookTooLongException)
 		{
@@ -110,9 +110,9 @@ public class GameManager : MonoBehaviour
 		animationManager.StartAnimation(battleStatuses);
 	}
 
-	public void SetEnemyMemory(Cell[] memory)
+	public void SetEnemyMemory(CellsContainer memory)
 	{
-		enemyCompiler.Compile(memory);
+		enemyCompiler.Compile(memory.memory);
 	}
 
 	private string PlayerStatus(BattleStatus battleStatus)
