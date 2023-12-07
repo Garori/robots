@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
 		enemyCompiler.ResetAttributes();
 		Debug.Log("Starting Battle");
 		List<BattleStatus> battleStatuses = new List<BattleStatus>();
-		BattleStatus status = battleManager.RunBattle();
+		BattleStatus status = battleManager.InitBattleAttributes(memory.playerFighterAttributes, memory.enemyFighterAttributes);
 		foreach (Transform child in roundContent.transform)
 		{
 			Destroy(child.gameObject);

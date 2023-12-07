@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleManager : MonoBehaviour {
+public class BattleManager : MonoBehaviour
+{
     [Header("Managers")]
     public GameManager manager;
 
@@ -18,32 +19,40 @@ public class BattleManager : MonoBehaviour {
     private Commands playerAction;
     private Commands enemyAction;
 
-    public BattleStatus RunBattle() {
+    public BattleStatus InitBattleAttributes(FighterAttributes playerAttributes, FighterAttributes enemyAttributes)
+    {
         isOver = 0;
         round = 1;
-        player.ResetAttributes();
-        enemy.ResetAttributes();
+        player.Init(playerAttributes);
+        enemy.Init(enemyAttributes);
         return new BattleStatus(player, enemy);
     }
 
-    public BattleStatus PlayRound(Commands[] actions) {
+    public BattleStatus PlayRound(Commands[] actions)
+    {
         round++;
         if (round > maxRounds) throw new MaxNumberOfRoundsException();
 
         playerAction = actions[0];
         enemyAction = actions[1];
         bool[] attacks = execute();
+        player.PassTurn();
+        enemy.PassTurn();
         checkWin();
 
         return new BattleStatus(player, enemy, round, isOver, playerAction, enemyAction, attacks[0], attacks[1]);
     }
 
-    private bool[] execute() {
+    private bool[] execute()
+    {
         bool playerSuccess, enemySuccess;
-        if ((int)playerAction <= (int)enemyAction) {
+        if ((int)playerAction <= (int)enemyAction)
+        {
             playerSuccess = player.executeAction(playerAction, enemy);
             enemySuccess = enemy.executeAction(enemyAction, player);
-        } else {
+        }
+        else
+        {
             enemySuccess = enemy.executeAction(enemyAction, player);
             playerSuccess = player.executeAction(playerAction, enemy);
         }
@@ -54,7 +63,8 @@ public class BattleManager : MonoBehaviour {
         return attacks;
     }
 
-    private void checkWin() {
+    private void checkWin()
+    {
         if (!player.isDead() && !enemy.isDead()) return;
 
         if (player.isDead()) isOver = -1;

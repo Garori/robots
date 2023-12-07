@@ -34,18 +34,60 @@ public class CustomCodeManager : MonoBehaviour
             return;
         }
 
-        int memoryCount = Directory.GetFiles("CustomCodes").Length;
+        int memoryCount = Directory.GetFiles("CustomMemories").Length;
         string fileName = (memoryCount + 1) + ".bin";
 
-        variables = new Dictionary<string, int>();
+        int roundMedal = 0;
+        int sizeMedal = 0;
+        int hpPlayer = 0;
+        int hpEnemy = 0;
+        int dmgPlayer = 0;
+        int dmgEnemy = 0;
+        int defPlayer = 0;
+        int defEnemy = 0;
+        int chaPlayer = 0;
+        int chaEnemy = 0;
         foreach (TMP_InputField inputField in inputFields)
         {
-            string inputFieldName = inputField.name;
-            int inputFieldValue = int.Parse(inputField.text);
-            variables.Add(inputFieldName, inputFieldValue);
+            switch (inputField.name)
+            {
+                case "RoundMedal":
+                    roundMedal = int.Parse(inputField.text);
+                    break;
+                case "SizeMedal":
+                    sizeMedal = int.Parse(inputField.text);
+                    break;
+                case "HPPlayer":
+                    hpPlayer = int.Parse(inputField.text);
+                    break;
+                case "HPEnemy":
+                    hpEnemy = int.Parse(inputField.text);
+                    break;
+                case "DmgPlayer":
+                    dmgPlayer = int.Parse(inputField.text);
+                    break;
+                case "DmgEnemy":
+                    dmgEnemy = int.Parse(inputField.text);
+                    break;
+                case "DefPlayer":
+                    defPlayer = int.Parse(inputField.text);
+                    break;
+                case "DefEnemy":
+                    defEnemy = int.Parse(inputField.text);
+                    break;
+                case "ChaPlayer":
+                    chaPlayer = int.Parse(inputField.text);
+                    break;
+                case "ChaEnemy":
+                    chaEnemy = int.Parse(inputField.text);
+                    break;
+            }
         }
+        Medal medal = new Medal(roundMedal, sizeMedal);
+        FighterAttributes playerFighter = new FighterAttributes(hpPlayer, dmgPlayer, defPlayer, chaPlayer);
+        FighterAttributes enemyFighter = new FighterAttributes(hpEnemy, dmgEnemy, defEnemy, chaEnemy);
 
-        CellsContainer cellsContainer = new CellsContainer(compiler, variables, null);
+        CellsContainer cellsContainer = new CellsContainer(compiler, playerFighter, enemyFighter, medal);
         cellsContainer.Serialize(fileName);
         Debug.Log("Código exportado");
     }

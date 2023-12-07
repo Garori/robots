@@ -10,14 +10,16 @@ public class CellsContainer
 {
     public int totalCells;
     public Cell[] memory { get; set; }
-    public Dictionary<string, int> variables { get; set; }
+    public FighterAttributes playerFighterAttributes { get; set; }
+    public FighterAttributes enemyFighterAttributes { get; set; }
     public Medal medal { get; set; }
 
-    public CellsContainer(Compiler compiler, Dictionary<string, int> variables, Medal medal)
+    public CellsContainer(Compiler compiler, FighterAttributes playerFighterAttributes, FighterAttributes enemyFighterAttributes, Medal medal)
     {
         this.totalCells = compiler.TotalCells;
         this.memory = compiler.Memory;
-        this.variables = variables;
+        this.playerFighterAttributes = playerFighterAttributes;
+        this.enemyFighterAttributes = enemyFighterAttributes;
         this.medal = medal;
     }
 
@@ -30,11 +32,10 @@ public class CellsContainer
         }
 
         CellsContainer cellsContainer = Deserialize("CustomMemories/" + fileName);
-        // print every variable
-        foreach (KeyValuePair<string, int> variable in cellsContainer.variables)
-        {
-            Debug.Log(variable.Key + ": " + variable.Value);
-        }
+
+        Debug.Log(cellsContainer.playerFighterAttributes.ToString());
+        Debug.Log(cellsContainer.enemyFighterAttributes.ToString());
+        Debug.Log(cellsContainer.medal.ToString());
     }
 
     public static CellsContainer Deserialize(string fileName)
