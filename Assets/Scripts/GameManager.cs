@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
 	[Header("Game Objects")]
 	public TMP_Text compilePopupText;
+	public GameObject battlePanel;
 	public GameObject roundPanel;
 	public GameObject roundError;
 	public RectTransform roundContent;
@@ -108,6 +109,10 @@ public class GameManager : MonoBehaviour
 		playerCompiled = false;
 
 		animationManager.StartAnimation(battleStatuses);
+
+		// show debug panel when code is executed
+		battlePanel.SetActive(true);
+		panelManager.gameObject.SetActive(false);
 	}
 
 	public void SetEnemyMemory(CellsContainer memory)
@@ -139,5 +144,11 @@ public class GameManager : MonoBehaviour
 	public void SkipAnimation()
 	{
 		animationManager.SkipAnimation();
+	}
+
+	public void ShowDebug()
+	{
+		battlePanel.SetActive(!battlePanel.activeSelf);
+		panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
 	}
 }
