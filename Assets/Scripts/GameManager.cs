@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
 	[Header("Game Objects")]
 	public TMP_Text compilePopupText;
 	public GameObject battlePanel;
-	public GameObject upperPanel;
 	public GameObject roundPanel;
 	public GameObject roundError;
 	public RectTransform roundContent;
@@ -27,10 +26,6 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private Compiler enemyCompiler;
 	private bool playerCompiled;
 	private CellsContainer memory;
-
-	[Header("Drawer Animation")]
-	private IEnumerator slidingAnimation;
-	private bool isSliding;
 
 	private void Start()
 	{
@@ -43,7 +38,6 @@ public class GameManager : MonoBehaviour
 		}
 		roundScrollbar.value = 1;
 		playerCompiled = false;
-		isSliding = false;
 	}
 
 	public void RunBattle()
@@ -152,50 +146,5 @@ public class GameManager : MonoBehaviour
 	{
 		battlePanel.SetActive(!battlePanel.activeSelf);
 		panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
-	}
-
-	public void UpperPanelPuller()
-	{
-		// StopCoroutine(animation);
-		bool isActive = upperPanel.transform.GetChild(0).gameObject.activeSelf;
-
-		if (!isSliding)
-		{
-			slidingAnimation = SlidePanel(upperPanel, isActive);
-			StartCoroutine(slidingAnimation);
-		}
-	}
-
-	private IEnumerator SlidePanel(GameObject panel, bool isActive)
-	{
-		isSliding = true;
-		float time = 0.2f;
-		float elapsedTime = 0;
-		Vector3 initialPosition = panel.transform.localPosition;
-		Vector3 finalPosition;
-
-		if (isActive)
-		{
-			finalPosition = new Vector3(initialPosition.x, initialPosition.y + 200, initialPosition.z);
-		}
-		else
-		{
-			panel.transform.GetChild(0).gameObject.SetActive(true);
-			finalPosition = new Vector3(initialPosition.x, initialPosition.y - 200, initialPosition.z);
-		}
-
-		while (elapsedTime < time)
-		{
-			panel.transform.localPosition = Vector3.Lerp(initialPosition, finalPosition, (elapsedTime / time));
-			elapsedTime += Time.deltaTime;
-			yield return null;
-		}
-
-		if (isActive)
-		{
-			panel.transform.GetChild(0).gameObject.SetActive(false);
-		}
-
-		isSliding = false;
 	}
 }

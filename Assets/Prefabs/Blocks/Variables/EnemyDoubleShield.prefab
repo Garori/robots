@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8802631775200859675}
   - component: {fileID: 1074020832834830650}
   - component: {fileID: 7278407160001593949}
+  - component: {fileID: 2920555979129773394}
   m_Layer: 5
   m_Name: EnemyDoubleShield
   m_TagString: VariableBlock
@@ -152,4 +153,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelManager: {fileID: 0}
   canvas: {fileID: 0}
+  isInPanel: 0
   commandName: 35
+  blockSlot: {fileID: 0}
+  canUseInFor: 0
+--- !u!114 &2920555979129773394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6589459276791584859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe53bb85e5166e440a485de72fd37d31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: Enemy Actual Shield Double

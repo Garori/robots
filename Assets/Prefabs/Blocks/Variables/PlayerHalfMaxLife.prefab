@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1246728334563625006}
   - component: {fileID: 7314917162731233039}
   - component: {fileID: 8730175326148385071}
+  - component: {fileID: 1178182738425133692}
   m_Layer: 5
   m_Name: PlayerHalfMaxLife
   m_TagString: VariableBlock
@@ -152,4 +153,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelManager: {fileID: 0}
   canvas: {fileID: 0}
+  isInPanel: 0
   commandName: 19
+  blockSlot: {fileID: 0}
+  canUseInFor: 0
+--- !u!114 &1178182738425133692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3464966215597622894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe53bb85e5166e440a485de72fd37d31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: Player Max Health Half

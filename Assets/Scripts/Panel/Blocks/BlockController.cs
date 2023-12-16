@@ -51,6 +51,10 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 			createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
 			//gameObject.transform.SetSiblingIndex(gameObject.transform.parent.childCount - 1);
 			newBlock = false;
+			TooltipTrigger tooltipTrigger = createdBlock.GetComponent<TooltipTrigger>();
+			if (tooltipTrigger != null) {
+				tooltipTrigger.isTooltipEnabled = false;
+			}
 		}
 		canvasGroup.alpha = .8f;
 		ResetParent();

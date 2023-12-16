@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 980394163677981960}
   - component: {fileID: 8743041568835959337}
   - component: {fileID: 3862845334491239920}
+  - component: {fileID: -1893200835211194593}
   m_Layer: 5
   m_Name: EnemyLife
   m_TagString: VariableBlock
@@ -152,4 +153,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelManager: {fileID: 0}
   canvas: {fileID: 0}
+  isInPanel: 0
   commandName: 27
+  blockSlot: {fileID: 0}
+  canUseInFor: 0
+--- !u!114 &-1893200835211194593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3224652059313513288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe53bb85e5166e440a485de72fd37d31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: Enemy Actual Health
