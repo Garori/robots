@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class TooltipTrigger : MonoBehaviour
 {
-    [SerializeField] private string tooltipText;
+    [SerializeField][TextArea] private string tooltipText;
     public bool isTooltipEnabled { get; set; }
 
     private void Start()
