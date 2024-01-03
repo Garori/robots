@@ -15,13 +15,13 @@ public class LevelManager : MonoBehaviour
 		for (int i = 0; i < Memories.memoriesLength; i++)
 		{
 			ButtonController button = Instantiate(levelButtonPrefab, transform);
-			button.Init(i, LoadLevel);
+			button.Init(i, LoadLevel, Memories.GetMemory(i).medal);
 		}
 
 		for (int i = 0; i < Memories.customMemoriesLength; i++)
 		{
 			ButtonController button = Instantiate(customLevelButtonPrefab, transform);
-			button.Init(i + Memories.memoriesLength, LoadLevel);
+			button.Init(i + Memories.memoriesLength, LoadLevel, Memories.GetMemory(i + Memories.memoriesLength).medal);
 		}
 	}
 

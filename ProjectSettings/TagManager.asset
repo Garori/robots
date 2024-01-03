@@ -18,6 +18,8 @@ TagManager:
   - ForCondition
   - ComparatorCollider
   - Void
+  - BlocksMedal
+  - TurnMedal
   layers:
   - Default
   - TransparentFX

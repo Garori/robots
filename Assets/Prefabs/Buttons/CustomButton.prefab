@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6910303805792957565}
   - component: {fileID: 1338314457474183057}
   m_Layer: 5
-  m_Name: BlocksMedal
+  m_Name: SizeMedal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,6 +224,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonText: {fileID: 5480650230747679888}
+  sizeMedal: {fileID: 1338314457474183057}
+  roundsMedal: {fileID: 5957305395728801087}
+  wonMedalColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &5480650230747679890
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +373,7 @@ GameObject:
   - component: {fileID: 548011029095973411}
   - component: {fileID: 5957305395728801087}
   m_Layer: 5
-  m_Name: TurnMedal
+  m_Name: RoundMedal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
