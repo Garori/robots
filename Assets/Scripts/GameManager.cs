@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 	{
 		memory = Memories.GetMemory(BattleData.selectedLevel);
 		SetEnemyMemory(memory);
+		SetMedalsText();
 
 		foreach (Transform child in roundContent.transform)
 		{
@@ -146,5 +147,21 @@ public class GameManager : MonoBehaviour
 	{
 		battlePanel.SetActive(!battlePanel.activeSelf);
 		panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
+	}
+
+	private void SetMedalsText()
+	{
+		GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
+		GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
+
+		if (roundMedal) 
+		{ 
+			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Max rounds for medal: {memory.medal.maxRounds}"; 
+		}
+
+		if (sizeMedal) 
+		{ 
+			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Max number of blocks for medal: {memory.medal.maxSize}"; 
+		}
 	}
 }

@@ -4,11 +4,11 @@ using UnityEngine;
 [System.Serializable]
 public class Medal
 {
-	[SerializeField] private int maxRounds;
-	[SerializeField] private int maxSize;
-
 	[SerializeField] private int bestRounds;
 	[SerializeField] private int bestSize;
+
+	public int maxRounds { get; private set; }
+	public int maxSize { get; private set; }
 
 	public bool roundsMedal { get; private set; }
 	public bool sizeMedal { get; private set; }
