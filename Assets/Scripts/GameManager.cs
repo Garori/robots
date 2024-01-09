@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 	{
 		memory = Memories.GetMemory(BattleData.selectedLevel);
 		SetEnemyMemory(memory);
-		SetMedalsText();
+		SetMedalsText(int.MaxValue, int.MaxValue);
 
 		foreach (Transform child in roundContent.transform)
 		{
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
 			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "WINNER" : "LOSER");
 
 			// Atualiza as medalhas
-			memory.SetMedals(status.values[Commands.ROUND], blocks.Count);
+			SetMedalsText(status.values[Commands.ROUND]-1, blocks.Count);
 		}
 		catch (ActionTookTooLongException)
 		{
@@ -149,19 +149,22 @@ public class GameManager : MonoBehaviour
 		panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
 	}
 
-	private void SetMedalsText()
+	//TODO: move away from GameManager
+	private void SetMedalsText(int rounds, int size)
 	{
+		memory.SetMedals(rounds, size);
+
 		GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
 		GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
 
 		if (roundMedal) 
 		{ 
-			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Max rounds for medal: {memory.medal.maxRounds}"; 
+			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Round Medal: {(memory.medal.bestRounds == int.MaxValue?0:memory.medal.bestRounds)}/{memory.medal.maxRounds}"; 
 		}
 
 		if (sizeMedal) 
 		{ 
-			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Max number of blocks for medal: {memory.medal.maxSize}"; 
+			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Size Medal: {(memory.medal.bestSize == int.MaxValue?0:memory.medal.bestSize)}/{memory.medal.maxSize}";
 		}
 	}
 }

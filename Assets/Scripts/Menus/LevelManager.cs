@@ -10,8 +10,11 @@ public class LevelManager : MonoBehaviour
 {
 	[SerializeField] private ButtonController levelButtonPrefab;
 	[SerializeField] private ButtonController customLevelButtonPrefab;
+
 	private void Start()
 	{
+		Memories.UpdateMemories();
+		
 		for (int i = 0; i < Memories.memoriesLength; i++)
 		{
 			ButtonController button = Instantiate(levelButtonPrefab, transform);

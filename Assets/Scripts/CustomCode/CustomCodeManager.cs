@@ -22,6 +22,14 @@ public class CustomCodeManager : MonoBehaviour
 
     public Dictionary<string, int> variables;
 
+    public bool isCustom = true;
+    private string folderName;
+
+    private void Update()
+    {
+        folderName = isCustom ? "CustomMemories" : "Memories";
+    }
+
     public void ExportCode()
     {
         string compileResult = "";
@@ -34,7 +42,7 @@ public class CustomCodeManager : MonoBehaviour
             return;
         }
 
-        int memoryCount = Directory.GetFiles("CustomMemories").Length;
+        int memoryCount = Directory.GetFiles(folderName).Length;
         string fileName = (memoryCount + 1) + ".bin";
 
         int roundMedal = 0;
@@ -88,7 +96,7 @@ public class CustomCodeManager : MonoBehaviour
         FighterAttributes enemyFighter = new FighterAttributes(hpEnemy, dmgEnemy, defEnemy, chaEnemy);
 
         CellsContainer cellsContainer = new CellsContainer(compiler, playerFighter, enemyFighter, medal);
-        cellsContainer.Serialize(fileName);
+        cellsContainer.Serialize(folderName + "/" + fileName);
         Debug.Log("Código exportado");
     }
 

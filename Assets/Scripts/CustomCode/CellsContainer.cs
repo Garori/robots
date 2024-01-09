@@ -8,14 +8,17 @@ using UnityEngine;
 [System.Serializable]
 public class CellsContainer
 {
+    private string fileName;
+    public bool isCustom;
     public int totalCells;
     public Cell[] memory { get; set; }
     public FighterAttributes playerFighterAttributes { get; set; }
     public FighterAttributes enemyFighterAttributes { get; set; }
     public Medal medal { get; set; }
 
-    public CellsContainer(Compiler compiler, FighterAttributes playerFighterAttributes, FighterAttributes enemyFighterAttributes, Medal medal)
+    public CellsContainer(Compiler compiler, FighterAttributes playerFighterAttributes, FighterAttributes enemyFighterAttributes, Medal medal, bool isCustom = true)
     {
+        this.isCustom = isCustom;
         this.totalCells = compiler.TotalCells;
         this.memory = compiler.Memory;
         this.playerFighterAttributes = playerFighterAttributes;
@@ -25,17 +28,12 @@ public class CellsContainer
 
     public void Serialize(string fileName)
     {
+        string folderName = isCustom ? "CustomMemories" : "Memories";
         IFormatter formatter = new BinaryFormatter();
-        using (Stream stream = new FileStream("CustomMemories/" + fileName, FileMode.Create, FileAccess.Write))
+        using (Stream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
         {
             formatter.Serialize(stream, this);
         }
-
-        CellsContainer cellsContainer = Deserialize("CustomMemories/" + fileName);
-
-        Debug.Log(cellsContainer.playerFighterAttributes.ToString());
-        Debug.Log(cellsContainer.enemyFighterAttributes.ToString());
-        Debug.Log(cellsContainer.medal.ToString());
     }
 
     public static CellsContainer Deserialize(string fileName)
@@ -43,12 +41,21 @@ public class CellsContainer
         IFormatter formatter = new BinaryFormatter();
         using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
         {
-            return (CellsContainer)formatter.Deserialize(stream);
+            CellsContainer memory = (CellsContainer)formatter.Deserialize(stream);
+            memory.fileName = fileName;
+            return memory;
         }
+    }
+
+    private void UpdateFile()
+    {
+        Debug.Log("Updating file: " + fileName);
+        Serialize(fileName);
     }
 
     public void SetMedals(int rounds, int size)
     {
         medal.CheckMedals(rounds, size);
+        UpdateFile();
     }
 }

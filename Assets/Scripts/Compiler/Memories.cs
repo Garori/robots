@@ -9,8 +9,7 @@ public static class Memories
 
 	static Memories()
 	{
-		memories = GetFiles("Memories");
-		customMemories = GetFiles("CustomMemories");
+		UpdateMemories();
 	}
 
 	public static CellsContainer[] GetFiles(string folderName)
@@ -36,5 +35,11 @@ public static class Memories
 		{
 			return customMemories[level - memoriesLength];
 		}
+	}
+
+	public static void UpdateMemories() 
+	{
+		memories = GetFiles("Memories");
+		customMemories = GetFiles("CustomMemories");
 	}
 }
