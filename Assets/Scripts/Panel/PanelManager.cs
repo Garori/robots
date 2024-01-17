@@ -148,12 +148,14 @@ public class PanelManager : MonoBehaviour
 
 	private void InsertVariable(VariableController variable, BlockSlotController variableSlot)
 	{
+		Debug.Log(variableSlot.isOccupied());
 		if (variableSlot.isOccupied())
 		{
 			Destroy(variable.gameObject);
 			return;
 		}
 
+		Debug.Log(variableSlot.isInPanel);
 		if (!variableSlot.isInPanel)
 		{
 			Destroy(variable.gameObject);
@@ -167,6 +169,8 @@ public class PanelManager : MonoBehaviour
 
 		variable.blockSlot = variableSlot;
 		variableSlot.setChildBlock(variable);
+
+		Debug.Log("Variable inserted");
 	}
 
 	private void RemoveVariable(VariableController variable)

@@ -91,7 +91,9 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
+		Debug.Log("Entrou em " + other.name);
 		if (!OnValidTriggerEnter2D(other)) return;
+		Debug.Log("valido");
 		colliding = other.gameObject;
 	}
 
