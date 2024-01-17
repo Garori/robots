@@ -217,8 +217,6 @@ public class PanelManager : MonoBehaviour
 		endLineSize.x = maxWidth;
 		endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
 		endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
-
-		Debug.Log(blocksPrint);
 	}
 
 	public void Clear()

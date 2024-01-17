@@ -90,7 +90,6 @@ public class Fighter : MonoBehaviour, IFighter
 
     public bool ReceiveAttack(int attackPoints)
     {
-        Debug.Log("Received " + attackPoints + " damage");
         if (isDodging) return false;
         if (isDefending)
         {
