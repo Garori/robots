@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 	public GameObject roundError;
 	public RectTransform roundContent;
 	public Scrollbar roundScrollbar;
+	public Transform blocksArea;
 
 	[Header("Fighters Scripts")]
 	[SerializeField] private Compiler playerCompiler;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
 		memory = Memories.GetMemory(BattleData.selectedLevel);
 		SetEnemyMemory(memory);
 		SetMedalsText(int.MaxValue, int.MaxValue);
+		EnableBlocks();
 
 		foreach (Transform child in roundContent.transform)
 		{
@@ -39,6 +41,18 @@ public class GameManager : MonoBehaviour
 		}
 		roundScrollbar.value = 1;
 		playerCompiled = false;
+	}
+
+	private void EnableBlocks()
+	{
+		foreach (Transform child in blocksArea)
+		{
+			// Get child block controller commandname
+			BlockController blockController = child.GetComponent<BlockController>();
+			Commands commandName = blockController.commandName;
+
+			child.gameObject.SetActive(memory.isBlockEnabled(commandName));
+		}
 	}
 
 	public void RunBattle()
@@ -71,7 +85,6 @@ public class GameManager : MonoBehaviour
 				actions[0] = playerCompiler.Run(status);
 				actions[1] = enemyCompiler.Run(status);
 				status = battleManager.PlayRound(actions);
-				Debug.Log(status);
 				// Imprime os textos dos rounds
 				actualRoundPanel = Instantiate(roundPanel, roundContent);
 				actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
@@ -87,7 +100,7 @@ public class GameManager : MonoBehaviour
 			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "WINNER" : "LOSER");
 
 			// Atualiza as medalhas
-			SetMedalsText(status.values[Commands.ROUND]-1, blocks.Count);
+			SetMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
 		}
 		catch (ActionTookTooLongException)
 		{
@@ -157,14 +170,33 @@ public class GameManager : MonoBehaviour
 		GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
 		GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
 
-		if (roundMedal) 
-		{ 
-			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Round Medal: {(memory.medal.bestRounds == int.MaxValue?0:memory.medal.bestRounds)}/{memory.medal.maxRounds}"; 
+		bool isRoundMedalWon = memory.medal.roundsMedal;
+		bool isSizeMedalWon = memory.medal.sizeMedal;
+
+		if (roundMedal)
+		{
+			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Round Medal: {(memory.medal.bestRounds == int.MaxValue ? 0 : memory.medal.bestRounds)}/{memory.medal.maxRounds}";
+			if (isRoundMedalWon)
+			{
+				roundMedal.GetComponent<Image>().color = Color.white;
+			}
+			else
+			{
+				roundMedal.GetComponent<Image>().color = Color.black;
+			}
 		}
 
-		if (sizeMedal) 
-		{ 
-			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Size Medal: {(memory.medal.bestSize == int.MaxValue?0:memory.medal.bestSize)}/{memory.medal.maxSize}";
+		if (sizeMedal)
+		{
+			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Size Medal: {(memory.medal.bestSize == int.MaxValue ? 0 : memory.medal.bestSize)}/{memory.medal.maxSize}";
+			if (isSizeMedalWon)
+			{
+				sizeMedal.GetComponent<Image>().color = Color.white;
+			}
+			else
+			{
+				sizeMedal.GetComponent<Image>().color = Color.black;
+			}
 		}
 	}
 }

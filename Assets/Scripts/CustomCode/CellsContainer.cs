@@ -15,8 +15,9 @@ public class CellsContainer
     public FighterAttributes playerFighterAttributes { get; set; }
     public FighterAttributes enemyFighterAttributes { get; set; }
     public Medal medal { get; set; }
+    public bool[] enabledBlocks { get; set; }
 
-    public CellsContainer(Compiler compiler, FighterAttributes playerFighterAttributes, FighterAttributes enemyFighterAttributes, Medal medal, bool isCustom = true)
+    public CellsContainer(Compiler compiler, FighterAttributes playerFighterAttributes, FighterAttributes enemyFighterAttributes, Medal medal, bool[] enabledBlocks, bool isCustom = true)
     {
         this.isCustom = isCustom;
         this.totalCells = compiler.TotalCells;
@@ -24,6 +25,7 @@ public class CellsContainer
         this.playerFighterAttributes = playerFighterAttributes;
         this.enemyFighterAttributes = enemyFighterAttributes;
         this.medal = medal;
+        this.enabledBlocks = enabledBlocks;
     }
 
     public void Serialize(string fileName)
@@ -49,7 +51,6 @@ public class CellsContainer
 
     private void UpdateFile()
     {
-        Debug.Log("Updating file: " + fileName);
         Serialize(fileName);
     }
 
@@ -57,5 +58,10 @@ public class CellsContainer
     {
         medal.CheckMedals(rounds, size);
         UpdateFile();
+    }
+
+    public bool isBlockEnabled(Commands command)
+    {
+        return enabledBlocks[(int)command];
     }
 }

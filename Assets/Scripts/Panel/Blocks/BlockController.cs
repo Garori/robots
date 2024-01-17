@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -13,8 +14,10 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	private RectTransform rectTransform;
 	private CanvasGroup canvasGroup;
 	private BoxCollider2D boxCollider2D;
+	private Image image;
 
 	private float scaledWidth;
+	public bool isEnabled { get; private set; }
 
 	protected GameObject colliding;
 	private bool newBlock;
@@ -23,39 +26,62 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	[Header("Enum")]
 	public Commands commandName;
 
-	private void Start()
+	void Awake()
 	{
 		newBlock = true;
 		isInPanel = false;
+		isEnabled = true;
+	}
 
+	private void Start()
+	{
 		rectTransform = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 		boxCollider2D = GetComponent<BoxCollider2D>();
+		image = GetComponent<Image>();
 
 		canvasTransform = canvas.GetComponent<RectTransform>();
-
 		scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;
+	}
+
+	void Update()
+	{
+		if (isEnabled)
+		{
+			image.color = new Color(1f, 1f, 1f, 1f);
+		}
+		else
+		{
+			image.color = new Color(1f, 1f, 1f, 0.5f);
+		}
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
+		if (eventData.button != PointerEventData.InputButton.Right) return;
+		if (isInPanel) return;
 
+		isEnabled = !isEnabled;
 	}
 
 	public void OnBeginDrag(PointerEventData eventData)
 	{
+		if (eventData.button != PointerEventData.InputButton.Left) return;
 		if (newBlock)
 		{
 			GameObject createdBlock = Instantiate(gameObject, gameObject.transform.parent);
 			createdBlock.name = gameObject.name;
 			createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
+			createdBlock.GetComponent<BlockController>().isEnabled = isEnabled;
 			//gameObject.transform.SetSiblingIndex(gameObject.transform.parent.childCount - 1);
 			newBlock = false;
 			TooltipTrigger tooltipTrigger = createdBlock.GetComponent<TooltipTrigger>();
-			if (tooltipTrigger != null) {
+			if (tooltipTrigger != null)
+			{
 				tooltipTrigger.isTooltipEnabled = false;
 			}
 		}
+		isEnabled = true;
 		canvasGroup.alpha = .8f;
 		ResetParent();
 		OnBeginDragAction();
@@ -68,12 +94,14 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
 	public void OnDrag(PointerEventData eventData)
 	{
+		if (eventData.button != PointerEventData.InputButton.Left) return;
 		rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
 		boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
+		if (eventData.button != PointerEventData.InputButton.Left) return;
 		canvasGroup.alpha = 1f;
 		if (colliding == null)
 		{

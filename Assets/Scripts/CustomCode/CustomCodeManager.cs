@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System;
 
 public class CustomCodeManager : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class CustomCodeManager : MonoBehaviour
     [Header("Game Objects")]
     public TMP_Text compilePopupText;
     public TMP_InputField[] inputFields;
+    public Transform blocksContainer;
 
     public Dictionary<string, int> variables;
 
@@ -95,9 +97,32 @@ public class CustomCodeManager : MonoBehaviour
         FighterAttributes playerFighter = new FighterAttributes(hpPlayer, dmgPlayer, defPlayer, chaPlayer);
         FighterAttributes enemyFighter = new FighterAttributes(hpEnemy, dmgEnemy, defEnemy, chaEnemy);
 
-        CellsContainer cellsContainer = new CellsContainer(compiler, playerFighter, enemyFighter, medal);
+        bool[] isBlockDisabled = GetEnabledBlocks();
+
+        CellsContainer cellsContainer = new CellsContainer(compiler, playerFighter, enemyFighter, medal, isBlockDisabled);
         cellsContainer.Serialize(folderName + "/" + fileName);
         Debug.Log("Código exportado");
+    }
+
+    private bool[] GetEnabledBlocks()
+    {
+        bool[] enabledBlocks = new bool[Enum.GetNames(typeof(Commands)).Length];
+        foreach (Transform child in blocksContainer)
+        {
+            BlockController blockController = child.GetComponent<BlockController>();
+            if (blockController == null) continue;
+
+            Commands command = blockController.commandName;
+            if (command == null) continue;
+
+            int index = (int)command;
+            if (index < 0) continue;
+            if (index >= enabledBlocks.Length) continue;
+
+            bool isEnabled = blockController.isEnabled;
+            enabledBlocks[index] = isEnabled;
+        }
+        return enabledBlocks;
     }
 
     public void QuitGame()

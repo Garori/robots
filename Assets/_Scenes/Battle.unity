@@ -514,8 +514,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 797283227}
   m_HandleRect: {fileID: 797283226}
   m_Direction: 2
-  m_Value: 1.0000613
-  m_Size: 0.9788383
+  m_Value: 1.0000596
+  m_Size: 0.97883826
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6666,6 +6666,7 @@ MonoBehaviour:
   roundError: {fileID: 4706127856252659425, guid: f0fea744a2139fe409ccc157e95ec709, type: 3}
   roundContent: {fileID: 1219929018}
   roundScrollbar: {fileID: 581933289}
+  blocksArea: {fileID: 1890078913}
   playerCompiler: {fileID: 551907756}
   enemyCompiler: {fileID: 174814918}
 --- !u!4 &1340327151
