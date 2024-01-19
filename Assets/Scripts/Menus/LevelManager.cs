@@ -31,6 +31,7 @@ public class LevelManager : MonoBehaviour
 	public void LoadLevel(int level)
 	{
 		BattleData.selectedLevel = level;
+		BattleData.isTest = false;
 		SceneManager.LoadScene("Battle");
 	}
 

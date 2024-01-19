@@ -5,4 +5,6 @@ using UnityEngine;
 public class BattleData
 {
     public static int selectedLevel { get; set; }
+    public static bool isTest { get; set; }
+    public static CellsContainer levelMemory { get; set; }
 }

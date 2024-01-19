@@ -30,9 +30,18 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		memory = Memories.GetMemory(BattleData.selectedLevel);
+		if (BattleData.isTest)
+		{
+			memory = BattleData.levelMemory;
+			SetTestMedalsText(int.MaxValue, int.MaxValue);
+		}
+		else
+		{
+			memory = Memories.GetMemory(BattleData.selectedLevel);
+			SetMedalsText(int.MaxValue, int.MaxValue);
+		}
+
 		SetEnemyMemory(memory);
-		SetMedalsText(int.MaxValue, int.MaxValue);
 		EnableBlocks();
 
 		foreach (Transform child in roundContent.transform)
@@ -99,8 +108,14 @@ public class GameManager : MonoBehaviour
 			actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == 1 ? "WINNER" : "LOSER");
 			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "WINNER" : "LOSER");
 
-			// Atualiza as medalhas
-			SetMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+			if (BattleData.isTest)
+			{
+				SetTestMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+			}
+			else
+			{
+				SetMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+			}
 		}
 		catch (ActionTookTooLongException)
 		{
@@ -143,7 +158,14 @@ public class GameManager : MonoBehaviour
 	public void QuitGame()
 	{
 		panelManager.KillEvents();
-		SceneManager.LoadScene("LevelSelect");
+		if (BattleData.isTest)
+		{
+			SceneManager.LoadScene("CustomCode");
+		}
+		else
+		{
+			SceneManager.LoadScene("LevelSelect");
+		}
 	}
 
 	public void ClearBlocks()
@@ -162,7 +184,6 @@ public class GameManager : MonoBehaviour
 		panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
 	}
 
-	//TODO: move away from GameManager
 	private void SetMedalsText(int rounds, int size)
 	{
 		memory.SetMedals(rounds, size);
@@ -176,27 +197,46 @@ public class GameManager : MonoBehaviour
 		if (roundMedal)
 		{
 			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Round Medal: {(memory.medal.bestRounds == int.MaxValue ? 0 : memory.medal.bestRounds)}/{memory.medal.maxRounds}";
-			if (isRoundMedalWon)
-			{
-				roundMedal.GetComponent<Image>().color = Color.white;
-			}
-			else
-			{
-				roundMedal.GetComponent<Image>().color = Color.black;
-			}
+			ColorMedal(isRoundMedalWon, roundMedal);
 		}
 
 		if (sizeMedal)
 		{
 			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Size Medal: {(memory.medal.bestSize == int.MaxValue ? 0 : memory.medal.bestSize)}/{memory.medal.maxSize}";
-			if (isSizeMedalWon)
-			{
-				sizeMedal.GetComponent<Image>().color = Color.white;
-			}
-			else
-			{
-				sizeMedal.GetComponent<Image>().color = Color.black;
-			}
+			ColorMedal(isSizeMedalWon, sizeMedal);
+		}
+	}
+
+	private void SetTestMedalsText(int round, int size)
+	{
+		GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
+		GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
+
+		bool isRoundMedalWon = round <= memory.medal.maxRounds;
+		bool isSizeMedalWon = size <= memory.medal.maxSize;
+
+		if (roundMedal)
+		{
+			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Round Medal: {(round == int.MaxValue ? 0 : round)}/{memory.medal.maxRounds}";
+			ColorMedal(isRoundMedalWon, roundMedal);
+		}
+
+		if (sizeMedal)
+		{
+			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Size Medal: {(size == int.MaxValue ? 0 : size)}/{memory.medal.maxSize}";
+			ColorMedal(isSizeMedalWon, sizeMedal);
+		}
+	}
+
+	private void ColorMedal(bool medalWon, GameObject medal)
+	{
+		if (medalWon)
+		{
+			medal.GetComponent<Image>().color = Color.white;
+		}
+		else
+		{
+			medal.GetComponent<Image>().color = Color.black;
 		}
 	}
 }

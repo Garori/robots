@@ -34,6 +34,56 @@ public class CustomCodeManager : MonoBehaviour
 
     public void ExportCode()
     {
+        if (!Compile()) return;
+
+        CellsContainer cellsContainer = CreateCellsContainer();
+
+        int memoryCount = Directory.GetFiles(folderName).Length;
+        string fileName = (memoryCount + 1) + ".bin";
+        cellsContainer.Serialize(folderName + "/" + fileName);
+        Debug.Log("Código exportado");
+    }
+
+    private bool[] GetEnabledBlocks()
+    {
+        bool[] enabledBlocks = new bool[Enum.GetNames(typeof(Commands)).Length];
+        foreach (Transform child in blocksContainer)
+        {
+            BlockController blockController = child.GetComponent<BlockController>();
+            if (blockController == null) continue;
+
+            Commands command = blockController.commandName;
+            if (command == null) continue;
+
+            int index = (int)command;
+            if (index < 0) continue;
+            if (index >= enabledBlocks.Length) continue;
+
+            bool isEnabled = blockController.isEnabled;
+            enabledBlocks[index] = isEnabled;
+        }
+        return enabledBlocks;
+    }
+
+    public void QuitGame()
+    {
+        panelManager.KillEvents();
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void LoadTestBattle()
+    {
+        if (!Compile()) return;
+
+        BattleData.levelMemory = CreateCellsContainer();
+        BattleData.isTest = true;
+
+        panelManager.KillEvents();
+        SceneManager.LoadScene("Battle");
+    }
+
+    private bool Compile()
+    {
         string compileResult = "";
         List<BlockController> blocks = panelManager.blocks;
         bool compiled = compiler.Compile(blocks, ref compileResult);
@@ -41,12 +91,13 @@ public class CustomCodeManager : MonoBehaviour
         {
             compilePopupText.transform.parent.gameObject.SetActive(true);
             compilePopupText.SetText(compileResult);
-            return;
+            return false;
         }
+        return true;
+    }
 
-        int memoryCount = Directory.GetFiles(folderName).Length;
-        string fileName = (memoryCount + 1) + ".bin";
-
+    private CellsContainer CreateCellsContainer()
+    {
         int roundMedal = 0;
         int sizeMedal = 0;
         int hpPlayer = 0;
@@ -93,6 +144,7 @@ public class CustomCodeManager : MonoBehaviour
                     break;
             }
         }
+
         Medal medal = new Medal(roundMedal, sizeMedal);
         FighterAttributes playerFighter = new FighterAttributes(hpPlayer, dmgPlayer, defPlayer, chaPlayer);
         FighterAttributes enemyFighter = new FighterAttributes(hpEnemy, dmgEnemy, defEnemy, chaEnemy);
@@ -100,35 +152,7 @@ public class CustomCodeManager : MonoBehaviour
         bool[] isBlockDisabled = GetEnabledBlocks();
 
         CellsContainer cellsContainer = new CellsContainer(compiler, playerFighter, enemyFighter, medal, isBlockDisabled);
-        cellsContainer.Serialize(folderName + "/" + fileName);
-        Debug.Log("Código exportado");
-    }
-
-    private bool[] GetEnabledBlocks()
-    {
-        bool[] enabledBlocks = new bool[Enum.GetNames(typeof(Commands)).Length];
-        foreach (Transform child in blocksContainer)
-        {
-            BlockController blockController = child.GetComponent<BlockController>();
-            if (blockController == null) continue;
-
-            Commands command = blockController.commandName;
-            if (command == null) continue;
-
-            int index = (int)command;
-            if (index < 0) continue;
-            if (index >= enabledBlocks.Length) continue;
-
-            bool isEnabled = blockController.isEnabled;
-            enabledBlocks[index] = isEnabled;
-        }
-        return enabledBlocks;
-    }
-
-    public void QuitGame()
-    {
-        panelManager.KillEvents();
-        SceneManager.LoadScene("Menu");
+        return cellsContainer;
     }
 
     public void ClearBlocks()
