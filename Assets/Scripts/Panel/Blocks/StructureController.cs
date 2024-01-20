@@ -25,4 +25,24 @@ public class StructureController : BlockController
     {
         return other.CompareTag("Line");
     }
+
+    public Commands GetComparatorCommand()
+    {
+        if (comparatorSlot.childBlock == null) return Commands.NONE;
+        return comparatorSlot.childBlock.commandName;
+    }
+
+    public Commands GetVariable1Command()
+    {
+        ComparatorController comparator = comparatorSlot.childBlock as ComparatorController;
+        if (comparator == null) return Commands.NONE;
+        return comparator.GetVariable1Command();
+    }
+
+    public Commands GetVariable2Command()
+    {
+        ComparatorController comparator = comparatorSlot.childBlock as ComparatorController;
+        if (comparator == null) return Commands.NONE;
+        return comparator.GetVariable2Command();
+    }
 }

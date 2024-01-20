@@ -27,4 +27,16 @@ public class ComparatorController : BlockController
     {
         return other.CompareTag("ComparatorCollider");
     }
+
+    public Commands GetVariable1Command()
+    {
+        if (variableSlot1.childBlock == null) return Commands.NONE;
+        return variableSlot1.childBlock.commandName;
+    }
+
+    public Commands GetVariable2Command()
+    {
+        if (variableSlot2.childBlock == null) return Commands.NONE;
+        return variableSlot2.childBlock.commandName;
+    }
 }

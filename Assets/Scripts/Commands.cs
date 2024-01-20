@@ -50,5 +50,6 @@ public enum Commands
     SEVEN,
     EIGHT,
     NINE,
-    TRUE
+    TRUE,
+    NONE
 }

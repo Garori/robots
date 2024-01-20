@@ -32,9 +32,54 @@ public class Compiler : MonoBehaviour
         PC = -1;
     }
 
+    public List<List<Commands>> GetCommands(List<BlockController> blocks)
+    {
+        List<List<Commands>> commands = new List<List<Commands>>();
+        foreach (BlockController block in blocks)
+        {
+            List<Commands> lineCommands = new List<Commands>();
+            lineCommands.Add(block.commandName);
+            switch (block)
+            {
+                case ActionController c:
+                    commands.Add(lineCommands);
+                    continue;
+                case StructureController c:
+                    lineCommands.Add(c.GetComparatorCommand());
+                    switch (c.GetComparatorCommand())
+                    {
+                        case Commands.TRUE:
+                            commands.Add(lineCommands);
+                            continue;
+                        case Commands.EVEN:
+                            lineCommands.Add(c.GetVariable1Command());
+                            commands.Add(lineCommands);
+                            continue;
+                        default:
+                            lineCommands.Add(c.GetVariable1Command());
+                            lineCommands.Add(c.GetVariable2Command());
+                            commands.Add(lineCommands);
+                            continue;
+                    }
+                case ForController c:
+                    lineCommands.Add(c.GetVariableCommand());
+                    commands.Add(lineCommands);
+                    continue;
+            }
+            commands.Add(lineCommands);
+        }
+        return commands;
+    }
+
     public bool Compile(List<BlockController> blocks, ref string compileResult)
     {
-        if (blocks.Count > maxBlocks)
+        List<List<Commands>> commands = GetCommands(blocks);
+        return Compile(commands, ref compileResult);
+    }
+
+    public bool Compile(List<List<Commands>> blockCommands, ref string compileResult)
+    {
+        if (blockCommands.Count > maxBlocks)
         {
             compileResult = $"COMPILATION ERROR: Can't have more than {maxBlocks} blocks";
             return false;
@@ -43,22 +88,22 @@ public class Compiler : MonoBehaviour
         bool hasAction = false;
 
         ResetAttributes();
-        foreach (BlockController block in blocks)
+        foreach (List<Commands> lineCommands in blockCommands)
         {
             PC++;
-            Commands command = block.commandName;
-            switch (command)
+            Commands mainCommand = lineCommands[0];
+            switch (mainCommand)
             {
                 case Commands.ATTACK:
                 case Commands.DEFEND:
                 case Commands.CHARGE:
                 case Commands.DODGE:
                 case Commands.HEAL:
-                    memory[PC] = new ActionCell(command);
+                    memory[PC] = new ActionCell(mainCommand);
                     hasAction = true;
                     continue;
             }
-            if (command == Commands.END)
+            if (mainCommand == Commands.END)
             {
                 if (structuresStack.Count == 0)
                 {
@@ -76,7 +121,7 @@ public class Compiler : MonoBehaviour
                 memory[PC].jmp = lastStructureIndex - PC - 1;
                 continue;
             }
-            if (command == Commands.ELSE)
+            if (mainCommand == Commands.ELSE)
             {
                 if (structuresStack.Count == 0)
                 {
@@ -98,17 +143,14 @@ public class Compiler : MonoBehaviour
 
                 continue;
             }
-            if (command == Commands.FOR)
+            if (mainCommand == Commands.FOR)
             {
-                // Log the type of block object
-                VariableController variableController = ((block as ForController).variableSlot.childBlock) as VariableController;
-                if (variableController == null)
+                Commands variableName = lineCommands[1];
+                if (variableName == Commands.NONE)
                 {
                     compileResult = "COMPILATION ERROR: FOR block without number";
                     return false;
                 }
-
-                Commands variableName = variableController.commandName;
 
                 if (variableName == Commands.ZERO)
                 {
@@ -120,15 +162,13 @@ public class Compiler : MonoBehaviour
                 structuresStack.Push(PC);
                 continue;
             }
-            ComparatorController comparatorController = ((block as StructureController).comparatorSlot.childBlock) as ComparatorController;
-            if (comparatorController == null)
+
+            Commands comparatorCommand = lineCommands[1];
+            if (comparatorCommand == Commands.NONE)
             {
                 compileResult = "COMPILATION ERROR: WHILE or IF block without condition";
                 return false;
             }
-
-            Commands comparatorCommand = comparatorController.commandName;
-
             ComparatorCell comparatorCell = null;
 
             switch (comparatorCommand)
@@ -137,41 +177,41 @@ public class Compiler : MonoBehaviour
                     comparatorCell = new TrueCell();
                     break;
                 case Commands.EVEN:
-                    VariableController variableController = comparatorController.variableSlot1.childBlock as VariableController;
-                    if (variableController == null)
+                    Commands variableName = lineCommands[2];
+                    if (variableName == Commands.NONE)
                     {
                         compileResult = "COMPILATION ERROR: EVEN comparator without variable";
                         return false;
                     }
 
-                    comparatorCell = new EvenCell(variableController.commandName);
+                    comparatorCell = new EvenCell(variableName);
                     break;
                 default:
-                    VariableController variable1Controller = comparatorController.variableSlot1.childBlock as VariableController;
-                    VariableController variable2Controller = comparatorController.variableSlot2.childBlock as VariableController;
-                    if (variable1Controller == null || variable2Controller == null)
+                    Commands variable1Name = lineCommands[2];
+                    Commands variable2Name = lineCommands[3];
+                    if (variable1Name == Commands.NONE || variable2Name == Commands.NONE)
                     {
-                        compileResult = $"COMPILATION ERROR: {comparatorController.gameObject.name.ToUpper()} comparator without variables";
+                        compileResult = $"COMPILATION ERROR: {comparatorCommand} comparator without variables";
                         return false;
                     }
 
                     switch (comparatorCommand)
                     {
                         case Commands.EQUALS:
-                            comparatorCell = new EqualsCell(variable1Controller.commandName, variable2Controller.commandName);
+                            comparatorCell = new EqualsCell(variable1Name, variable2Name);
                             break;
                         case Commands.NOT_EQUALS:
-                            comparatorCell = new NotEqualsCell(variable1Controller.commandName, variable2Controller.commandName);
+                            comparatorCell = new NotEqualsCell(variable1Name, variable2Name);
                             break;
                         case Commands.GREATER:
-                            comparatorCell = new GreaterCell(variable1Controller.commandName, variable2Controller.commandName);
+                            comparatorCell = new GreaterCell(variable1Name, variable2Name);
                             break;
                     }
                     break;
             }
 
             IConditionCell structureStart = null;
-            if (command == Commands.IF)
+            if (mainCommand == Commands.IF)
             {
                 structureStart = new IfCell(comparatorCell);
             }

@@ -25,4 +25,10 @@ public class ForController : BlockController
     {
         return other.CompareTag("Line");
     }
+
+    public Commands GetVariableCommand()
+    {
+        if (variableSlot.childBlock == null) return Commands.NONE;
+        return variableSlot.childBlock.commandName;
+    }
 }
