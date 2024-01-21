@@ -10574,7 +10574,7 @@ GameObject:
   - component: {fileID: 2125954515}
   m_Layer: 0
   m_Name: Panel
-  m_TagString: Untagged
+  m_TagString: PanelManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10687,6 +10687,60 @@ MonoBehaviour:
   endLineObject: {fileID: 484285254}
   minPadding: 10
   tabPadding: 20
+  actionsPrefabs:
+    attackPrefab: {fileID: 0}
+    defendPrefab: {fileID: 0}
+    chargePrefab: {fileID: 0}
+    healPrefab: {fileID: 0}
+  structuresPrefabs:
+    ifPrefab: {fileID: 0}
+    elsePrefab: {fileID: 0}
+    whilePrefab: {fileID: 0}
+    forPrefab: {fileID: 0}
+    endPrefab: {fileID: 0}
+  comparatorsPrefabs:
+    truePrefab: {fileID: 0}
+    equalsPrefab: {fileID: 0}
+    notEqualsPrefab: {fileID: 0}
+    greaterPrefab: {fileID: 0}
+    evenPrefab: {fileID: 0}
+  variablesPrefabs:
+    player:
+      health:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+      maxHealth:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+      defense:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+      charge:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+    enemy:
+      health:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+      maxHealth:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+      defense:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+      charge:
+        currentPrefab: {fileID: 0}
+        halfPrefab: {fileID: 0}
+        doublePrefab: {fileID: 0}
+    roundPrefab: {fileID: 0}
+    numbersPrefabs: []
 --- !u!210 &2125954515
 SortingGroup:
   m_ObjectHideFlags: 0

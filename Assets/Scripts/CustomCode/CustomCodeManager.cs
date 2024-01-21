@@ -27,6 +27,15 @@ public class CustomCodeManager : MonoBehaviour
     public bool isCustom = true;
     private string folderName;
 
+    void Start()
+    {
+        if (BattleData.isTest)
+        {
+            panelManager.LoadCommands(BattleData.levelCommands);
+            BattleData.isTest = false;
+        }
+    }
+
     private void Update()
     {
         folderName = isCustom ? "CustomMemories" : "Memories";
@@ -77,6 +86,7 @@ public class CustomCodeManager : MonoBehaviour
 
         BattleData.levelMemory = CreateCellsContainer();
         BattleData.isTest = true;
+        BattleData.levelCommands = compiler.GetCommands(panelManager.blocks);
 
         panelManager.KillEvents();
         SceneManager.LoadScene("Battle");

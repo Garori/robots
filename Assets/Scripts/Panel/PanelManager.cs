@@ -5,6 +5,62 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 
+[Serializable]
+public struct ActionsPrefabs
+{
+	public GameObject attackPrefab;
+	public GameObject defendPrefab;
+	public GameObject chargePrefab;
+	public GameObject healPrefab;
+}
+
+[Serializable]
+public struct StructuresPrefabs
+{
+	public GameObject ifPrefab;
+	public GameObject elsePrefab;
+	public GameObject whilePrefab;
+	public GameObject forPrefab;
+	public GameObject endPrefab;
+}
+
+[Serializable]
+public struct ComparatorsPrefabs
+{
+	public GameObject truePrefab;
+	public GameObject equalsPrefab;
+	public GameObject notEqualsPrefab;
+	public GameObject greaterPrefab;
+	public GameObject evenPrefab;
+
+}
+
+[Serializable]
+public struct FighterVariableModifiersPrefabs
+{
+	public GameObject currentPrefab;
+	public GameObject halfPrefab;
+	public GameObject doublePrefab;
+}
+
+[Serializable]
+public struct FighterPrefabs
+{
+	public FighterVariableModifiersPrefabs health;
+	public FighterVariableModifiersPrefabs maxHealth;
+	public FighterVariableModifiersPrefabs defense;
+	public FighterVariableModifiersPrefabs charge;
+}
+
+[Serializable]
+public struct VariablesPrefabs
+{
+	public FighterPrefabs player;
+	public FighterPrefabs enemy;
+	public GameObject roundPrefab;
+	public GameObject[] numbersPrefabs;
+}
+
 public class PanelManager : MonoBehaviour
 {
 	[Header("Game Objects")]
@@ -25,6 +81,12 @@ public class PanelManager : MonoBehaviour
 	[SerializeField] private int minPadding;
 	[SerializeField] private int tabPadding;
 
+	[Header("Prefabs")]
+	[SerializeField] private ActionsPrefabs actionsPrefabs;
+	[SerializeField] private StructuresPrefabs structuresPrefabs;
+	[SerializeField] private ComparatorsPrefabs comparatorsPrefabs;
+	[SerializeField] private VariablesPrefabs variablesPrefabs;
+
 	// Blocks and lines arrays
 	private int activeLines;
 	private List<GameObject> lines;
@@ -40,10 +102,7 @@ public class PanelManager : MonoBehaviour
 		blocks = new List<BlockController>();
 		lines = new List<GameObject>();
 		linesLayout = new List<HorizontalLayoutGroup>();
-	}
 
-	private void Start()
-	{
 		RectTransform lineObjectPrefabTransform = lineObjectPrefab.GetComponent<RectTransform>();
 		minLineWidth = lineObjectPrefabTransform.sizeDelta.x;
 		lineHeight = lineObjectPrefabTransform.sizeDelta.y;
@@ -60,6 +119,10 @@ public class PanelManager : MonoBehaviour
 			lineObjectPrefabPadding.top,
 			lineObjectPrefabPadding.bottom
 		);
+	}
+
+	private void Start()
+	{
 
 		EventManager.BlockEnter += InsertBlock;
 		EventManager.BlockExit += RemoveBlock;
@@ -217,6 +280,197 @@ public class PanelManager : MonoBehaviour
 		endLineSize.x = maxWidth;
 		endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
 		endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
+	}
+
+	public void LoadCommands(List<List<Commands>> commands)
+	{
+		Clear();
+		foreach (List<Commands> lineCommands in commands)
+		{
+			Commands mainCommand = lineCommands[0];
+			switch (mainCommand)
+			{
+				case Commands.ELSE:
+					GameObject elseBlock = InstantiateStructure(mainCommand);
+					InsertBlock(elseBlock.GetComponent<ElseController>(), endLineObject);
+					break;
+				case Commands.END:
+					GameObject endBlock = InstantiateStructure(mainCommand);
+					InsertBlock(endBlock.GetComponent<EndController>(), endLineObject);
+					break;
+				case Commands.FOR:
+					GameObject forBlock = InstantiateStructure(mainCommand);
+					InsertBlock(forBlock.GetComponent<ForController>(), endLineObject);
+
+					GameObject forVariable = InstantiateVariable(lineCommands[1]);
+					InsertVariable(forVariable.GetComponent<VariableController>(), forBlock.GetComponent<ForController>().variableSlot);
+					break;
+				case Commands.IF:
+				case Commands.WHILE:
+					GameObject structureBlock = InstantiateStructure(mainCommand);
+					InsertBlock(structureBlock.GetComponent<BlockController>(), endLineObject);
+
+					GameObject comparator = InstantiateComparator(lineCommands[1]);
+					InsertComparator(comparator.GetComponent<ComparatorController>(), structureBlock.GetComponent<StructureController>().comparatorSlot);
+
+					switch (lineCommands[1])
+					{
+						case Commands.TRUE:
+							break;
+						case Commands.EVEN:
+							GameObject variable = InstantiateVariable(lineCommands[2]);
+							InsertVariable(variable.GetComponent<VariableController>(), structureBlock.GetComponent<ComparatorController>().variableSlot1);
+							break;
+						default:
+							GameObject variable1 = InstantiateVariable(lineCommands[2]);
+							InsertVariable(variable1.GetComponent<VariableController>(), structureBlock.GetComponent<ComparatorController>().variableSlot1);
+
+							GameObject variable2 = InstantiateVariable(lineCommands[3]);
+							InsertVariable(variable2.GetComponent<VariableController>(), structureBlock.GetComponent<ComparatorController>().variableSlot2);
+							break;
+					}
+					break;
+				default:
+					GameObject actionBlock = InstantiateAction(mainCommand);
+					InsertBlock(actionBlock.GetComponent<BlockController>(), endLineObject);
+					break;
+			}
+		}
+		OrganizeBlocks();
+	}
+
+	public GameObject InstantiateAction(Commands command)
+	{
+		switch (command)
+		{
+			case Commands.ATTACK:
+				return Instantiate(actionsPrefabs.attackPrefab);
+			case Commands.DEFEND:
+				return Instantiate(actionsPrefabs.defendPrefab);
+			case Commands.CHARGE:
+				return Instantiate(actionsPrefabs.chargePrefab);
+			case Commands.HEAL:
+				return Instantiate(actionsPrefabs.healPrefab);
+			default:
+				return null;
+		}
+	}
+
+	public GameObject InstantiateStructure(Commands command)
+	{
+		switch (command)
+		{
+			case Commands.IF:
+				return Instantiate(structuresPrefabs.ifPrefab);
+			case Commands.ELSE:
+				return Instantiate(structuresPrefabs.elsePrefab);
+			case Commands.WHILE:
+				return Instantiate(structuresPrefabs.whilePrefab);
+			case Commands.FOR:
+				return Instantiate(structuresPrefabs.forPrefab);
+			case Commands.END:
+				return Instantiate(structuresPrefabs.endPrefab);
+			default:
+				return null;
+		}
+	}
+
+	public GameObject InstantiateComparator(Commands command)
+	{
+		switch (command)
+		{
+			case Commands.TRUE:
+				return Instantiate(comparatorsPrefabs.truePrefab);
+			case Commands.EQUALS:
+				return Instantiate(comparatorsPrefabs.equalsPrefab);
+			case Commands.NOT_EQUALS:
+				return Instantiate(comparatorsPrefabs.notEqualsPrefab);
+			case Commands.GREATER:
+				return Instantiate(comparatorsPrefabs.greaterPrefab);
+			case Commands.EVEN:
+				return Instantiate(comparatorsPrefabs.evenPrefab);
+			default:
+				return null;
+		}
+	}
+
+	public GameObject InstantiateVariable(Commands command)
+	{
+		switch (command)
+		{
+			case Commands.PLAYER_ACTUAL_HEALTH:
+				return Instantiate(variablesPrefabs.player.health.currentPrefab);
+			case Commands.PLAYER_ACTUAL_HEALTH_HALF:
+				return Instantiate(variablesPrefabs.player.health.halfPrefab);
+			case Commands.PLAYER_ACTUAL_HEALTH_DOUBLE:
+				return Instantiate(variablesPrefabs.player.health.doublePrefab);
+			case Commands.PLAYER_MAX_HEALTH:
+				return Instantiate(variablesPrefabs.player.maxHealth.currentPrefab);
+			case Commands.PLAYER_MAX_HEALTH_HALF:
+				return Instantiate(variablesPrefabs.player.maxHealth.halfPrefab);
+			case Commands.PLAYER_MAX_HEALTH_DOUBLE:
+				return Instantiate(variablesPrefabs.player.maxHealth.doublePrefab);
+			case Commands.PLAYER_ACTUAL_SHIELD:
+				return Instantiate(variablesPrefabs.player.defense.currentPrefab);
+			case Commands.PLAYER_ACTUAL_SHIELD_HALF:
+				return Instantiate(variablesPrefabs.player.defense.halfPrefab);
+			case Commands.PLAYER_ACTUAL_SHIELD_DOUBLE:
+				return Instantiate(variablesPrefabs.player.defense.doublePrefab);
+			case Commands.PLAYER_ACTUAL_CHARGE:
+				return Instantiate(variablesPrefabs.player.charge.currentPrefab);
+			case Commands.PLAYER_ACTUAL_CHARGE_HALF:
+				return Instantiate(variablesPrefabs.player.charge.halfPrefab);
+			case Commands.PLAYER_ACTUAL_CHARGE_DOUBLE:
+				return Instantiate(variablesPrefabs.player.charge.doublePrefab);
+			case Commands.ENEMY_ACTUAL_HEALTH:
+				return Instantiate(variablesPrefabs.enemy.health.currentPrefab);
+			case Commands.ENEMY_ACTUAL_HEALTH_HALF:
+				return Instantiate(variablesPrefabs.enemy.health.halfPrefab);
+			case Commands.ENEMY_ACTUAL_HEALTH_DOUBLE:
+				return Instantiate(variablesPrefabs.enemy.health.doublePrefab);
+			case Commands.ENEMY_MAX_HEALTH:
+				return Instantiate(variablesPrefabs.enemy.maxHealth.currentPrefab);
+			case Commands.ENEMY_MAX_HEALTH_HALF:
+				return Instantiate(variablesPrefabs.enemy.maxHealth.halfPrefab);
+			case Commands.ENEMY_MAX_HEALTH_DOUBLE:
+				return Instantiate(variablesPrefabs.enemy.maxHealth.doublePrefab);
+			case Commands.ENEMY_ACTUAL_SHIELD:
+				return Instantiate(variablesPrefabs.enemy.defense.currentPrefab);
+			case Commands.ENEMY_ACTUAL_SHIELD_HALF:
+				return Instantiate(variablesPrefabs.enemy.defense.halfPrefab);
+			case Commands.ENEMY_ACTUAL_SHIELD_DOUBLE:
+				return Instantiate(variablesPrefabs.enemy.defense.doublePrefab);
+			case Commands.ENEMY_ACTUAL_CHARGE:
+				return Instantiate(variablesPrefabs.enemy.charge.currentPrefab);
+			case Commands.ENEMY_ACTUAL_CHARGE_HALF:
+				return Instantiate(variablesPrefabs.enemy.charge.halfPrefab);
+			case Commands.ENEMY_ACTUAL_CHARGE_DOUBLE:
+				return Instantiate(variablesPrefabs.enemy.charge.doublePrefab);
+			case Commands.ROUND:
+				return Instantiate(variablesPrefabs.roundPrefab);
+			case Commands.ZERO:
+				return Instantiate(variablesPrefabs.numbersPrefabs[0]);
+			case Commands.ONE:
+				return Instantiate(variablesPrefabs.numbersPrefabs[1]);
+			case Commands.TWO:
+				return Instantiate(variablesPrefabs.numbersPrefabs[2]);
+			case Commands.THREE:
+				return Instantiate(variablesPrefabs.numbersPrefabs[3]);
+			case Commands.FOUR:
+				return Instantiate(variablesPrefabs.numbersPrefabs[4]);
+			case Commands.FIVE:
+				return Instantiate(variablesPrefabs.numbersPrefabs[5]);
+			case Commands.SIX:
+				return Instantiate(variablesPrefabs.numbersPrefabs[6]);
+			case Commands.SEVEN:
+				return Instantiate(variablesPrefabs.numbersPrefabs[7]);
+			case Commands.EIGHT:
+				return Instantiate(variablesPrefabs.numbersPrefabs[8]);
+			case Commands.NINE:
+				return Instantiate(variablesPrefabs.numbersPrefabs[9]);
+			default:
+				return null;
+		}
 	}
 
 	public void Clear()

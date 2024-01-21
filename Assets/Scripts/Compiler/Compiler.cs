@@ -42,29 +42,25 @@ public class Compiler : MonoBehaviour
             switch (block)
             {
                 case ActionController c:
-                    commands.Add(lineCommands);
-                    continue;
+                    break;
                 case StructureController c:
                     lineCommands.Add(c.GetComparatorCommand());
                     switch (c.GetComparatorCommand())
                     {
                         case Commands.TRUE:
-                            commands.Add(lineCommands);
-                            continue;
+                            break;
                         case Commands.EVEN:
                             lineCommands.Add(c.GetVariable1Command());
-                            commands.Add(lineCommands);
-                            continue;
+                            break;
                         default:
                             lineCommands.Add(c.GetVariable1Command());
                             lineCommands.Add(c.GetVariable2Command());
-                            commands.Add(lineCommands);
-                            continue;
+                            break;
                     }
+                    break;
                 case ForController c:
                     lineCommands.Add(c.GetVariableCommand());
-                    commands.Add(lineCommands);
-                    continue;
+                    break;
             }
             commands.Add(lineCommands);
         }

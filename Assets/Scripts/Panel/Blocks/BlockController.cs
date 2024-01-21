@@ -6,9 +6,8 @@ using UnityEngine.UI;
 
 public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-	[Header("Game Objects")]
-	[SerializeField] private PanelManager panelManager;
-	[SerializeField] private Canvas canvas;
+	private PanelManager panelManager;
+	private Canvas canvas;
 	private RectTransform canvasTransform;
 
 	private RectTransform rectTransform;
@@ -31,14 +30,17 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		newBlock = true;
 		isInPanel = false;
 		isEnabled = true;
-	}
 
-	private void Start()
-	{
 		rectTransform = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 		boxCollider2D = GetComponent<BoxCollider2D>();
 		image = GetComponent<Image>();
+	}
+
+	private void Start()
+	{
+		canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+		panelManager = GameObject.FindGameObjectWithTag("PanelManager").GetComponent<PanelManager>();
 
 		canvasTransform = canvas.GetComponent<RectTransform>();
 		scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;

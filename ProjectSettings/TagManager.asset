@@ -20,6 +20,7 @@ TagManager:
   - Void
   - BlocksMedal
   - TurnMedal
+  - PanelManager
   layers:
   - Default
   - TransparentFX
