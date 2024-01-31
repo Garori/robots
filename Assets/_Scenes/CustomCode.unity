@@ -8725,7 +8725,7 @@ MonoBehaviour:
   - {fileID: 245378364}
   - {fileID: 2026584076}
   blocksContainer: {fileID: 1324607073}
-  isCustom: 0
+  isCustom: 1
 --- !u!4 &1467012404
 Transform:
   m_ObjectHideFlags: 0

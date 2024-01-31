@@ -1374,7 +1374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxIterations: 10
-  maxBlocks: 100
+  maxBlocks: 50
   debug: 0
 --- !u!114 &174814919
 MonoBehaviour:
@@ -3545,7 +3545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxIterations: 10
-  maxBlocks: 100
+  maxBlocks: 50
   debug: 0
 --- !u!114 &551907757
 MonoBehaviour:
@@ -7507,7 +7507,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8126845996813393440, guid: ff221bbd8ba8b5f42b6f22b5d0c3d8c2, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8126845996813393440, guid: ff221bbd8ba8b5f42b6f22b5d0c3d8c2, type: 3}
       propertyPath: m_AnchorMin.x
@@ -7515,7 +7515,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8126845996813393440, guid: ff221bbd8ba8b5f42b6f22b5d0c3d8c2, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8126845996813393440, guid: ff221bbd8ba8b5f42b6f22b5d0c3d8c2, type: 3}
       propertyPath: m_SizeDelta.x
@@ -7555,11 +7555,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8126845996813393440, guid: ff221bbd8ba8b5f42b6f22b5d0c3d8c2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 135.91
       objectReference: {fileID: 0}
     - target: {fileID: 8126845996813393440, guid: ff221bbd8ba8b5f42b6f22b5d0c3d8c2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -234.66
       objectReference: {fileID: 0}
     - target: {fileID: 8126845996813393440, guid: ff221bbd8ba8b5f42b6f22b5d0c3d8c2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
