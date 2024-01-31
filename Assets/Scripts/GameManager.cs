@@ -108,13 +108,16 @@ public class GameManager : MonoBehaviour
 			actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == 1 ? "WINNER" : "LOSER");
 			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "WINNER" : "LOSER");
 
-			if (BattleData.isTest)
+			if(status.isOver == 1)
 			{
-				SetTestMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
-			}
-			else
-			{
-				SetMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+				if (BattleData.isTest)
+				{
+					SetTestMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+				}
+				else
+				{
+					SetMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+				}
 			}
 		}
 		catch (ActionTookTooLongException)
