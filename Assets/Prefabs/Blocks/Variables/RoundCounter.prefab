@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4729554135887144904}
   - component: {fileID: 7819558871505393571}
   - component: {fileID: 2254823907367188266}
+  - component: {fileID: 3681846236274432659}
   m_Layer: 0
   m_Name: RoundCounter
   m_TagString: VariableBlock
@@ -151,8 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4709e7d77e495084fa52db5fb77dddbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
   isInPanel: 0
   commandName: 39
   blockSlot: {fileID: 0}
@@ -170,3 +169,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipText: Round Count
+--- !u!210 &3681846236274432659
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456640017469652649}
+  m_Enabled: 1
+  m_SortingLayerID: -696356193
+  m_SortingLayer: 5
+  m_SortingOrder: 0

@@ -151,4 +151,10 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	{
 		rectTransform.SetParent(canvasTransform);
 	}
+
+	public void SetInPanel()
+	{
+		this.newBlock = false;
+		this.isInPanel = true;
+	}
 }

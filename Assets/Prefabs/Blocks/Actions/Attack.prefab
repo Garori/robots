@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8416817275521812517}
   - component: {fileID: 432922372}
   - component: {fileID: 1821781585}
+  - component: {fileID: 3731367759251380993}
   m_Layer: 5
   m_Name: Attack
   m_TagString: ActionBlock
@@ -152,3 +153,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInPanel: 0
   commandName: 3
+--- !u!210 &3731367759251380993
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6167053025645954661}
+  m_Enabled: 1
+  m_SortingLayerID: -1497108421
+  m_SortingLayer: 3
+  m_SortingOrder: 0

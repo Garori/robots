@@ -300,18 +300,21 @@ public class PanelManager : MonoBehaviour
 					break;
 				case Commands.FOR:
 					GameObject forBlock = InstantiateStructure(mainCommand);
-					InsertBlock(forBlock.GetComponent<ForController>(), endLineObject);
+					ForController forController = forBlock.GetComponent<ForController>();
+					InsertBlock(forController, endLineObject);
 
 					GameObject forVariable = InstantiateVariable(lineCommands[1]);
-					InsertVariable(forVariable.GetComponent<VariableController>(), forBlock.GetComponent<ForController>().variableSlot);
+					InsertVariable(forVariable.GetComponent<VariableController>(), forController.variableSlot);
 					break;
 				case Commands.IF:
 				case Commands.WHILE:
 					GameObject structureBlock = InstantiateStructure(mainCommand);
-					InsertBlock(structureBlock.GetComponent<BlockController>(), endLineObject);
+					StructureController structureController = structureBlock.GetComponent<StructureController>();
+					InsertBlock(structureController, endLineObject);
 
 					GameObject comparator = InstantiateComparator(lineCommands[1]);
-					InsertComparator(comparator.GetComponent<ComparatorController>(), structureBlock.GetComponent<StructureController>().comparatorSlot);
+					ComparatorController comparatorController = comparator.GetComponent<ComparatorController>();
+					InsertComparator(comparatorController, structureController.comparatorSlot);
 
 					switch (lineCommands[1])
 					{
@@ -319,14 +322,14 @@ public class PanelManager : MonoBehaviour
 							break;
 						case Commands.EVEN:
 							GameObject variable = InstantiateVariable(lineCommands[2]);
-							InsertVariable(variable.GetComponent<VariableController>(), structureBlock.GetComponent<ComparatorController>().variableSlot1);
+							InsertVariable(variable.GetComponent<VariableController>(), comparatorController.variableSlot1);
 							break;
 						default:
 							GameObject variable1 = InstantiateVariable(lineCommands[2]);
-							InsertVariable(variable1.GetComponent<VariableController>(), structureBlock.GetComponent<ComparatorController>().variableSlot1);
+							InsertVariable(variable1.GetComponent<VariableController>(), comparatorController.variableSlot1);
 
 							GameObject variable2 = InstantiateVariable(lineCommands[3]);
-							InsertVariable(variable2.GetComponent<VariableController>(), structureBlock.GetComponent<ComparatorController>().variableSlot2);
+							InsertVariable(variable2.GetComponent<VariableController>(), comparatorController.variableSlot2);
 							break;
 					}
 					break;
@@ -339,138 +342,204 @@ public class PanelManager : MonoBehaviour
 		OrganizeBlocks();
 	}
 
+	private void SetBlockAsOld(GameObject block)
+	{
+		block.GetComponent<BlockController>().SetInPanel();
+	}
+
 	public GameObject InstantiateAction(Commands command)
 	{
+		GameObject action = null;
 		switch (command)
 		{
 			case Commands.ATTACK:
-				return Instantiate(actionsPrefabs.attackPrefab);
+				action = Instantiate(actionsPrefabs.attackPrefab, canvas);
+				break;
 			case Commands.DEFEND:
-				return Instantiate(actionsPrefabs.defendPrefab);
+				action = Instantiate(actionsPrefabs.defendPrefab, canvas);
+				break;
 			case Commands.CHARGE:
-				return Instantiate(actionsPrefabs.chargePrefab);
+				action = Instantiate(actionsPrefabs.chargePrefab, canvas);
+				break;
 			case Commands.HEAL:
-				return Instantiate(actionsPrefabs.healPrefab);
+				action = Instantiate(actionsPrefabs.healPrefab, canvas);
+				break;
 			default:
 				return null;
 		}
+		SetBlockAsOld(action);
+		return action;
 	}
 
 	public GameObject InstantiateStructure(Commands command)
 	{
+		GameObject structure = null;
 		switch (command)
 		{
 			case Commands.IF:
-				return Instantiate(structuresPrefabs.ifPrefab);
+				structure = Instantiate(structuresPrefabs.ifPrefab, canvas);
+				break;
 			case Commands.ELSE:
-				return Instantiate(structuresPrefabs.elsePrefab);
+				structure = Instantiate(structuresPrefabs.elsePrefab, canvas);
+				break;
 			case Commands.WHILE:
-				return Instantiate(structuresPrefabs.whilePrefab);
+				structure = Instantiate(structuresPrefabs.whilePrefab, canvas);
+				break;
 			case Commands.FOR:
-				return Instantiate(structuresPrefabs.forPrefab);
+				structure = Instantiate(structuresPrefabs.forPrefab, canvas);
+				break;
 			case Commands.END:
-				return Instantiate(structuresPrefabs.endPrefab);
+				structure = Instantiate(structuresPrefabs.endPrefab, canvas);
+				break;
 			default:
 				return null;
 		}
+		SetBlockAsOld(structure);
+		return structure;
 	}
 
 	public GameObject InstantiateComparator(Commands command)
 	{
+		GameObject comparator = null;
 		switch (command)
 		{
 			case Commands.TRUE:
-				return Instantiate(comparatorsPrefabs.truePrefab);
+				comparator = Instantiate(comparatorsPrefabs.truePrefab, canvas);
+				break;
 			case Commands.EQUALS:
-				return Instantiate(comparatorsPrefabs.equalsPrefab);
+				comparator = Instantiate(comparatorsPrefabs.equalsPrefab, canvas);
+				break;
 			case Commands.NOT_EQUALS:
-				return Instantiate(comparatorsPrefabs.notEqualsPrefab);
+				comparator = Instantiate(comparatorsPrefabs.notEqualsPrefab, canvas);
+				break;
 			case Commands.GREATER:
-				return Instantiate(comparatorsPrefabs.greaterPrefab);
+				comparator = Instantiate(comparatorsPrefabs.greaterPrefab, canvas);
+				break;
 			case Commands.EVEN:
-				return Instantiate(comparatorsPrefabs.evenPrefab);
+				comparator = Instantiate(comparatorsPrefabs.evenPrefab, canvas);
+				break;
 			default:
 				return null;
 		}
+		SetBlockAsOld(comparator);
+		return comparator;
 	}
 
 	public GameObject InstantiateVariable(Commands command)
 	{
+		GameObject variable = null;
 		switch (command)
 		{
 			case Commands.PLAYER_ACTUAL_HEALTH:
-				return Instantiate(variablesPrefabs.player.health.currentPrefab);
+				variable = Instantiate(variablesPrefabs.player.health.currentPrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_HEALTH_HALF:
-				return Instantiate(variablesPrefabs.player.health.halfPrefab);
+				variable = Instantiate(variablesPrefabs.player.health.halfPrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_HEALTH_DOUBLE:
-				return Instantiate(variablesPrefabs.player.health.doublePrefab);
+				variable = Instantiate(variablesPrefabs.player.health.doublePrefab, canvas);
+				break;
 			case Commands.PLAYER_MAX_HEALTH:
-				return Instantiate(variablesPrefabs.player.maxHealth.currentPrefab);
+				variable = Instantiate(variablesPrefabs.player.maxHealth.currentPrefab, canvas);
+				break;
 			case Commands.PLAYER_MAX_HEALTH_HALF:
-				return Instantiate(variablesPrefabs.player.maxHealth.halfPrefab);
+				variable = Instantiate(variablesPrefabs.player.maxHealth.halfPrefab, canvas);
+				break;
 			case Commands.PLAYER_MAX_HEALTH_DOUBLE:
-				return Instantiate(variablesPrefabs.player.maxHealth.doublePrefab);
+				variable = Instantiate(variablesPrefabs.player.maxHealth.doublePrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_SHIELD:
-				return Instantiate(variablesPrefabs.player.defense.currentPrefab);
+				variable = Instantiate(variablesPrefabs.player.defense.currentPrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_SHIELD_HALF:
-				return Instantiate(variablesPrefabs.player.defense.halfPrefab);
+				variable = Instantiate(variablesPrefabs.player.defense.halfPrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_SHIELD_DOUBLE:
-				return Instantiate(variablesPrefabs.player.defense.doublePrefab);
+				variable = Instantiate(variablesPrefabs.player.defense.doublePrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_CHARGE:
-				return Instantiate(variablesPrefabs.player.charge.currentPrefab);
+				variable = Instantiate(variablesPrefabs.player.charge.currentPrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_CHARGE_HALF:
-				return Instantiate(variablesPrefabs.player.charge.halfPrefab);
+				variable = Instantiate(variablesPrefabs.player.charge.halfPrefab, canvas);
+				break;
 			case Commands.PLAYER_ACTUAL_CHARGE_DOUBLE:
-				return Instantiate(variablesPrefabs.player.charge.doublePrefab);
+				variable = Instantiate(variablesPrefabs.player.charge.doublePrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_HEALTH:
-				return Instantiate(variablesPrefabs.enemy.health.currentPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.health.currentPrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_HEALTH_HALF:
-				return Instantiate(variablesPrefabs.enemy.health.halfPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.health.halfPrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_HEALTH_DOUBLE:
-				return Instantiate(variablesPrefabs.enemy.health.doublePrefab);
+				variable = Instantiate(variablesPrefabs.enemy.health.doublePrefab, canvas);
+				break;
 			case Commands.ENEMY_MAX_HEALTH:
-				return Instantiate(variablesPrefabs.enemy.maxHealth.currentPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.maxHealth.currentPrefab, canvas);
+				break;
 			case Commands.ENEMY_MAX_HEALTH_HALF:
-				return Instantiate(variablesPrefabs.enemy.maxHealth.halfPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.maxHealth.halfPrefab, canvas);
+				break;
 			case Commands.ENEMY_MAX_HEALTH_DOUBLE:
-				return Instantiate(variablesPrefabs.enemy.maxHealth.doublePrefab);
+				variable = Instantiate(variablesPrefabs.enemy.maxHealth.doublePrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_SHIELD:
-				return Instantiate(variablesPrefabs.enemy.defense.currentPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.defense.currentPrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_SHIELD_HALF:
-				return Instantiate(variablesPrefabs.enemy.defense.halfPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.defense.halfPrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_SHIELD_DOUBLE:
-				return Instantiate(variablesPrefabs.enemy.defense.doublePrefab);
+				variable = Instantiate(variablesPrefabs.enemy.defense.doublePrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_CHARGE:
-				return Instantiate(variablesPrefabs.enemy.charge.currentPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.charge.currentPrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_CHARGE_HALF:
-				return Instantiate(variablesPrefabs.enemy.charge.halfPrefab);
+				variable = Instantiate(variablesPrefabs.enemy.charge.halfPrefab, canvas);
+				break;
 			case Commands.ENEMY_ACTUAL_CHARGE_DOUBLE:
-				return Instantiate(variablesPrefabs.enemy.charge.doublePrefab);
+				variable = Instantiate(variablesPrefabs.enemy.charge.doublePrefab, canvas);
+				break;
 			case Commands.ROUND:
-				return Instantiate(variablesPrefabs.roundPrefab);
+				variable = Instantiate(variablesPrefabs.roundPrefab, canvas);
+				break;
 			case Commands.ZERO:
-				return Instantiate(variablesPrefabs.numbersPrefabs[0]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[0], canvas);
+				break;
 			case Commands.ONE:
-				return Instantiate(variablesPrefabs.numbersPrefabs[1]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[1], canvas);
+				break;
 			case Commands.TWO:
-				return Instantiate(variablesPrefabs.numbersPrefabs[2]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[2], canvas);
+				break;
 			case Commands.THREE:
-				return Instantiate(variablesPrefabs.numbersPrefabs[3]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[3], canvas);
+				break;
 			case Commands.FOUR:
-				return Instantiate(variablesPrefabs.numbersPrefabs[4]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[4], canvas);
+				break;
 			case Commands.FIVE:
-				return Instantiate(variablesPrefabs.numbersPrefabs[5]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[5], canvas);
+				break;
 			case Commands.SIX:
-				return Instantiate(variablesPrefabs.numbersPrefabs[6]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[6], canvas);
+				break;
 			case Commands.SEVEN:
-				return Instantiate(variablesPrefabs.numbersPrefabs[7]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[7], canvas);
+				break;
 			case Commands.EIGHT:
-				return Instantiate(variablesPrefabs.numbersPrefabs[8]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[8], canvas);
+				break;
 			case Commands.NINE:
-				return Instantiate(variablesPrefabs.numbersPrefabs[9]);
+				variable = Instantiate(variablesPrefabs.numbersPrefabs[9], canvas);
+				break;
 			default:
 				return null;
 		}
+		SetBlockAsOld(variable);
+		return variable;
 	}
 
 	public void Clear()
