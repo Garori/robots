@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6689201167722628214}
   - component: {fileID: 8846899857513202214}
   - component: {fileID: 3296982123081313127}
+  - component: {fileID: 2723855533452369146}
   m_Layer: 5
   m_Name: While
   m_TagString: StructureBlock
@@ -151,11 +152,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41bdfb023a5c0ee4abaa691aee00a577, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
   isInPanel: 0
   commandName: 8
   comparatorSlot: {fileID: 9210400295588638459}
+--- !u!210 &2723855533452369146
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7585212951836542240}
+  m_Enabled: 1
+  m_SortingLayerID: -1497108421
+  m_SortingLayer: 3
+  m_SortingOrder: 0
 --- !u!1001 &6720890200186579853
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -163,6 +173,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5145801793831112621}
     m_Modifications:
+    - target: {fileID: 7794643752263940644, guid: d0700cb1c12964849a93820ea5670ee0, type: 3}
+      propertyPath: m_ChildControlWidth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794643752263940644, guid: d0700cb1c12964849a93820ea5670ee0, type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7794643752263940649, guid: d0700cb1c12964849a93820ea5670ee0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

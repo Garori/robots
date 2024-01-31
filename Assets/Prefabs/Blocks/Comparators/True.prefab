@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2191062040659512733}
   - component: {fileID: 7685038613608716988}
   - component: {fileID: 2719661090857773778}
+  - component: {fileID: 8020851453808588668}
   m_Layer: 0
   m_Name: True
   m_TagString: ComparatorBlock
@@ -150,6 +151,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f8bb18278f3274ba7ac5bbcfc98dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
+  isInPanel: 0
   commandName: 14
+  structureSlot: {fileID: 0}
+  variableSlot1: {fileID: 0}
+  variableSlot2: {fileID: 0}
+--- !u!210 &8020851453808588668
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4554119900001666013}
+  m_Enabled: 1
+  m_SortingLayerID: 99581609
+  m_SortingLayer: 4
+  m_SortingOrder: 0

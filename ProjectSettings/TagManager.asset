@@ -64,3 +64,12 @@ TagManager:
   - name: Line
     uniqueID: 2920618663
     locked: 0
+  - name: Structure
+    uniqueID: 2797858875
+    locked: 0
+  - name: Comparator
+    uniqueID: 99581609
+    locked: 0
+  - name: Variable
+    uniqueID: 3598611103
+    locked: 0

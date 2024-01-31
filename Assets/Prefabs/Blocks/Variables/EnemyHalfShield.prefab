@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 254252559258559628}
   - component: {fileID: 3745001812598473613}
   - component: {fileID: 1350503129201081735}
+  - component: {fileID: -1793512976419505163}
   m_Layer: 5
   m_Name: EnemyHalfShield
   m_TagString: VariableBlock
@@ -151,8 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4709e7d77e495084fa52db5fb77dddbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
   isInPanel: 0
   commandName: 34
   blockSlot: {fileID: 0}
@@ -170,3 +169,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipText: Enemy Actual Shield Half
+--- !u!210 &-1793512976419505163
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202177238330965485}
+  m_Enabled: 1
+  m_SortingLayerID: -696356193
+  m_SortingLayer: 5
+  m_SortingOrder: 0

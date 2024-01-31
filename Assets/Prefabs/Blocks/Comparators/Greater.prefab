@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9085471504708465387}
   - component: {fileID: 781548831698347466}
   - component: {fileID: 327587845}
+  - component: {fileID: -7944382677776719773}
   m_Layer: 5
   m_Name: Greater
   m_TagString: ComparatorBlock
@@ -152,13 +153,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f8bb18278f3274ba7ac5bbcfc98dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
   isInPanel: 0
   commandName: 13
   structureSlot: {fileID: 0}
   variableSlot1: {fileID: 2814667993944271610}
   variableSlot2: {fileID: 6137161494487864337}
+--- !u!210 &-7944382677776719773
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6867242352133389483}
+  m_Enabled: 1
+  m_SortingLayerID: 99581609
+  m_SortingLayer: 4
+  m_SortingOrder: 0
 --- !u!1001 &854369455646681188
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -166,6 +176,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8169741942399858214}
     m_Modifications:
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Top
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_ChildControlWidth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7280749285905250111, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -296,6 +330,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8169741942399858214}
     m_Modifications:
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Top
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_ChildControlWidth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211569532725438177, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7280749285905250111, guid: a1ac509556600d342a6bbb41a0fe6946, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

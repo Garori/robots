@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1824805728063154945}
   - component: {fileID: 4558015202854333777}
   - component: {fileID: 3073126981320136280}
+  - component: {fileID: 4294594140484086122}
   m_Layer: 5
   m_Name: Charge
   m_TagString: ActionBlock
@@ -150,6 +151,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728978c9eef8a104baed8025ebc58a9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelManager: {fileID: 0}
-  canvas: {fileID: 0}
+  isInPanel: 0
   commandName: 2
+--- !u!210 &4294594140484086122
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3225638209708485207}
+  m_Enabled: 1
+  m_SortingLayerID: -1497108421
+  m_SortingLayer: 3
+  m_SortingOrder: 0
