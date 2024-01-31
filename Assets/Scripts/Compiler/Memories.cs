@@ -14,6 +14,7 @@ public static class Memories
 
 	public static CellsContainer[] GetFiles(string folderName)
 	{
+		if(!System.IO.Directory.Exists(folderName)) return new CellsContainer[0];
 		string[] fileNames = System.IO.Directory.GetFiles(folderName);
 		CellsContainer[] memories = new CellsContainer[fileNames.Length];
 
