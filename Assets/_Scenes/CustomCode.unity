@@ -375,7 +375,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 797283227}
   m_HandleRect: {fileID: 797283226}
   m_Direction: 2
-  m_Value: 1.0000769
+  m_Value: 1.0000753
   m_Size: 0.97883826
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8725,7 +8725,7 @@ MonoBehaviour:
   - {fileID: 245378364}
   - {fileID: 2026584076}
   blocksContainer: {fileID: 1324607073}
-  isCustom: 1
+  isCustom: 0
 --- !u!4 &1467012404
 Transform:
   m_ObjectHideFlags: 0
