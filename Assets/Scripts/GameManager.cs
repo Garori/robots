@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -27,6 +28,9 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private Compiler enemyCompiler;
 	private bool playerCompiled;
 	private CellsContainer memory;
+
+	[Header("Events")]
+	public UnityEvent SetDebugColor;
 
 	private void Start()
 	{
@@ -138,8 +142,9 @@ public class GameManager : MonoBehaviour
 			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
 			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE CODE FINISHED BEFORE THE BATTLE ENDED");
 		}
-		playerCompiled = false;
 
+		ShowDebug();
+		playerCompiled = false;
 		animationManager.StartAnimation(battleStatuses);
 	}
 
@@ -181,10 +186,17 @@ public class GameManager : MonoBehaviour
 		animationManager.SkipAnimation();
 	}
 
-	public void ShowDebug()
+	public void ToggleDebug()
 	{
 		battlePanel.SetActive(!battlePanel.activeSelf);
 		panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
+	}
+	
+	public void ShowDebug()
+	{
+		battlePanel.SetActive(true);
+		panelManager.gameObject.SetActive(false);
+		SetDebugColor.Invoke();
 	}
 
 	private void SetMedalsText(int rounds, int size)

@@ -18,4 +18,10 @@ public class ChangeSprite : MonoBehaviour
         currentID = (currentID + 1) % sprites.Length;
         this.GetComponent<Image>().sprite = sprites[currentID];
     }
+
+    public void ChangeImage(int id)
+    {
+        currentID = id;
+        this.GetComponent<Image>().sprite = sprites[currentID];
+    }
 }
