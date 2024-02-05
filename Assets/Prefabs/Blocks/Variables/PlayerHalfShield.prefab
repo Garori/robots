@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe53bb85e5166e440a485de72fd37d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: Player Actual Shield Half
+  tooltipText: Metade de Escudo Atual Jogador
 --- !u!210 &-6476521526911118364
 SortingGroup:
   m_ObjectHideFlags: 0

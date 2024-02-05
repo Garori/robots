@@ -108,9 +108,9 @@ public class GameManager : MonoBehaviour
 			} while (status.isOver == 0);
 			actualRoundPanel = Instantiate(roundPanel, roundContent);
 			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"END OF BATTLE");
-			actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == 1 ? "WINNER" : "LOSER");
-			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "WINNER" : "LOSER");
+			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"FIM DA BATALHA");
+			actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == 1 ? "VENCEDOR" : "PERDEDOR");
+			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "VENCEDOR" : "PERDEDOR");
 
 			if(status.isOver == 1)
 			{
@@ -128,19 +128,19 @@ public class GameManager : MonoBehaviour
 		{
 			actualRoundPanel = Instantiate(roundError, roundContent);
 			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE PLAYER TOOK TOO LONG TO CHOOSE AN ACTION");
+			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERRO:\nJOGADOR DEMOROU MUITO PARA ESCOLHER UMA AÇÃO");
 		}
 		catch (MaxNumberOfRoundsException)
 		{
 			actualRoundPanel = Instantiate(roundError, roundContent);
 			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE BATTLE IS TAKING TOO LONG TO FINISH");
+			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERRO:\nA BATALHA DEMOROU MUITO PARA ACABAR");
 		}
 		catch (PlayerOutOfActionsException)
 		{
 			actualRoundPanel = Instantiate(roundError, roundContent);
 			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERROR\nTHE CODE FINISHED BEFORE THE BATTLE ENDED");
+			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERRO:\nO CÓDIGO ACABOU ANTES DO FIM DA BATALHA");
 		}
 
 		ShowDebug();
@@ -155,12 +155,12 @@ public class GameManager : MonoBehaviour
 
 	private string PlayerStatus(BattleStatus battleStatus)
 	{
-		return $"ACTION:\n{battleStatus.playerAction}\nLIFE: {battleStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\nDEFENSE: {battleStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\nCHARGE: {battleStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
+		return $"COMANDO:\n{battleStatus.playerAction}\nVIDA: {battleStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\nESCUDOS: {battleStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\nCARGAS: {battleStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
 	}
 
 	private string EnemyStatus(BattleStatus battleStatus)
 	{
-		return $"ACTION:\n{battleStatus.enemyAction}\nLIFE: {battleStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\nDEFENSE: {battleStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\nCHARGE: {battleStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
+		return $"COMANDO:\n{battleStatus.enemyAction}\nVIDA: {battleStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\nESCUDOS: {battleStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\nCARGAS: {battleStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
 	}
 
 	public void QuitGame()
@@ -211,13 +211,13 @@ public class GameManager : MonoBehaviour
 
 		if (roundMedal)
 		{
-			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Round Medal: {(memory.medal.bestRounds == int.MaxValue ? 0 : memory.medal.bestRounds)}/{memory.medal.maxRounds}";
+			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Turnos: {(memory.medal.bestRounds == int.MaxValue ? 0 : memory.medal.bestRounds)}/{memory.medal.maxRounds}";
 			ColorMedal(isRoundMedalWon, roundMedal);
 		}
 
 		if (sizeMedal)
 		{
-			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Size Medal: {(memory.medal.bestSize == int.MaxValue ? 0 : memory.medal.bestSize)}/{memory.medal.maxSize}";
+			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Blocos: {(memory.medal.bestSize == int.MaxValue ? 0 : memory.medal.bestSize)}/{memory.medal.maxSize}";
 			ColorMedal(isSizeMedalWon, sizeMedal);
 		}
 	}
@@ -232,13 +232,13 @@ public class GameManager : MonoBehaviour
 
 		if (roundMedal)
 		{
-			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Round Medal: {(round == int.MaxValue ? 0 : round)}/{memory.medal.maxRounds}";
+			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Turnos: {(round == int.MaxValue ? 0 : round)}/{memory.medal.maxRounds}";
 			ColorMedal(isRoundMedalWon, roundMedal);
 		}
 
 		if (sizeMedal)
 		{
-			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Size Medal: {(size == int.MaxValue ? 0 : size)}/{memory.medal.maxSize}";
+			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Blocos: {(size == int.MaxValue ? 0 : size)}/{memory.medal.maxSize}";
 			ColorMedal(isSizeMedalWon, sizeMedal);
 		}
 	}

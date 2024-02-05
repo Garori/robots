@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe53bb85e5166e440a485de72fd37d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: Enemy Actual Charge Double
+  tooltipText: Dobro de Carga Atual Inimigo
 --- !u!210 &-8484418880402581365
 SortingGroup:
   m_ObjectHideFlags: 0

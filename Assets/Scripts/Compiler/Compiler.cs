@@ -77,7 +77,7 @@ public class Compiler : MonoBehaviour
     {
         if (blockCommands.Count > maxBlocks)
         {
-            compileResult = $"COMPILATION ERROR: Can't have more than {maxBlocks} blocks";
+            compileResult = $"ERRO DE COMPILAÇÃO: Não pode haver mais de {maxBlocks} blocos";
             return false;
         }
         Stack<int> structuresStack = new Stack<int>();
@@ -103,7 +103,7 @@ public class Compiler : MonoBehaviour
             {
                 if (structuresStack.Count == 0)
                 {
-                    compileResult = "COMPILATION ERROR: END block without corresponding structure";
+                    compileResult = "ERRO DE COMPILAÇÃO: Bloco END sem estrutura correspondente";
                     return false;
                 }
                 memory[PC] = new EndCell();
@@ -121,7 +121,7 @@ public class Compiler : MonoBehaviour
             {
                 if (structuresStack.Count == 0)
                 {
-                    compileResult = "COMPILATION ERROR: ELSE block without corresponding IF";
+                    compileResult = "ERRO DE COMPILAÇÃO: Bloco ELSE sem IF correspondente";
                     return false;
                 }
 
@@ -129,7 +129,7 @@ public class Compiler : MonoBehaviour
                 Cell lastStructure = memory[lastStructureIndex];
                 if (!(lastStructure is IfCell))
                 {
-                    compileResult = "COMPILATION ERROR: ELSE block without corresponding IF";
+                    compileResult = "ERRO DE COMPILAÇÃO: Bloco ELSE sem IF correspondente";
                     return false;
                 }
 
@@ -144,13 +144,13 @@ public class Compiler : MonoBehaviour
                 Commands variableName = lineCommands[1];
                 if (variableName == Commands.NONE)
                 {
-                    compileResult = "COMPILATION ERROR: FOR block without number";
+                    compileResult = "ERRO DE COMPILAÇÃO: Bloco FOR sem número de repetições";
                     return false;
                 }
 
                 if (variableName == Commands.ZERO)
                 {
-                    compileResult = "COMPILATION ERROR: FOR block must have at least 1";
+                    compileResult = "ERRO DE COMPILAÇÃO: Bloco FOR deve ter número de repetições maior que zero";
                     return false;
                 }
 
@@ -162,7 +162,7 @@ public class Compiler : MonoBehaviour
             Commands comparatorCommand = lineCommands[1];
             if (comparatorCommand == Commands.NONE)
             {
-                compileResult = "COMPILATION ERROR: WHILE or IF block without condition";
+                compileResult = "ERRO DE COMPILAÇÃO: WHILE ou IF sem comparador";
                 return false;
             }
             ComparatorCell comparatorCell = null;
@@ -176,7 +176,7 @@ public class Compiler : MonoBehaviour
                     Commands variableName = lineCommands[2];
                     if (variableName == Commands.NONE)
                     {
-                        compileResult = "COMPILATION ERROR: EVEN comparator without variable";
+                        compileResult = "ERRO DE COMPILAÇÃO: Comparador EVEN sem variável";
                         return false;
                     }
 
@@ -187,7 +187,7 @@ public class Compiler : MonoBehaviour
                     Commands variable2Name = lineCommands[3];
                     if (variable1Name == Commands.NONE || variable2Name == Commands.NONE)
                     {
-                        compileResult = $"COMPILATION ERROR: {comparatorCommand} comparator without variables";
+                        compileResult = $"ERRO DE COMPILAÇÃO: {comparatorCommand} comparador sem variável(s)";
                         return false;
                     }
 
@@ -220,17 +220,17 @@ public class Compiler : MonoBehaviour
         }
         if (structuresStack.Count != 0)
         {
-            compileResult = "COMPILATION ERROR: The structures were not properly ended";
+            compileResult = "ERRO DE COMPILAÇÃO: A estrutura não foi fechada corretamente";
             return false;
         }
         if (!hasAction)
         {
-            compileResult = "COMPILATION ERROR: There isn't an action to be done";
+            compileResult = "ERRO DE COMPILAÇÃO: Não há nenhuma ação no código";
             return false;
         }
         totalCells = PC + 1;
         ResetAttributes();
-        compileResult = "COMPILED SUCCESSFULLY!!!";
+        compileResult = "COMPILAÇÃO BEM SUCEDIDA!!!";
         return true;
     }
 
