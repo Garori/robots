@@ -22,6 +22,8 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	private bool newBlock;
 	public bool isInPanel;
 
+	public bool canDisable;
+
 	[Header("Enum")]
 	public Commands commandName;
 
@@ -62,6 +64,7 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	{
 		if (eventData.button != PointerEventData.InputButton.Right) return;
 		if (isInPanel) return;
+		if (!canDisable) return;
 
 		isEnabled = !isEnabled;
 	}
@@ -75,7 +78,6 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 			createdBlock.name = gameObject.name;
 			createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
 			createdBlock.GetComponent<BlockController>().isEnabled = isEnabled;
-			//gameObject.transform.SetSiblingIndex(gameObject.transform.parent.childCount - 1);
 			newBlock = false;
 			TooltipTrigger tooltipTrigger = createdBlock.GetComponent<TooltipTrigger>();
 			if (tooltipTrigger != null)

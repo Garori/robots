@@ -375,7 +375,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 797283227}
   m_HandleRect: {fileID: 797283226}
   m_Direction: 2
-  m_Value: 1.0000753
+  m_Value: 1.0000769
   m_Size: 0.97883826
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -530,6 +530,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
@@ -1610,6 +1614,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
       objectReference: {fileID: 0}
@@ -1891,6 +1899,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
@@ -3715,6 +3727,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 3073126981320136280, guid: 21d49dfcbb5a3e9498a1a07aaed893b9, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3073126981320136280, guid: 21d49dfcbb5a3e9498a1a07aaed893b9, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -4185,6 +4201,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
@@ -4784,6 +4804,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: commandName
       value: 39
@@ -6207,6 +6231,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
@@ -9599,6 +9627,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
       objectReference: {fileID: 0}
@@ -9733,6 +9765,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
@@ -10247,6 +10283,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: -7632818983819954395, guid: 9c90f33d33f974848850b0fa7f174b41, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7632818983819954395, guid: 9c90f33d33f974848850b0fa7f174b41, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -10590,6 +10630,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
@@ -10972,6 +11016,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
       objectReference: {fileID: 0}
@@ -11303,6 +11351,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 6179719029786794228, guid: fb211a58273a6074f8bad42a978838a1, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6179719029786794228, guid: fb211a58273a6074f8bad42a978838a1, type: 3}
       propertyPath: panelManager
       value: 
@@ -12110,6 +12162,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 1821781585, guid: 4b870b7ec60682a40a5a2ee091f4ef14, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1821781585, guid: 4b870b7ec60682a40a5a2ee091f4ef14, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -12380,6 +12436,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: canUseInFor
       value: 1
@@ -12798,6 +12858,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 1342300566427006780, guid: 7892dbead21d84343a2875f36be70a69, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1342300566427006780, guid: 7892dbead21d84343a2875f36be70a69, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -12912,6 +12976,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 3745001812598473613, guid: 0fda2d5e378dd1d448cd75a063a893cd, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745001812598473613, guid: 0fda2d5e378dd1d448cd75a063a893cd, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -13025,6 +13093,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 2900924869161395377, guid: 40f30220e558c424e9463814625d9839, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2900924869161395377, guid: 40f30220e558c424e9463814625d9839, type: 3}
       propertyPath: panelManager
       value: 
@@ -13241,6 +13313,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4829894850477928264, guid: f3367a3c560dd524c9d78ddb4fecf738, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -13257,6 +13333,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4696334997503450255, guid: 0cf9768e65a4fb34f960e00e62f4467e, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4696334997503450255, guid: 0cf9768e65a4fb34f960e00e62f4467e, type: 3}
       propertyPath: panelManager
       value: 
@@ -13375,6 +13455,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 7278407160001593949, guid: 0a2707f3becb25f45955ff146a21d7ae, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7278407160001593949, guid: 0a2707f3becb25f45955ff146a21d7ae, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -13480,6 +13564,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 3296982123081313127, guid: 7bc742e3929d82b48a92e20c26e97792, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3296982123081313127, guid: 7bc742e3929d82b48a92e20c26e97792, type: 3}
       propertyPath: panelManager
       value: 
@@ -13617,6 +13705,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 7648425203939685076, guid: cfa31e5f1f56b754ab8b94a48c30fc6b, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648425203939685076, guid: cfa31e5f1f56b754ab8b94a48c30fc6b, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -13717,6 +13809,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 1094061232130812894, guid: 85dd6f48bef19c14fafed32d6c9ab4b4, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1094061232130812894, guid: 85dd6f48bef19c14fafed32d6c9ab4b4, type: 3}
       propertyPath: panelManager
       value: 
@@ -13826,6 +13922,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 695989173666572916, guid: 1c7feac908b296848b53603ef40a5f89, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 695989173666572916, guid: 1c7feac908b296848b53603ef40a5f89, type: 3}
       propertyPath: panelManager
       value: 
@@ -14028,6 +14128,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 7751365863283206743, guid: d6dc6081e72a36b4f9fd0c0bd9fe8d07, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7751365863283206743, guid: d6dc6081e72a36b4f9fd0c0bd9fe8d07, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -14049,6 +14153,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 998018649, guid: b555a5e0a3483f047b0c2abadbcb3612, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 998018649, guid: b555a5e0a3483f047b0c2abadbcb3612, type: 3}
       propertyPath: panelManager
       value: 
@@ -14172,6 +14280,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 3268054498588168264, guid: be8c708a13ed50e408eed328b0eb118f, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3268054498588168264, guid: be8c708a13ed50e408eed328b0eb118f, type: 3}
       propertyPath: panelManager
       value: 
@@ -14378,6 +14490,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 3924103608271580112, guid: c33a04de603f5674784f349f178e4d5d, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924103608271580112, guid: c33a04de603f5674784f349f178e4d5d, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -14486,6 +14602,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 8645231901117139977, guid: d335dbf45164bdf4f9d79f2198b49708, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8645231901117139977, guid: d335dbf45164bdf4f9d79f2198b49708, type: 3}
       propertyPath: panelManager
       value: 
@@ -14596,6 +14716,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 3759707297718124979, guid: a28a987da7f73c34ca714e03a5b8f5fa, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3759707297718124979, guid: a28a987da7f73c34ca714e03a5b8f5fa, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -14620,6 +14744,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 8132776007419426489, guid: 508ae250de5752941ac9fea496477719, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8132776007419426489, guid: 508ae250de5752941ac9fea496477719, type: 3}
       propertyPath: panelManager
       value: 
@@ -14721,6 +14849,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 327587845, guid: 24d8618fac292b74fa84eaefc14e59f3, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 327587845, guid: 24d8618fac292b74fa84eaefc14e59f3, type: 3}
       propertyPath: panelManager
       value: 
@@ -14950,6 +15082,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 9184101738282992309, guid: b96b6764f31e91f4abd792ed77883e0b, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184101738282992309, guid: b96b6764f31e91f4abd792ed77883e0b, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -15069,6 +15205,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 7434588254945742642, guid: aa1d3c0ef15432d43891466df0f570fb, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7434588254945742642, guid: aa1d3c0ef15432d43891466df0f570fb, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -15174,6 +15314,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 2719661090857773778, guid: 484f15dfa4c90c2458848b373ed50401, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2719661090857773778, guid: 484f15dfa4c90c2458848b373ed50401, type: 3}
       propertyPath: commandName
       value: 50
@@ -15317,6 +15461,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 7147004584114646427, guid: 89e02e5ff829c1b4c9655a5b61fccc73, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7147004584114646427, guid: 89e02e5ff829c1b4c9655a5b61fccc73, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -15425,6 +15573,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 8730175326148385071, guid: 13ae4cb4de3a4be4ab7234bc1c04f22a, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8730175326148385071, guid: 13ae4cb4de3a4be4ab7234bc1c04f22a, type: 3}
       propertyPath: panelManager
       value: 
@@ -15545,6 +15697,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 4429124157705544387, guid: 4869c686c428afc49878869777cc3504, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4429124157705544387, guid: 4869c686c428afc49878869777cc3504, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -15577,6 +15733,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 3720000725098096077, guid: 33c5c202b5124e34f8a830d881dd79ae, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3720000725098096077, guid: 33c5c202b5124e34f8a830d881dd79ae, type: 3}
       propertyPath: panelManager
       value: 
@@ -15687,6 +15847,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 1406255366, guid: d61e3bf3d1deed94886dff523543716e, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1406255366, guid: d61e3bf3d1deed94886dff523543716e, type: 3}
       propertyPath: panelManager
       value: 
@@ -15902,6 +16066,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 7659043317245088176, guid: 032f0818e126c4543997cf75b1f880a7, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7659043317245088176, guid: 032f0818e126c4543997cf75b1f880a7, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -16008,6 +16176,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 3504191299715052202, guid: 7da5ee3ac3b57034598927b20432e964, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3504191299715052202, guid: 7da5ee3ac3b57034598927b20432e964, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -16032,6 +16204,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 1351278594456546799, guid: 002604f3d2339b34a9973bdb7c53665c, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1351278594456546799, guid: 002604f3d2339b34a9973bdb7c53665c, type: 3}
       propertyPath: panelManager
       value: 
@@ -16249,6 +16425,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 3862845334491239920, guid: e66eaf96d2360564bafa76186f108d48, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3862845334491239920, guid: e66eaf96d2360564bafa76186f108d48, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -16265,6 +16445,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 473922330357844380, guid: 8da332259dd0e3447970a6a81b6cdef5, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 473922330357844380, guid: 8da332259dd0e3447970a6a81b6cdef5, type: 3}
       propertyPath: panelManager
       value: 
@@ -16476,6 +16660,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1717061593}
     - target: {fileID: 6011023451289867750, guid: f918415ee57112d41a71cb750db2d765, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011023451289867750, guid: f918415ee57112d41a71cb750db2d765, type: 3}
       propertyPath: panelManager
       value: 
       objectReference: {fileID: 2125954514}
@@ -16547,6 +16735,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 129265141818403271, guid: cc8466aabda4699419c7296c76f74811, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 129265141818403271, guid: cc8466aabda4699419c7296c76f74811, type: 3}
       propertyPath: panelManager
       value: 
@@ -16748,6 +16940,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1717061593}
+    - target: {fileID: 4624904584246890234, guid: cfe74134f3560ef4c8e1d85ef77b9b51, type: 3}
+      propertyPath: canDisable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4624904584246890234, guid: cfe74134f3560ef4c8e1d85ef77b9b51, type: 3}
       propertyPath: panelManager
       value: 
