@@ -34,6 +34,11 @@ public class CustomCodeManager : MonoBehaviour
             panelManager.LoadCommands(BattleData.levelCommands);
             BattleData.isTest = false;
         }
+        
+        if (!Directory.Exists("CustomMemories"))
+        {
+            Directory.CreateDirectory("CustomMemories");
+        }
     }
 
     private void Update()
