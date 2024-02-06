@@ -17,4 +17,9 @@ public abstract class Cell
     {
         return false;
     }
+
+    public virtual void ResetCell()
+    {
+        
+    }
 }

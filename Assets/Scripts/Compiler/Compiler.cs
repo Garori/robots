@@ -30,6 +30,10 @@ public class Compiler : MonoBehaviour
     public void ResetAttributes()
     {
         PC = -1;
+        foreach (Cell cell in memory)
+        {
+            if (cell != null) cell.ResetCell();
+        }
     }
 
     public List<List<Commands>> GetCommands(List<BlockController> blocks)

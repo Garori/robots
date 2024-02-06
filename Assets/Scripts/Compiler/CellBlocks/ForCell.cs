@@ -24,4 +24,9 @@ class ForCell : Cell, IConditionCell
         if (count < 0) count = maxCount;
         return mustContinue;
     }
+
+    public override void ResetCell()
+    {
+        count = maxCount;
+    }
 }
