@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 	[Header("Game Objects")]
 	public TMP_Text compilePopupText;
 	public GameObject battlePanel;
+	public GameObject statsPanel;
 	public GameObject roundPanel;
 	public GameObject roundError;
 	public RectTransform roundContent;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
 			SetMedalsText(int.MaxValue, int.MaxValue);
 		}
 
+		SetStatusText(memory);
 		SetEnemyMemory(memory);
 		EnableBlocks();
 
@@ -241,6 +243,22 @@ public class GameManager : MonoBehaviour
 			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Blocos: {(size == int.MaxValue ? 0 : size)}/{memory.medal.maxSize}";
 			ColorMedal(isSizeMedalWon, sizeMedal);
 		}
+	}
+
+	private void SetStatusText(CellsContainer memory)
+	{
+		GameObject playerStatsUI = statsPanel.transform.Find("PlayerStatsUI").gameObject;
+		GameObject enemyStatsUI = statsPanel.transform.Find("EnemyStatsUI").gameObject;
+
+		playerStatsUI.transform.Find("HealthText").GetComponent<TMP_Text>().SetText("Vida: " + memory.playerFighterAttributes.maxLifePoints);
+		playerStatsUI.transform.Find("DefenseText").GetComponent<TMP_Text>().SetText("Defesa: " + memory.playerFighterAttributes.maxDefensePoints);
+		playerStatsUI.transform.Find("ChargeText").GetComponent<TMP_Text>().SetText("Carga: " + memory.playerFighterAttributes.maxChargePoints);
+		playerStatsUI.transform.Find("DamageText").GetComponent<TMP_Text>().SetText("Dano: " + memory.playerFighterAttributes.minAttackPoints);
+
+		enemyStatsUI.transform.Find("HealthText").GetComponent<TMP_Text>().SetText("Vida: " + memory.enemyFighterAttributes.maxLifePoints);
+		enemyStatsUI.transform.Find("DefenseText").GetComponent<TMP_Text>().SetText("Defesa: " + memory.enemyFighterAttributes.maxDefensePoints);
+		enemyStatsUI.transform.Find("ChargeText").GetComponent<TMP_Text>().SetText("Carga: " + memory.enemyFighterAttributes.maxChargePoints);
+		enemyStatsUI.transform.Find("DamageText").GetComponent<TMP_Text>().SetText("Dano: " + memory.enemyFighterAttributes.minAttackPoints);
 	}
 
 	private void ColorMedal(bool medalWon, GameObject medal)
