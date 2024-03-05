@@ -513,7 +513,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a1dd0ae4ee363c840a587f7834babc7e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed152708a10c087438becda19df37589, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1421,10 +1421,10 @@ MonoBehaviour:
   creatorModeSceneName: CustomCode
   tutorialImage: {fileID: 386285758}
   tutorialImages:
-  - {fileID: 21300000, guid: a1dd0ae4ee363c840a587f7834babc7e, type: 3}
-  - {fileID: 21300000, guid: 764d0372abc4dea46ad78797594f127d, type: 3}
-  - {fileID: 21300000, guid: 31cb49dee5f9a72478d758a90be16267, type: 3}
-  - {fileID: 21300000, guid: 212e74e244dd51449bef2ea4f6a8a455, type: 3}
+  - {fileID: 21300000, guid: ed152708a10c087438becda19df37589, type: 3}
+  - {fileID: 21300000, guid: c0976f817be6e984884b13570d0648fa, type: 3}
+  - {fileID: 21300000, guid: 7e3f1289efca5e148a20f4f06b35f3d8, type: 3}
+  - {fileID: 21300000, guid: 6dfe1dc8f0b943447bd53e3f8726c1a1, type: 3}
   - {fileID: 21300000, guid: 8d78d707b14855248af0e99bd9a642e5, type: 3}
   - {fileID: 21300000, guid: 07085fdcd5a1ba2499d9b8b2e3e570f5, type: 3}
   - {fileID: 21300000, guid: dd601cb1a0dd10d47bc4a6983a81e3ac, type: 3}
