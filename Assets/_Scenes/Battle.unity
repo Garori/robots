@@ -514,7 +514,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 797283227}
   m_HandleRect: {fileID: 797283226}
   m_Direction: 2
-  m_Value: 1.0000596
+  m_Value: 1.000058
   m_Size: 0.97883826
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10678,7 +10678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe53bb85e5166e440a485de72fd37d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: Toggle Debug Panel
+  tooltipText: "Alternar Tela de Depura\xE7\xE3o"
 --- !u!61 &1884965774
 BoxCollider2D:
   m_ObjectHideFlags: 0
