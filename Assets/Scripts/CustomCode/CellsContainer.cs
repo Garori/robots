@@ -15,9 +15,10 @@ public class CellsContainer
     public FighterAttributes playerFighterAttributes { get; set; }
     public FighterAttributes enemyFighterAttributes { get; set; }
     public Medal medal { get; set; }
+    public string hint { get; set; }
     public bool[] enabledBlocks { get; set; }
 
-    public CellsContainer(Compiler compiler, FighterAttributes playerFighterAttributes, FighterAttributes enemyFighterAttributes, Medal medal, bool[] enabledBlocks, bool isCustom = true)
+    public CellsContainer(Compiler compiler, FighterAttributes playerFighterAttributes, FighterAttributes enemyFighterAttributes, Medal medal, bool[] enabledBlocks, string hint, bool isCustom = true)
     {
         this.isCustom = isCustom;
         this.totalCells = compiler.TotalCells;
@@ -25,6 +26,7 @@ public class CellsContainer
         this.playerFighterAttributes = playerFighterAttributes;
         this.enemyFighterAttributes = enemyFighterAttributes;
         this.medal = medal;
+        this.hint = hint;
         this.enabledBlocks = enabledBlocks;
     }
 

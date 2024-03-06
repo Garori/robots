@@ -19,6 +19,7 @@ public class CustomCodeManager : MonoBehaviour
 
     [Header("Game Objects")]
     public TMP_Text compilePopupText;
+    public TMP_InputField hintField;
     public TMP_InputField[] inputFields;
     public Transform blocksContainer;
 
@@ -67,7 +68,6 @@ public class CustomCodeManager : MonoBehaviour
             if (blockController == null) continue;
 
             Commands command = blockController.commandName;
-            if (command == null) continue;
 
             int index = (int)command;
             if (index < 0) continue;
@@ -164,9 +164,11 @@ public class CustomCodeManager : MonoBehaviour
         FighterAttributes playerFighter = new FighterAttributes(hpPlayer, dmgPlayer, defPlayer, chaPlayer);
         FighterAttributes enemyFighter = new FighterAttributes(hpEnemy, dmgEnemy, defEnemy, chaEnemy);
 
+        string hint = hintField.text; 
+
         bool[] isBlockDisabled = GetEnabledBlocks();
 
-        CellsContainer cellsContainer = new CellsContainer(compiler, playerFighter, enemyFighter, medal, isBlockDisabled);
+        CellsContainer cellsContainer = new CellsContainer(compiler, playerFighter, enemyFighter, medal, isBlockDisabled, hint);
         return cellsContainer;
     }
 

@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 	public RectTransform roundContent;
 	public Scrollbar roundScrollbar;
 	public Transform blocksArea;
+	public HintPanelMove hintPanel;
 
 	[Header("Fighters Scripts")]
 	[SerializeField] private Compiler playerCompiler;
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviour
 
 		SetStatusText(memory);
 		SetEnemyMemory(memory);
+		SetHintText(memory);
 		EnableBlocks();
 
 		foreach (Transform child in roundContent.transform)
@@ -271,5 +273,10 @@ public class GameManager : MonoBehaviour
 		{
 			medal.GetComponent<Image>().color = Color.black;
 		}
+	}
+
+	private void SetHintText(CellsContainer memory)
+	{
+		hintPanel.SetText(memory.hint);
 	}
 }

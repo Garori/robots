@@ -18,8 +18,8 @@ public class PanelPuller : MonoBehaviour
     private bool isOpen;
 
     void Start()
-    {
-        isOpen = true;
+    {   
+        OpenPanel();
     }
 
     public void TogglePanel()
@@ -39,15 +39,11 @@ public class PanelPuller : MonoBehaviour
         isOpen = true;
         blocksArea.SetActive(true);
         transform.DOLocalMoveY(openPositionY, 0.5f, false);
-
-        statusPanel.transform.DOLocalMoveY(statusOpenPositionY, 0.5f, false);
     }
 
     private void ClosePanel()
     {
         isOpen = false;
         transform.DOLocalMoveY(closedPositionY, 0.5f, false).OnComplete(() => blocksArea.SetActive(false));
-
-        statusPanel.transform.DOLocalMoveY(statusClosedPositionY, 0.5f, false);
     }
 }
