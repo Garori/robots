@@ -7884,6 +7884,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2113851779}
+        m_TargetAssemblyTypeName: HintPanelMove, Assembly-CSharp
+        m_MethodName: TogglePanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1315515823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12341,8 +12353,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dec0c5a470a36c4cb76f400e9c53c08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showHintPositionX: 0
-  hideHintPositionX: 0
+  showHintPositionX: -150
+  hideHintPositionX: -650
+  hintPanelText: {fileID: 313974717}
 --- !u!1 &2125954509
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,21 +9,21 @@ public class HintPanelMove : MonoBehaviour
     [Header("Hint Panel")]
     [SerializeField] private float showHintPositionX;
     [SerializeField] private float hideHintPositionX;
-    private TMPro.TextMeshProUGUI hintPanelText;
-    private bool isOpen;
+    [SerializeField] private TMPro.TextMeshProUGUI hintPanelText;
+    private bool isShowing;
     private bool canShow;
 
-    void Start()
+    void Awake()
     {
-        isOpen = false;
-        canShow = true;
+        gameObject.SetActive(false);
+        canShow = false;
         HideHintPanel();
-        hintPanelText = GetComponentInChildren<TMPro.TextMeshProUGUI>();
     }
 
     public void TogglePanel()
     {
-        if (isOpen)
+        if (!canShow) return;
+        if (isShowing)
         {
             HideHintPanel();
         }
@@ -35,18 +35,25 @@ public class HintPanelMove : MonoBehaviour
 
     public void ShowHintPanel()
     {
-        gameObject.SetActive(canShow);
+        isShowing = true;
+        gameObject.SetActive(true);
         transform.DOLocalMoveX(showHintPositionX, 0.5f, false);
     }
 
     public void HideHintPanel()
     {
+        isShowing = false;
         transform.DOLocalMoveX(hideHintPositionX, 0.5f, false);
     }
 
     public void SetText(string text)
     {
+        if (string.IsNullOrWhiteSpace(text)) 
+        {
+            canShow = false;
+            return;
+        }
         hintPanelText.text = text;
-        canShow = text.Length > 0;
+        canShow = true;
     }
 }
