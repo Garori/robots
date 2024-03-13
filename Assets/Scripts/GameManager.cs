@@ -86,7 +86,8 @@ public class GameManager : MonoBehaviour
 		enemyCompiler.ResetAttributes();
 		Debug.Log("Starting Battle");
 		List<BattleStatus> battleStatuses = new List<BattleStatus>();
-		BattleStatus status = battleManager.InitBattleAttributes(memory.playerFighterAttributes, memory.enemyFighterAttributes);
+		BattleStatus lastStatus = battleManager.InitBattleAttributes(memory.playerFighterAttributes, memory.enemyFighterAttributes);
+		BattleStatus newStatus;
 		foreach (Transform child in roundContent.transform)
 		{
 			Destroy(child.gameObject);
@@ -99,32 +100,33 @@ public class GameManager : MonoBehaviour
 			{
 				// Turno a turno da batalha
 				Commands[] actions = new Commands[2];
-				actions[0] = playerCompiler.Run(status);
-				actions[1] = enemyCompiler.Run(status);
-				status = battleManager.PlayRound(actions);
+				actions[0] = playerCompiler.Run(lastStatus);
+				actions[1] = enemyCompiler.Run(lastStatus);
+				newStatus = battleManager.PlayRound(actions);
 				// Imprime os textos dos rounds
 				actualRoundPanel = Instantiate(roundPanel, roundContent);
 				actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-				actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {status.values[Commands.ROUND] - 1}");
-				actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PlayerStatus(status));
-				actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(EnemyStatus(status));
-				battleStatuses.Add(status);
-			} while (status.isOver == 0);
+				actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {newStatus.values[Commands.ROUND] - 1}");
+				actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PlayerStatus(lastStatus, newStatus));
+				actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(EnemyStatus(lastStatus, newStatus));
+				battleStatuses.Add(newStatus);
+				lastStatus = newStatus;
+			} while (newStatus.isOver == 0);
 			actualRoundPanel = Instantiate(roundPanel, roundContent);
 			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
 			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"FIM DA BATALHA");
-			actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == 1 ? "VENCEDOR" : "PERDEDOR");
-			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(status.isOver == -1 ? "VENCEDOR" : "PERDEDOR");
+			actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(newStatus.isOver == 1 ? "VENCEDOR" : "PERDEDOR");
+			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(newStatus.isOver == -1 ? "VENCEDOR" : "PERDEDOR");
 
-			if(status.isOver == 1)
+			if(newStatus.isOver == 1)
 			{
 				if (BattleData.isTest)
 				{
-					SetTestMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+					SetTestMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
 				}
 				else
 				{
-					SetMedalsText(status.values[Commands.ROUND] - 1, blocks.Count);
+					SetMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
 				}
 			}
 		}
@@ -157,14 +159,20 @@ public class GameManager : MonoBehaviour
 		enemyCompiler.Compile(memory.memory);
 	}
 
-	private string PlayerStatus(BattleStatus battleStatus)
+	private string PlayerStatus(BattleStatus lastStatus, BattleStatus newStatus)
 	{
-		return $"COMANDO:\n{battleStatus.playerAction}\nVIDA: {battleStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\nESCUDOS: {battleStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\nCARGAS: {battleStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
+		return $"COMANDO:\n{newStatus.playerAction}\n" +
+				$"VIDA: {lastStatus.values[Commands.PLAYER_ACTUAL_HEALTH]} -> {newStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\n" +
+				$"ESCUDOS: {lastStatus.values[Commands.PLAYER_ACTUAL_SHIELD]} -> {newStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\n" +
+				$"CARGAS: {lastStatus.values[Commands.PLAYER_ACTUAL_CHARGE]} -> {newStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
 	}
 
-	private string EnemyStatus(BattleStatus battleStatus)
+	private string EnemyStatus(BattleStatus lastStatus, BattleStatus newStatus)
 	{
-		return $"COMANDO:\n{battleStatus.enemyAction}\nVIDA: {battleStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\nESCUDOS: {battleStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\nCARGAS: {battleStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
+		return $"COMANDO:\n{newStatus.enemyAction}\n" +
+				$"VIDA: {lastStatus.values[Commands.ENEMY_ACTUAL_HEALTH]} -> {newStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\n" +
+				$"ESCUDOS: {lastStatus.values[Commands.ENEMY_ACTUAL_SHIELD]} -> {newStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\n" +
+				$"CARGAS: {lastStatus.values[Commands.ENEMY_ACTUAL_CHARGE]} -> {newStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
 	}
 
 	public void QuitGame()

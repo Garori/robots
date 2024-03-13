@@ -514,7 +514,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 797283227}
   m_HandleRect: {fileID: 797283226}
   m_Direction: 2
-  m_Value: 1.0000596
+  m_Value: 1.000058
   m_Size: 0.97883826
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -7439,7 +7439,7 @@ MonoBehaviour:
     m_Top: 30
     m_Bottom: 30
   m_ChildAlignment: 4
-  m_Spacing: 1
+  m_Spacing: 30
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
