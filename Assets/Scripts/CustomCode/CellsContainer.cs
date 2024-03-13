@@ -17,7 +17,8 @@ public class CellsContainer
     public Medal medal { get; set; }
     public string hint { get; set; }
     public bool[] enabledBlocks { get; set; }
-    public bool isLevelCleared;
+    public bool isLevelCleared { get; set; }
+    public List<List<Commands>> lastUserCode { get; set; }
 
     public CellsContainer(
         Compiler compiler,
@@ -73,6 +74,11 @@ public class CellsContainer
     public void SetWin(bool won)
     {
         isLevelCleared = isLevelCleared || won;
+    }
+
+    public void SetLastCode(List<List<Commands>> lastUserCode)
+    {
+        this.lastUserCode = lastUserCode;
     }
 
     public bool isBlockEnabled(Commands command)

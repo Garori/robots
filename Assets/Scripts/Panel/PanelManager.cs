@@ -1,568 +1,609 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System;
 
 [Serializable]
 public struct ActionsPrefabs
 {
-	public GameObject attackPrefab;
-	public GameObject defendPrefab;
-	public GameObject chargePrefab;
-	public GameObject healPrefab;
+    public GameObject attackPrefab;
+    public GameObject defendPrefab;
+    public GameObject chargePrefab;
+    public GameObject healPrefab;
 }
 
 [Serializable]
 public struct StructuresPrefabs
 {
-	public GameObject ifPrefab;
-	public GameObject elsePrefab;
-	public GameObject whilePrefab;
-	public GameObject forPrefab;
-	public GameObject endPrefab;
+    public GameObject ifPrefab;
+    public GameObject elsePrefab;
+    public GameObject whilePrefab;
+    public GameObject forPrefab;
+    public GameObject endPrefab;
 }
 
 [Serializable]
 public struct ComparatorsPrefabs
 {
-	public GameObject truePrefab;
-	public GameObject equalsPrefab;
-	public GameObject notEqualsPrefab;
-	public GameObject greaterPrefab;
-	public GameObject evenPrefab;
-
+    public GameObject truePrefab;
+    public GameObject equalsPrefab;
+    public GameObject notEqualsPrefab;
+    public GameObject greaterPrefab;
+    public GameObject evenPrefab;
 }
 
 [Serializable]
 public struct FighterVariableModifiersPrefabs
 {
-	public GameObject currentPrefab;
-	public GameObject halfPrefab;
-	public GameObject doublePrefab;
+    public GameObject currentPrefab;
+    public GameObject halfPrefab;
+    public GameObject doublePrefab;
 }
 
 [Serializable]
 public struct FighterPrefabs
 {
-	public FighterVariableModifiersPrefabs health;
-	public FighterVariableModifiersPrefabs maxHealth;
-	public FighterVariableModifiersPrefabs defense;
-	public FighterVariableModifiersPrefabs charge;
+    public FighterVariableModifiersPrefabs health;
+    public FighterVariableModifiersPrefabs maxHealth;
+    public FighterVariableModifiersPrefabs defense;
+    public FighterVariableModifiersPrefabs charge;
 }
 
 [Serializable]
 public struct VariablesPrefabs
 {
-	public FighterPrefabs player;
-	public FighterPrefabs enemy;
-	public GameObject roundPrefab;
-	public GameObject[] numbersPrefabs;
+    public FighterPrefabs player;
+    public FighterPrefabs enemy;
+    public GameObject roundPrefab;
+    public GameObject[] numbersPrefabs;
 }
 
 public class PanelManager : MonoBehaviour
 {
-	[Header("Game Objects")]
-	[SerializeField] private RectTransform canvas;
-	[SerializeField] private RectTransform linesContent;
-	public GameObject lineObjectPrefab;
-	public GameObject endLineObject;
+    [Header("Game Objects")]
+    [SerializeField]
+    private RectTransform canvas;
 
-	// Line info
-	private float minLineWidth;
-	private float lineHeight;
-	private float colliderHeight;
-	private Vector2 endLineSize;
-	private RectOffset linePadding;
-	private List<HorizontalLayoutGroup> linesLayout;
+    [SerializeField]
+    private RectTransform linesContent;
+    public GameObject lineObjectPrefab;
+    public GameObject endLineObject;
 
-	[Header("Padding")]
-	[SerializeField] private int minPadding;
-	[SerializeField] private int tabPadding;
+    // Line info
+    private float minLineWidth;
+    private float lineHeight;
+    private float colliderHeight;
+    private Vector2 endLineSize;
+    private RectOffset linePadding;
+    private List<HorizontalLayoutGroup> linesLayout;
 
-	[Header("Prefabs")]
-	[SerializeField] private ActionsPrefabs actionsPrefabs;
-	[SerializeField] private StructuresPrefabs structuresPrefabs;
-	[SerializeField] private ComparatorsPrefabs comparatorsPrefabs;
-	[SerializeField] private VariablesPrefabs variablesPrefabs;
+    [Header("Padding")]
+    [SerializeField]
+    private int minPadding;
 
-	// Blocks and lines arrays
-	private int activeLines;
-	private List<GameObject> lines;
-	public List<BlockController> blocks { get; set; }
+    [SerializeField]
+    private int tabPadding;
 
-	// Panel size
-	public float panelX { get; set; }
+    [Header("Prefabs")]
+    [SerializeField]
+    private ActionsPrefabs actionsPrefabs;
 
-	private void Awake()
-	{
-		activeLines = 0;
+    [SerializeField]
+    private StructuresPrefabs structuresPrefabs;
 
-		blocks = new List<BlockController>();
-		lines = new List<GameObject>();
-		linesLayout = new List<HorizontalLayoutGroup>();
+    [SerializeField]
+    private ComparatorsPrefabs comparatorsPrefabs;
 
-		RectTransform lineObjectPrefabTransform = lineObjectPrefab.GetComponent<RectTransform>();
-		minLineWidth = lineObjectPrefabTransform.sizeDelta.x;
-		lineHeight = lineObjectPrefabTransform.sizeDelta.y;
-		colliderHeight = lineObjectPrefab.GetComponent<BoxCollider2D>().size.y;
+    [SerializeField]
+    private VariablesPrefabs variablesPrefabs;
 
-		panelX = canvas.sizeDelta.x - GetComponent<RectTransform>().sizeDelta.x;
+    // Blocks and lines arrays
+    private int activeLines;
+    private List<GameObject> lines;
+    public List<BlockController> blocks { get; set; }
 
-		endLineSize = endLineObject.GetComponent<RectTransform>().sizeDelta;
+    // Panel size
+    public float panelX { get; set; }
 
-		RectOffset lineObjectPrefabPadding = lineObjectPrefab.GetComponent<HorizontalLayoutGroup>().padding;
-		linePadding = new RectOffset(
-			lineObjectPrefabPadding.left,
-			lineObjectPrefabPadding.right,
-			lineObjectPrefabPadding.top,
-			lineObjectPrefabPadding.bottom
-		);
-	}
+    private void Awake()
+    {
+        activeLines = 0;
 
-	private void Start()
-	{
+        blocks = new List<BlockController>();
+        lines = new List<GameObject>();
+        linesLayout = new List<HorizontalLayoutGroup>();
 
-		EventManager.BlockEnter += InsertBlock;
-		EventManager.BlockExit += RemoveBlock;
+        RectTransform lineObjectPrefabTransform = lineObjectPrefab.GetComponent<RectTransform>();
+        minLineWidth = lineObjectPrefabTransform.sizeDelta.x;
+        lineHeight = lineObjectPrefabTransform.sizeDelta.y;
+        colliderHeight = lineObjectPrefab.GetComponent<BoxCollider2D>().size.y;
 
-		EventManager.ComparatorEnter += InsertComparator;
-		EventManager.ComparatorExit += RemoveComparator;
+        panelX = canvas.sizeDelta.x - GetComponent<RectTransform>().sizeDelta.x;
 
-		EventManager.VariableEnter += InsertVariable;
-		EventManager.VariableExit += RemoveVariable;
-	}
+        endLineSize = endLineObject.GetComponent<RectTransform>().sizeDelta;
 
-	private void InsertBlock(BlockController block, GameObject line)
-	{
-		// Pega o index da linha e adiciona o bloco na lista
-		int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
-		blocks.Insert(index, block);
+        RectOffset lineObjectPrefabPadding = lineObjectPrefab
+            .GetComponent<HorizontalLayoutGroup>()
+            .padding;
+        linePadding = new RectOffset(
+            lineObjectPrefabPadding.left,
+            lineObjectPrefabPadding.right,
+            lineObjectPrefabPadding.top,
+            lineObjectPrefabPadding.bottom
+        );
+    }
 
-		// Cria a linha para o bloco
-		GameObject newLine = Instantiate(lineObjectPrefab, linesContent);
-		lines.Insert(index, newLine);
-		activeLines++;
-		linesLayout.Insert(index, newLine.GetComponent<HorizontalLayoutGroup>());
-		newLine.transform.SetSiblingIndex(index);
+    private void Start()
+    {
+        EventManager.BlockEnter += InsertBlock;
+        EventManager.BlockExit += RemoveBlock;
 
-		// Adiciona o bloco na linha
-		block.SetParent(newLine.GetComponent<RectTransform>());
-		block.isInPanel = true;
+        EventManager.ComparatorEnter += InsertComparator;
+        EventManager.ComparatorExit += RemoveComparator;
 
-		OrganizeBlocks();
-	}
+        EventManager.VariableEnter += InsertVariable;
+        EventManager.VariableExit += RemoveVariable;
+    }
 
-	private void RemoveBlock(BlockController block)
-	{
-		// Verifica se o bloco está no painel
-		if (!block.isInPanel) return;
-		block.isInPanel = false;
+    private void InsertBlock(BlockController block, GameObject line)
+    {
+        // Pega o index da linha e adiciona o bloco na lista
+        int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
+        blocks.Insert(index, block);
 
-		// Remove da lista de blocos
-		int index = blocks.IndexOf(block);
-		blocks.RemoveAt(index);
+        // Cria a linha para o bloco
+        GameObject newLine = Instantiate(lineObjectPrefab, linesContent);
+        lines.Insert(index, newLine);
+        activeLines++;
+        linesLayout.Insert(index, newLine.GetComponent<HorizontalLayoutGroup>());
+        newLine.transform.SetSiblingIndex(index);
 
-		// Remove a linha correspondente do painel 
-		GameObject line = lines[index];
-		lines.RemoveAt(index);
-		linesLayout.RemoveAt(index);
-		Destroy(line);
-		activeLines--;
+        // Adiciona o bloco na linha
+        block.SetParent(newLine.GetComponent<RectTransform>());
+        block.isInPanel = true;
 
-		OrganizeBlocks();
-	}
+        OrganizeBlocks();
+    }
 
-	private void InsertComparator(ComparatorController comparator, BlockSlotController blockSlot)
-	{
-		// Verifica se o espaco esta ocupado
-		if (blockSlot.isOccupied())
-		{
-			Destroy(comparator.gameObject);
-			return;
-		}
+    private void RemoveBlock(BlockController block)
+    {
+        // Verifica se o bloco está no painel
+        if (!block.isInPanel)
+            return;
+        block.isInPanel = false;
 
-		// Verifica se o bloco esta no painel
-		if (!blockSlot.isInPanel)
-		{
-			Destroy(comparator.gameObject);
-			return;
-		}
+        // Remove da lista de blocos
+        int index = blocks.IndexOf(block);
+        blocks.RemoveAt(index);
 
-		// Define parent de comparador
-		comparator.isInPanel = true;
-		Transform blockSlotTransform = blockSlot.GetComponent<RectTransform>();
-		comparator.SetParent(blockSlotTransform);
+        // Remove a linha correspondente do painel
+        GameObject line = lines[index];
+        lines.RemoveAt(index);
+        linesLayout.RemoveAt(index);
+        Destroy(line);
+        activeLines--;
 
-		// Define espaco parent de comparador como blockSlot
-		comparator.structureSlot = blockSlot;
-		// E espaco child de blockSlot como comparador
-		blockSlot.setChildBlock(comparator);
-	}
+        OrganizeBlocks();
+    }
 
-	private void RemoveComparator(ComparatorController comparator)
-	{
-		if (!comparator.isInPanel) return;
-		comparator.isInPanel = false;
+    private void InsertComparator(ComparatorController comparator, BlockSlotController blockSlot)
+    {
+        // Verifica se o espaco esta ocupado
+        if (blockSlot.isOccupied())
+        {
+            Destroy(comparator.gameObject);
+            return;
+        }
 
-		comparator.structureSlot.removeChildBlock();
-	}
+        // Verifica se o bloco esta no painel
+        if (!blockSlot.isInPanel)
+        {
+            Destroy(comparator.gameObject);
+            return;
+        }
 
-	private void InsertVariable(VariableController variable, BlockSlotController variableSlot)
-	{
-		if (variableSlot.isOccupied())
-		{
-			Destroy(variable.gameObject);
-			return;
-		}
+        // Define parent de comparador
+        comparator.isInPanel = true;
+        Transform blockSlotTransform = blockSlot.GetComponent<RectTransform>();
+        comparator.SetParent(blockSlotTransform);
 
-		if (!variableSlot.isInPanel)
-		{
-			Destroy(variable.gameObject);
-			return;
-		}
+        // Define espaco parent de comparador como blockSlot
+        comparator.structureSlot = blockSlot;
+        // E espaco child de blockSlot como comparador
+        blockSlot.setChildBlock(comparator);
+    }
 
-		// Define parent da variavel
-		variable.isInPanel = true;
-		Transform variableSlotTransform = variableSlot.GetComponent<RectTransform>();
-		variable.SetParent(variableSlotTransform);
+    private void RemoveComparator(ComparatorController comparator)
+    {
+        if (!comparator.isInPanel)
+            return;
+        comparator.isInPanel = false;
 
-		variable.blockSlot = variableSlot;
-		variableSlot.setChildBlock(variable);
-	}
+        comparator.structureSlot.removeChildBlock();
+    }
 
-	private void RemoveVariable(VariableController variable)
-	{
-		// Verifica se o bloco esta no painel
-		if (!variable.isInPanel) return;
-		variable.isInPanel = false;
+    private void InsertVariable(VariableController variable, BlockSlotController variableSlot)
+    {
+        if (variableSlot.isOccupied())
+        {
+            Destroy(variable.gameObject);
+            return;
+        }
 
-		variable.blockSlot.removeChildBlock();
-	}
+        if (!variableSlot.isInPanel)
+        {
+            Destroy(variable.gameObject);
+            return;
+        }
 
-	private void OrganizeBlocks()
-	{
-		string blocksPrint = "BLOCKS ARRAY\n";
-		int leftPadding = minPadding;
-		float maxWidth = minLineWidth;
-		for (int i = 0; i < lines.Count; i++)
-		{
-			GameObject blockGameObject = blocks[i].gameObject;
-			HorizontalLayoutGroup line = linesLayout[i];
-			blocksPrint += $"{blockGameObject.name}\n";
+        // Define parent da variavel
+        variable.isInPanel = true;
+        Transform variableSlotTransform = variableSlot.GetComponent<RectTransform>();
+        variable.SetParent(variableSlotTransform);
 
-			if (blockGameObject.CompareTag("ElseBlock") || blockGameObject.CompareTag("EndBlock")) leftPadding -= tabPadding;
-			leftPadding = Mathf.Max(leftPadding, minPadding);
+        variable.blockSlot = variableSlot;
+        variableSlot.setChildBlock(variable);
+    }
 
-			RectOffset padding = new RectOffset(
-				leftPadding,
-				linePadding.right,
-				linePadding.top,
-				linePadding.bottom
-			);
-			line.padding = padding;
+    private void RemoveVariable(VariableController variable)
+    {
+        // Verifica se o bloco esta no painel
+        if (!variable.isInPanel)
+            return;
+        variable.isInPanel = false;
 
-			RectTransform blockTransform = blockGameObject.GetComponent<RectTransform>();
-			maxWidth = Mathf.Max(maxWidth, leftPadding + blockTransform.sizeDelta.x * blockTransform.localScale.x);
+        variable.blockSlot.removeChildBlock();
+    }
 
-			if (blockGameObject.CompareTag("ElseBlock") || blockGameObject.CompareTag("StructureBlock") || blockGameObject.CompareTag("ForBlock")) leftPadding += tabPadding;
-		}
+    private void OrganizeBlocks()
+    {
+        string blocksPrint = "BLOCKS ARRAY\n";
+        int leftPadding = minPadding;
+        float maxWidth = minLineWidth;
+        for (int i = 0; i < lines.Count; i++)
+        {
+            GameObject blockGameObject = blocks[i].gameObject;
+            HorizontalLayoutGroup line = linesLayout[i];
+            blocksPrint += $"{blockGameObject.name}\n";
 
-		foreach (GameObject line in lines)
-		{
-			Vector2 transformSize = new Vector2(maxWidth, lineHeight);
-			line.GetComponent<RectTransform>().sizeDelta = transformSize;
+            if (blockGameObject.CompareTag("ElseBlock") || blockGameObject.CompareTag("EndBlock"))
+                leftPadding -= tabPadding;
+            leftPadding = Mathf.Max(leftPadding, minPadding);
 
-			Vector2 colliderSize = new Vector2(maxWidth, colliderHeight);
-			line.GetComponent<BoxCollider2D>().size = colliderSize;
-		}
-		endLineSize.x = maxWidth;
-		endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
-		endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
-	}
+            RectOffset padding = new RectOffset(
+                leftPadding,
+                linePadding.right,
+                linePadding.top,
+                linePadding.bottom
+            );
+            line.padding = padding;
 
-	public void LoadCommands(List<List<Commands>> commands)
-	{
-		Clear();
-		foreach (List<Commands> lineCommands in commands)
-		{
-			Commands mainCommand = lineCommands[0];
-			switch (mainCommand)
-			{
-				case Commands.ELSE:
-					GameObject elseBlock = InstantiateStructure(mainCommand);
-					InsertBlock(elseBlock.GetComponent<ElseController>(), endLineObject);
-					break;
-				case Commands.END:
-					GameObject endBlock = InstantiateStructure(mainCommand);
-					InsertBlock(endBlock.GetComponent<EndController>(), endLineObject);
-					break;
-				case Commands.FOR:
-					GameObject forBlock = InstantiateStructure(mainCommand);
-					ForController forController = forBlock.GetComponent<ForController>();
-					InsertBlock(forController, endLineObject);
+            RectTransform blockTransform = blockGameObject.GetComponent<RectTransform>();
+            maxWidth = Mathf.Max(
+                maxWidth,
+                leftPadding + blockTransform.sizeDelta.x * blockTransform.localScale.x
+            );
 
-					GameObject forVariable = InstantiateVariable(lineCommands[1]);
-					InsertVariable(forVariable.GetComponent<VariableController>(), forController.variableSlot);
-					break;
-				case Commands.IF:
-				case Commands.WHILE:
-					GameObject structureBlock = InstantiateStructure(mainCommand);
-					StructureController structureController = structureBlock.GetComponent<StructureController>();
-					InsertBlock(structureController, endLineObject);
+            if (
+                blockGameObject.CompareTag("ElseBlock")
+                || blockGameObject.CompareTag("StructureBlock")
+                || blockGameObject.CompareTag("ForBlock")
+            )
+                leftPadding += tabPadding;
+        }
 
-					GameObject comparator = InstantiateComparator(lineCommands[1]);
-					ComparatorController comparatorController = comparator.GetComponent<ComparatorController>();
-					InsertComparator(comparatorController, structureController.comparatorSlot);
+        foreach (GameObject line in lines)
+        {
+            Vector2 transformSize = new Vector2(maxWidth, lineHeight);
+            line.GetComponent<RectTransform>().sizeDelta = transformSize;
 
-					switch (lineCommands[1])
-					{
-						case Commands.TRUE:
-							break;
-						case Commands.EVEN:
-							GameObject variable = InstantiateVariable(lineCommands[2]);
-							InsertVariable(variable.GetComponent<VariableController>(), comparatorController.variableSlot1);
-							break;
-						default:
-							GameObject variable1 = InstantiateVariable(lineCommands[2]);
-							InsertVariable(variable1.GetComponent<VariableController>(), comparatorController.variableSlot1);
+            Vector2 colliderSize = new Vector2(maxWidth, colliderHeight);
+            line.GetComponent<BoxCollider2D>().size = colliderSize;
+        }
+        endLineSize.x = maxWidth;
+        endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
+        endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
+    }
 
-							GameObject variable2 = InstantiateVariable(lineCommands[3]);
-							InsertVariable(variable2.GetComponent<VariableController>(), comparatorController.variableSlot2);
-							break;
-					}
-					break;
-				default:
-					GameObject actionBlock = InstantiateAction(mainCommand);
-					InsertBlock(actionBlock.GetComponent<BlockController>(), endLineObject);
-					break;
-			}
-		}
-		OrganizeBlocks();
-	}
+    public void LoadCommands(List<List<Commands>> commands)
+    {
+        if (commands == null || commands.Count == 0)
+            return;
+        Clear();
+        foreach (List<Commands> lineCommands in commands)
+        {
+            Commands mainCommand = lineCommands[0];
+            switch (mainCommand)
+            {
+                case Commands.ELSE:
+                    GameObject elseBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(elseBlock.GetComponent<ElseController>(), endLineObject);
+                    break;
+                case Commands.END:
+                    GameObject endBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(endBlock.GetComponent<EndController>(), endLineObject);
+                    break;
+                case Commands.FOR:
+                    GameObject forBlock = InstantiateStructure(mainCommand);
+                    ForController forController = forBlock.GetComponent<ForController>();
+                    InsertBlock(forController, endLineObject);
 
-	private void SetBlockAsOld(GameObject block)
-	{
-		block.GetComponent<BlockController>().SetInPanel();
-	}
+                    GameObject forVariable = InstantiateVariable(lineCommands[1]);
+                    InsertVariable(
+                        forVariable.GetComponent<VariableController>(),
+                        forController.variableSlot
+                    );
+                    break;
+                case Commands.IF:
+                case Commands.WHILE:
+                    GameObject structureBlock = InstantiateStructure(mainCommand);
+                    StructureController structureController =
+                        structureBlock.GetComponent<StructureController>();
+                    InsertBlock(structureController, endLineObject);
 
-	public GameObject InstantiateAction(Commands command)
-	{
-		GameObject action = null;
-		switch (command)
-		{
-			case Commands.ATTACK:
-				action = Instantiate(actionsPrefabs.attackPrefab, canvas);
-				break;
-			case Commands.DEFEND:
-				action = Instantiate(actionsPrefabs.defendPrefab, canvas);
-				break;
-			case Commands.CHARGE:
-				action = Instantiate(actionsPrefabs.chargePrefab, canvas);
-				break;
-			case Commands.HEAL:
-				action = Instantiate(actionsPrefabs.healPrefab, canvas);
-				break;
-			default:
-				return null;
-		}
-		SetBlockAsOld(action);
-		return action;
-	}
+                    GameObject comparator = InstantiateComparator(lineCommands[1]);
+                    ComparatorController comparatorController =
+                        comparator.GetComponent<ComparatorController>();
+                    InsertComparator(comparatorController, structureController.comparatorSlot);
 
-	public GameObject InstantiateStructure(Commands command)
-	{
-		GameObject structure = null;
-		switch (command)
-		{
-			case Commands.IF:
-				structure = Instantiate(structuresPrefabs.ifPrefab, canvas);
-				break;
-			case Commands.ELSE:
-				structure = Instantiate(structuresPrefabs.elsePrefab, canvas);
-				break;
-			case Commands.WHILE:
-				structure = Instantiate(structuresPrefabs.whilePrefab, canvas);
-				break;
-			case Commands.FOR:
-				structure = Instantiate(structuresPrefabs.forPrefab, canvas);
-				break;
-			case Commands.END:
-				structure = Instantiate(structuresPrefabs.endPrefab, canvas);
-				break;
-			default:
-				return null;
-		}
-		SetBlockAsOld(structure);
-		return structure;
-	}
+                    switch (lineCommands[1])
+                    {
+                        case Commands.TRUE:
+                            break;
+                        case Commands.EVEN:
+                            GameObject variable = InstantiateVariable(lineCommands[2]);
+                            InsertVariable(
+                                variable.GetComponent<VariableController>(),
+                                comparatorController.variableSlot1
+                            );
+                            break;
+                        default:
+                            GameObject variable1 = InstantiateVariable(lineCommands[2]);
+                            InsertVariable(
+                                variable1.GetComponent<VariableController>(),
+                                comparatorController.variableSlot1
+                            );
 
-	public GameObject InstantiateComparator(Commands command)
-	{
-		GameObject comparator = null;
-		switch (command)
-		{
-			case Commands.TRUE:
-				comparator = Instantiate(comparatorsPrefabs.truePrefab, canvas);
-				break;
-			case Commands.EQUALS:
-				comparator = Instantiate(comparatorsPrefabs.equalsPrefab, canvas);
-				break;
-			case Commands.NOT_EQUALS:
-				comparator = Instantiate(comparatorsPrefabs.notEqualsPrefab, canvas);
-				break;
-			case Commands.GREATER:
-				comparator = Instantiate(comparatorsPrefabs.greaterPrefab, canvas);
-				break;
-			case Commands.EVEN:
-				comparator = Instantiate(comparatorsPrefabs.evenPrefab, canvas);
-				break;
-			default:
-				return null;
-		}
-		SetBlockAsOld(comparator);
-		return comparator;
-	}
+                            GameObject variable2 = InstantiateVariable(lineCommands[3]);
+                            InsertVariable(
+                                variable2.GetComponent<VariableController>(),
+                                comparatorController.variableSlot2
+                            );
+                            break;
+                    }
+                    break;
+                default:
+                    GameObject actionBlock = InstantiateAction(mainCommand);
+                    InsertBlock(actionBlock.GetComponent<BlockController>(), endLineObject);
+                    break;
+            }
+        }
+        OrganizeBlocks();
+    }
 
-	public GameObject InstantiateVariable(Commands command)
-	{
-		GameObject variable = null;
-		switch (command)
-		{
-			case Commands.PLAYER_ACTUAL_HEALTH:
-				variable = Instantiate(variablesPrefabs.player.health.currentPrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_HEALTH_HALF:
-				variable = Instantiate(variablesPrefabs.player.health.halfPrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_HEALTH_DOUBLE:
-				variable = Instantiate(variablesPrefabs.player.health.doublePrefab, canvas);
-				break;
-			case Commands.PLAYER_MAX_HEALTH:
-				variable = Instantiate(variablesPrefabs.player.maxHealth.currentPrefab, canvas);
-				break;
-			case Commands.PLAYER_MAX_HEALTH_HALF:
-				variable = Instantiate(variablesPrefabs.player.maxHealth.halfPrefab, canvas);
-				break;
-			case Commands.PLAYER_MAX_HEALTH_DOUBLE:
-				variable = Instantiate(variablesPrefabs.player.maxHealth.doublePrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_SHIELD:
-				variable = Instantiate(variablesPrefabs.player.defense.currentPrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_SHIELD_HALF:
-				variable = Instantiate(variablesPrefabs.player.defense.halfPrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_SHIELD_DOUBLE:
-				variable = Instantiate(variablesPrefabs.player.defense.doublePrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_CHARGE:
-				variable = Instantiate(variablesPrefabs.player.charge.currentPrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_CHARGE_HALF:
-				variable = Instantiate(variablesPrefabs.player.charge.halfPrefab, canvas);
-				break;
-			case Commands.PLAYER_ACTUAL_CHARGE_DOUBLE:
-				variable = Instantiate(variablesPrefabs.player.charge.doublePrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_HEALTH:
-				variable = Instantiate(variablesPrefabs.enemy.health.currentPrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_HEALTH_HALF:
-				variable = Instantiate(variablesPrefabs.enemy.health.halfPrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_HEALTH_DOUBLE:
-				variable = Instantiate(variablesPrefabs.enemy.health.doublePrefab, canvas);
-				break;
-			case Commands.ENEMY_MAX_HEALTH:
-				variable = Instantiate(variablesPrefabs.enemy.maxHealth.currentPrefab, canvas);
-				break;
-			case Commands.ENEMY_MAX_HEALTH_HALF:
-				variable = Instantiate(variablesPrefabs.enemy.maxHealth.halfPrefab, canvas);
-				break;
-			case Commands.ENEMY_MAX_HEALTH_DOUBLE:
-				variable = Instantiate(variablesPrefabs.enemy.maxHealth.doublePrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_SHIELD:
-				variable = Instantiate(variablesPrefabs.enemy.defense.currentPrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_SHIELD_HALF:
-				variable = Instantiate(variablesPrefabs.enemy.defense.halfPrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_SHIELD_DOUBLE:
-				variable = Instantiate(variablesPrefabs.enemy.defense.doublePrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_CHARGE:
-				variable = Instantiate(variablesPrefabs.enemy.charge.currentPrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_CHARGE_HALF:
-				variable = Instantiate(variablesPrefabs.enemy.charge.halfPrefab, canvas);
-				break;
-			case Commands.ENEMY_ACTUAL_CHARGE_DOUBLE:
-				variable = Instantiate(variablesPrefabs.enemy.charge.doublePrefab, canvas);
-				break;
-			case Commands.ROUND:
-				variable = Instantiate(variablesPrefabs.roundPrefab, canvas);
-				break;
-			case Commands.ZERO:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[0], canvas);
-				break;
-			case Commands.ONE:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[1], canvas);
-				break;
-			case Commands.TWO:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[2], canvas);
-				break;
-			case Commands.THREE:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[3], canvas);
-				break;
-			case Commands.FOUR:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[4], canvas);
-				break;
-			case Commands.FIVE:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[5], canvas);
-				break;
-			case Commands.SIX:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[6], canvas);
-				break;
-			case Commands.SEVEN:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[7], canvas);
-				break;
-			case Commands.EIGHT:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[8], canvas);
-				break;
-			case Commands.NINE:
-				variable = Instantiate(variablesPrefabs.numbersPrefabs[9], canvas);
-				break;
-			default:
-				return null;
-		}
-		SetBlockAsOld(variable);
-		return variable;
-	}
+    private void SetBlockAsOld(GameObject block)
+    {
+        block.GetComponent<BlockController>().SetInPanel();
+    }
 
-	public void Clear()
-	{
-		foreach (GameObject line in lines)
-		{
-			Destroy(line);
-		}
-		activeLines = 0;
-		lines.Clear();
-		blocks.Clear();
-		OrganizeBlocks();
-	}
+    public GameObject InstantiateAction(Commands command)
+    {
+        GameObject action = null;
+        switch (command)
+        {
+            case Commands.ATTACK:
+                action = Instantiate(actionsPrefabs.attackPrefab, canvas);
+                break;
+            case Commands.DEFEND:
+                action = Instantiate(actionsPrefabs.defendPrefab, canvas);
+                break;
+            case Commands.CHARGE:
+                action = Instantiate(actionsPrefabs.chargePrefab, canvas);
+                break;
+            case Commands.HEAL:
+                action = Instantiate(actionsPrefabs.healPrefab, canvas);
+                break;
+            default:
+                return null;
+        }
+        SetBlockAsOld(action);
+        return action;
+    }
 
-	public void KillEvents()
-	{
-		EventManager.BlockEnter -= InsertBlock;
-		EventManager.BlockExit -= RemoveBlock;
+    public GameObject InstantiateStructure(Commands command)
+    {
+        GameObject structure = null;
+        switch (command)
+        {
+            case Commands.IF:
+                structure = Instantiate(structuresPrefabs.ifPrefab, canvas);
+                break;
+            case Commands.ELSE:
+                structure = Instantiate(structuresPrefabs.elsePrefab, canvas);
+                break;
+            case Commands.WHILE:
+                structure = Instantiate(structuresPrefabs.whilePrefab, canvas);
+                break;
+            case Commands.FOR:
+                structure = Instantiate(structuresPrefabs.forPrefab, canvas);
+                break;
+            case Commands.END:
+                structure = Instantiate(structuresPrefabs.endPrefab, canvas);
+                break;
+            default:
+                return null;
+        }
+        SetBlockAsOld(structure);
+        return structure;
+    }
 
-		EventManager.ComparatorEnter -= InsertComparator;
-		EventManager.ComparatorExit -= RemoveComparator;
+    public GameObject InstantiateComparator(Commands command)
+    {
+        GameObject comparator = null;
+        switch (command)
+        {
+            case Commands.TRUE:
+                comparator = Instantiate(comparatorsPrefabs.truePrefab, canvas);
+                break;
+            case Commands.EQUALS:
+                comparator = Instantiate(comparatorsPrefabs.equalsPrefab, canvas);
+                break;
+            case Commands.NOT_EQUALS:
+                comparator = Instantiate(comparatorsPrefabs.notEqualsPrefab, canvas);
+                break;
+            case Commands.GREATER:
+                comparator = Instantiate(comparatorsPrefabs.greaterPrefab, canvas);
+                break;
+            case Commands.EVEN:
+                comparator = Instantiate(comparatorsPrefabs.evenPrefab, canvas);
+                break;
+            default:
+                return null;
+        }
+        SetBlockAsOld(comparator);
+        return comparator;
+    }
 
-		EventManager.VariableEnter -= InsertVariable;
-		EventManager.VariableExit -= RemoveVariable;
-	}
+    public GameObject InstantiateVariable(Commands command)
+    {
+        GameObject variable = null;
+        switch (command)
+        {
+            case Commands.PLAYER_ACTUAL_HEALTH:
+                variable = Instantiate(variablesPrefabs.player.health.currentPrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_HEALTH_HALF:
+                variable = Instantiate(variablesPrefabs.player.health.halfPrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_HEALTH_DOUBLE:
+                variable = Instantiate(variablesPrefabs.player.health.doublePrefab, canvas);
+                break;
+            case Commands.PLAYER_MAX_HEALTH:
+                variable = Instantiate(variablesPrefabs.player.maxHealth.currentPrefab, canvas);
+                break;
+            case Commands.PLAYER_MAX_HEALTH_HALF:
+                variable = Instantiate(variablesPrefabs.player.maxHealth.halfPrefab, canvas);
+                break;
+            case Commands.PLAYER_MAX_HEALTH_DOUBLE:
+                variable = Instantiate(variablesPrefabs.player.maxHealth.doublePrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_SHIELD:
+                variable = Instantiate(variablesPrefabs.player.defense.currentPrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_SHIELD_HALF:
+                variable = Instantiate(variablesPrefabs.player.defense.halfPrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_SHIELD_DOUBLE:
+                variable = Instantiate(variablesPrefabs.player.defense.doublePrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_CHARGE:
+                variable = Instantiate(variablesPrefabs.player.charge.currentPrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_CHARGE_HALF:
+                variable = Instantiate(variablesPrefabs.player.charge.halfPrefab, canvas);
+                break;
+            case Commands.PLAYER_ACTUAL_CHARGE_DOUBLE:
+                variable = Instantiate(variablesPrefabs.player.charge.doublePrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_HEALTH:
+                variable = Instantiate(variablesPrefabs.enemy.health.currentPrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_HEALTH_HALF:
+                variable = Instantiate(variablesPrefabs.enemy.health.halfPrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_HEALTH_DOUBLE:
+                variable = Instantiate(variablesPrefabs.enemy.health.doublePrefab, canvas);
+                break;
+            case Commands.ENEMY_MAX_HEALTH:
+                variable = Instantiate(variablesPrefabs.enemy.maxHealth.currentPrefab, canvas);
+                break;
+            case Commands.ENEMY_MAX_HEALTH_HALF:
+                variable = Instantiate(variablesPrefabs.enemy.maxHealth.halfPrefab, canvas);
+                break;
+            case Commands.ENEMY_MAX_HEALTH_DOUBLE:
+                variable = Instantiate(variablesPrefabs.enemy.maxHealth.doublePrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_SHIELD:
+                variable = Instantiate(variablesPrefabs.enemy.defense.currentPrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_SHIELD_HALF:
+                variable = Instantiate(variablesPrefabs.enemy.defense.halfPrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_SHIELD_DOUBLE:
+                variable = Instantiate(variablesPrefabs.enemy.defense.doublePrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_CHARGE:
+                variable = Instantiate(variablesPrefabs.enemy.charge.currentPrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_CHARGE_HALF:
+                variable = Instantiate(variablesPrefabs.enemy.charge.halfPrefab, canvas);
+                break;
+            case Commands.ENEMY_ACTUAL_CHARGE_DOUBLE:
+                variable = Instantiate(variablesPrefabs.enemy.charge.doublePrefab, canvas);
+                break;
+            case Commands.ROUND:
+                variable = Instantiate(variablesPrefabs.roundPrefab, canvas);
+                break;
+            case Commands.ZERO:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[0], canvas);
+                break;
+            case Commands.ONE:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[1], canvas);
+                break;
+            case Commands.TWO:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[2], canvas);
+                break;
+            case Commands.THREE:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[3], canvas);
+                break;
+            case Commands.FOUR:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[4], canvas);
+                break;
+            case Commands.FIVE:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[5], canvas);
+                break;
+            case Commands.SIX:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[6], canvas);
+                break;
+            case Commands.SEVEN:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[7], canvas);
+                break;
+            case Commands.EIGHT:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[8], canvas);
+                break;
+            case Commands.NINE:
+                variable = Instantiate(variablesPrefabs.numbersPrefabs[9], canvas);
+                break;
+            default:
+                return null;
+        }
+        SetBlockAsOld(variable);
+        return variable;
+    }
+
+    public void Clear()
+    {
+        foreach (GameObject line in lines)
+        {
+            Destroy(line);
+        }
+        activeLines = 0;
+        lines.Clear();
+        blocks.Clear();
+        OrganizeBlocks();
+    }
+
+    public void KillEvents()
+    {
+        EventManager.BlockEnter -= InsertBlock;
+        EventManager.BlockExit -= RemoveBlock;
+
+        EventManager.ComparatorEnter -= InsertComparator;
+        EventManager.ComparatorExit -= RemoveComparator;
+
+        EventManager.VariableEnter -= InsertVariable;
+        EventManager.VariableExit -= RemoveVariable;
+    }
 }

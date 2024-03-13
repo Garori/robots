@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         SetStatusText(memory);
         SetEnemyMemory(memory);
         SetHintText(memory);
+        LoadLastCode(memory);
         EnableBlocks();
 
         foreach (Transform child in roundContent.transform)
@@ -155,9 +156,10 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     SetMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
+                    memory.SetWin(true);
+                    List<List<Commands>> commands = playerCompiler.GetCommands(blocks);
+                    SetLastCode(commands);
                 }
-                memory.SetWin(true);
-                memory.UpdateFile();
             }
         }
         catch (ActionTookTooLongException)
@@ -187,7 +189,7 @@ public class GameManager : MonoBehaviour
                 .GetComponent<TMPro.TextMeshProUGUI>()
                 .SetText($"ERRO:\nO CÓDIGO ACABOU ANTES DO FIM DA BATALHA");
         }
-
+        memory.UpdateFile();
         ShowDebug();
         playerCompiled = false;
         animationManager.StartAnimation(battleStatuses);
@@ -353,5 +355,15 @@ public class GameManager : MonoBehaviour
     private void SetHintText(CellsContainer memory)
     {
         hintPanel.SetText(memory.hint);
+    }
+
+    private void LoadLastCode(CellsContainer memory)
+    {
+        panelManager.LoadCommands(memory.lastUserCode);
+    }
+
+    private void SetLastCode(List<List<Commands>> commands)
+    {
+        memory.lastUserCode = commands;
     }
 }
