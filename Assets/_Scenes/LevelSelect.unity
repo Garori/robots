@@ -572,7 +572,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelButtonPrefab: {fileID: 5822116533729963006, guid: bb2f569debccf0e4f9fe01943edf28df, type: 3}
+  levelClearedButtonPrefab: {fileID: 7974349179240890351, guid: 0ddcd20aede502742afb64d6cc28667a, type: 3}
   customLevelButtonPrefab: {fileID: 8659743653243511174, guid: c20b52c0cdff3bd44a28411f91649cd2, type: 3}
+  customLevelClearedButtonPrefab: {fileID: 14996864569195116, guid: 9c681658b6dcce24ca06e69ae647e476, type: 3}
 --- !u!1 &818743618
 GameObject:
   m_ObjectHideFlags: 0
