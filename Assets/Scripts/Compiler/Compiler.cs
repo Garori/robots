@@ -32,7 +32,7 @@ public class Compiler : MonoBehaviour
         PC = -1;
         foreach (Cell cell in memory)
         {
-            if (cell != null) cell.ResetCell();
+            if (cell != null) cell.ResetCell(); 
         }
     }
 

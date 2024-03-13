@@ -11,7 +11,16 @@ public class BattleStatus
     public bool playerHit { get; set; }
     public bool enemyHit { get; set; }
 
-    public BattleStatus(Fighter player, Fighter enemy, int round = 1, int isOver = 0, Commands playerAction = Commands.START, Commands enemyAction = Commands.START, bool playerHit = false, bool enemyHit = false)
+    public BattleStatus(
+        Fighter player,
+        Fighter enemy,
+        int round = 1,
+        int isOver = 0,
+        Commands playerAction = Commands.START,
+        Commands enemyAction = Commands.START,
+        bool playerHit = false,
+        bool enemyHit = false
+    )
     {
         values = new Dictionary<Commands, int>();
         values[Commands.ZERO] = 0;

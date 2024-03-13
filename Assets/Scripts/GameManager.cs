@@ -1,290 +1,357 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-	[Header("Managers")]
-	public PanelManager panelManager;
-	public BattleManager battleManager;
-	public AnimationManager animationManager;
+    [Header("Managers")]
+    public PanelManager panelManager;
+    public BattleManager battleManager;
+    public AnimationManager animationManager;
 
-	[Header("Game Objects")]
-	public TMP_Text compilePopupText;
-	public GameObject battlePanel;
-	public GameObject statsPanel;
-	public GameObject roundPanel;
-	public GameObject roundError;
-	public RectTransform roundContent;
-	public Scrollbar roundScrollbar;
-	public Transform blocksArea;
-	public HintPanelMove hintPanel;
+    [Header("Game Objects")]
+    public TMP_Text compilePopupText;
+    public GameObject battlePanel;
+    public GameObject statsPanel;
+    public GameObject roundPanel;
+    public GameObject roundError;
+    public RectTransform roundContent;
+    public Scrollbar roundScrollbar;
+    public Transform blocksArea;
+    public HintPanelMove hintPanel;
 
-	[Header("Fighters Scripts")]
-	[SerializeField] private Compiler playerCompiler;
-	[SerializeField] private Compiler enemyCompiler;
-	private bool playerCompiled;
-	private CellsContainer memory;
+    [Header("Fighters Scripts")]
+    [SerializeField]
+    private Compiler playerCompiler;
 
-	[Header("Events")]
-	public UnityEvent SetDebugColor;
+    [SerializeField]
+    private Compiler enemyCompiler;
+    private bool playerCompiled;
+    private CellsContainer memory;
 
-	private void Start()
-	{
-		if (BattleData.isTest)
-		{
-			memory = BattleData.levelMemory;
-			SetTestMedalsText(int.MaxValue, int.MaxValue);
-		}
-		else
-		{
-			memory = Memories.GetMemory(BattleData.selectedLevel);
-			SetMedalsText(int.MaxValue, int.MaxValue);
-		}
+    [Header("Events")]
+    public UnityEvent SetDebugColor;
 
-		SetStatusText(memory);
-		SetEnemyMemory(memory);
-		SetHintText(memory);
-		EnableBlocks();
+    private void Start()
+    {
+        if (BattleData.isTest)
+        {
+            memory = BattleData.levelMemory;
+            SetTestMedalsText(int.MaxValue, int.MaxValue);
+        }
+        else
+        {
+            memory = Memories.GetMemory(BattleData.selectedLevel);
+            SetMedalsText(int.MaxValue, int.MaxValue);
+        }
 
-		foreach (Transform child in roundContent.transform)
-		{
-			Destroy(child.gameObject);
-		}
-		roundScrollbar.value = 1;
-		playerCompiled = false;
-	}
+        SetStatusText(memory);
+        SetEnemyMemory(memory);
+        SetHintText(memory);
+        EnableBlocks();
 
-	private void EnableBlocks()
-	{
-		foreach (Transform child in blocksArea)
-		{
-			// Get child block controller commandname
-			BlockController blockController = child.GetComponent<BlockController>();
-			Commands commandName = blockController.commandName;
+        foreach (Transform child in roundContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        roundScrollbar.value = 1;
+        playerCompiled = false;
+    }
 
-			child.gameObject.SetActive(memory.isBlockEnabled(commandName));
-		}
-	}
+    private void EnableBlocks()
+    {
+        foreach (Transform child in blocksArea)
+        {
+            // Get child block controller commandname
+            BlockController blockController = child.GetComponent<BlockController>();
+            Commands commandName = blockController.commandName;
 
-	public void RunBattle()
-	{
-		string compileResult = "";
-		List<BlockController> blocks = panelManager.blocks;
-		playerCompiled = playerCompiler.Compile(blocks, ref compileResult);
-		if (!playerCompiled)
-		{
-			compilePopupText.transform.parent.gameObject.SetActive(true);
-			compilePopupText.SetText(compileResult);
-			return;
-		}
-		enemyCompiler.ResetAttributes();
-		Debug.Log("Starting Battle");
-		List<BattleStatus> battleStatuses = new List<BattleStatus>();
-		BattleStatus lastStatus = battleManager.InitBattleAttributes(memory.playerFighterAttributes, memory.enemyFighterAttributes);
-		BattleStatus newStatus;
-		foreach (Transform child in roundContent.transform)
-		{
-			Destroy(child.gameObject);
-		}
-		GameObject actualRoundPanel;
-		RectTransform actualRoundPanelTransform;
-		try
-		{
-			do
-			{
-				// Turno a turno da batalha
-				Commands[] actions = new Commands[2];
-				actions[0] = playerCompiler.Run(lastStatus);
-				actions[1] = enemyCompiler.Run(lastStatus);
-				newStatus = battleManager.PlayRound(actions);
-				// Imprime os textos dos rounds
-				actualRoundPanel = Instantiate(roundPanel, roundContent);
-				actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-				actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"Round {newStatus.values[Commands.ROUND] - 1}");
-				actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PlayerStatus(lastStatus, newStatus));
-				actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(EnemyStatus(lastStatus, newStatus));
-				battleStatuses.Add(newStatus);
-				lastStatus = newStatus;
-			} while (newStatus.isOver == 0);
-			actualRoundPanel = Instantiate(roundPanel, roundContent);
-			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"FIM DA BATALHA");
-			actualRoundPanelTransform.GetChild(1).GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(newStatus.isOver == 1 ? "VENCEDOR" : "PERDEDOR");
-			actualRoundPanelTransform.GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(newStatus.isOver == -1 ? "VENCEDOR" : "PERDEDOR");
+            child.gameObject.SetActive(memory.isBlockEnabled(commandName));
+        }
+    }
 
-			if(newStatus.isOver == 1)
-			{
-				if (BattleData.isTest)
-				{
-					SetTestMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
-				}
-				else
-				{
-					SetMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
-				}
-			}
-		}
-		catch (ActionTookTooLongException)
-		{
-			actualRoundPanel = Instantiate(roundError, roundContent);
-			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERRO:\nJOGADOR DEMOROU MUITO PARA ESCOLHER UMA AÇÃO");
-		}
-		catch (MaxNumberOfRoundsException)
-		{
-			actualRoundPanel = Instantiate(roundError, roundContent);
-			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERRO:\nA BATALHA DEMOROU MUITO PARA ACABAR");
-		}
-		catch (PlayerOutOfActionsException)
-		{
-			actualRoundPanel = Instantiate(roundError, roundContent);
-			actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-			actualRoundPanelTransform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText($"ERRO:\nO CÓDIGO ACABOU ANTES DO FIM DA BATALHA");
-		}
+    public void RunBattle()
+    {
+        string compileResult = "";
+        List<BlockController> blocks = panelManager.blocks;
+        playerCompiled = playerCompiler.Compile(blocks, ref compileResult);
+        if (!playerCompiled)
+        {
+            compilePopupText.transform.parent.gameObject.SetActive(true);
+            compilePopupText.SetText(compileResult);
+            return;
+        }
+        enemyCompiler.ResetAttributes();
+        Debug.Log("Starting Battle");
+        List<BattleStatus> battleStatuses = new List<BattleStatus>();
+        BattleStatus lastStatus = battleManager.InitBattleAttributes(
+            memory.playerFighterAttributes,
+            memory.enemyFighterAttributes
+        );
+        BattleStatus newStatus;
+        foreach (Transform child in roundContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        GameObject actualRoundPanel;
+        RectTransform actualRoundPanelTransform;
+        try
+        {
+            do
+            {
+                // Turno a turno da batalha
+                Commands[] actions = new Commands[2];
+                actions[0] = playerCompiler.Run(lastStatus);
+                actions[1] = enemyCompiler.Run(lastStatus);
+                newStatus = battleManager.PlayRound(actions);
+                // Imprime os textos dos rounds
+                actualRoundPanel = Instantiate(roundPanel, roundContent);
+                actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
+                actualRoundPanelTransform
+                    .GetChild(0)
+                    .GetComponent<TMPro.TextMeshProUGUI>()
+                    .SetText($"Round {newStatus.values[Commands.ROUND] - 1}");
+                actualRoundPanelTransform
+                    .GetChild(1)
+                    .GetChild(0)
+                    .GetComponent<TMPro.TextMeshProUGUI>()
+                    .SetText(PlayerStatus(lastStatus, newStatus));
+                actualRoundPanelTransform
+                    .GetChild(1)
+                    .GetChild(1)
+                    .GetComponent<TMPro.TextMeshProUGUI>()
+                    .SetText(EnemyStatus(lastStatus, newStatus));
+                battleStatuses.Add(newStatus);
+                lastStatus = newStatus;
+            } while (newStatus.isOver == 0);
+            actualRoundPanel = Instantiate(roundPanel, roundContent);
+            actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
+            actualRoundPanelTransform
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText($"FIM DA BATALHA");
+            actualRoundPanelTransform
+                .GetChild(1)
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText(newStatus.isOver == 1 ? "VENCEDOR" : "PERDEDOR");
+            actualRoundPanelTransform
+                .GetChild(1)
+                .GetChild(1)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText(newStatus.isOver == -1 ? "VENCEDOR" : "PERDEDOR");
 
-		ShowDebug();
-		playerCompiled = false;
-		animationManager.StartAnimation(battleStatuses);
-	}
+            if (newStatus.isOver == 1)
+            {
+                if (BattleData.isTest)
+                {
+                    SetTestMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
+                }
+                else
+                {
+                    SetMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
+                }
+                memory.SetWin(true);
+                memory.UpdateFile();
+            }
+        }
+        catch (ActionTookTooLongException)
+        {
+            actualRoundPanel = Instantiate(roundError, roundContent);
+            actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
+            actualRoundPanelTransform
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText($"ERRO:\nJOGADOR DEMOROU MUITO PARA ESCOLHER UMA AÇÃO");
+        }
+        catch (MaxNumberOfRoundsException)
+        {
+            actualRoundPanel = Instantiate(roundError, roundContent);
+            actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
+            actualRoundPanelTransform
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText($"ERRO:\nA BATALHA DEMOROU MUITO PARA ACABAR");
+        }
+        catch (PlayerOutOfActionsException)
+        {
+            actualRoundPanel = Instantiate(roundError, roundContent);
+            actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
+            actualRoundPanelTransform
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText($"ERRO:\nO CÓDIGO ACABOU ANTES DO FIM DA BATALHA");
+        }
 
-	public void SetEnemyMemory(CellsContainer memory)
-	{
-		enemyCompiler.Compile(memory.memory);
-	}
+        ShowDebug();
+        playerCompiled = false;
+        animationManager.StartAnimation(battleStatuses);
+    }
 
-	private string PlayerStatus(BattleStatus lastStatus, BattleStatus newStatus)
-	{
-		return $"COMANDO:\n{newStatus.playerAction}\n" +
-				$"VIDA: {lastStatus.values[Commands.PLAYER_ACTUAL_HEALTH]} -> {newStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\n" +
-				$"ESCUDOS: {lastStatus.values[Commands.PLAYER_ACTUAL_SHIELD]} -> {newStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\n" +
-				$"CARGAS: {lastStatus.values[Commands.PLAYER_ACTUAL_CHARGE]} -> {newStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
-	}
+    public void SetEnemyMemory(CellsContainer memory)
+    {
+        enemyCompiler.Compile(memory.memory);
+    }
 
-	private string EnemyStatus(BattleStatus lastStatus, BattleStatus newStatus)
-	{
-		return $"COMANDO:\n{newStatus.enemyAction}\n" +
-				$"VIDA: {lastStatus.values[Commands.ENEMY_ACTUAL_HEALTH]} -> {newStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\n" +
-				$"ESCUDOS: {lastStatus.values[Commands.ENEMY_ACTUAL_SHIELD]} -> {newStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\n" +
-				$"CARGAS: {lastStatus.values[Commands.ENEMY_ACTUAL_CHARGE]} -> {newStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
-	}
+    private string PlayerStatus(BattleStatus lastStatus, BattleStatus newStatus)
+    {
+        return $"COMANDO:\n{newStatus.playerAction}\n"
+            + $"VIDA: {lastStatus.values[Commands.PLAYER_ACTUAL_HEALTH]} -> {newStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\n"
+            + $"ESCUDOS: {lastStatus.values[Commands.PLAYER_ACTUAL_SHIELD]} -> {newStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\n"
+            + $"CARGAS: {lastStatus.values[Commands.PLAYER_ACTUAL_CHARGE]} -> {newStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
+    }
 
-	public void QuitGame()
-	{
-		panelManager.KillEvents();
-		if (BattleData.isTest)
-		{
-			SceneManager.LoadScene("CustomCode");
-		}
-		else
-		{
-			SceneManager.LoadScene("LevelSelect");
-		}
-	}
+    private string EnemyStatus(BattleStatus lastStatus, BattleStatus newStatus)
+    {
+        return $"COMANDO:\n{newStatus.enemyAction}\n"
+            + $"VIDA: {lastStatus.values[Commands.ENEMY_ACTUAL_HEALTH]} -> {newStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\n"
+            + $"ESCUDOS: {lastStatus.values[Commands.ENEMY_ACTUAL_SHIELD]} -> {newStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\n"
+            + $"CARGAS: {lastStatus.values[Commands.ENEMY_ACTUAL_CHARGE]} -> {newStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
+    }
 
-	public void ClearBlocks()
-	{
-		panelManager.Clear();
-	}
+    public void QuitGame()
+    {
+        panelManager.KillEvents();
+        if (BattleData.isTest)
+        {
+            SceneManager.LoadScene("CustomCode");
+        }
+        else
+        {
+            SceneManager.LoadScene("LevelSelect");
+        }
+    }
 
-	public void SkipAnimation()
-	{
-		animationManager.SkipAnimation();
-	}
+    public void ClearBlocks()
+    {
+        panelManager.Clear();
+    }
 
-	public void ToggleDebug()
-	{
-		battlePanel.SetActive(!battlePanel.activeSelf);
-		panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
-	}
-	
-	public void ShowDebug()
-	{
-		battlePanel.SetActive(true);
-		panelManager.gameObject.SetActive(false);
-		SetDebugColor.Invoke();
-	}
+    public void SkipAnimation()
+    {
+        animationManager.SkipAnimation();
+    }
 
-	private void SetMedalsText(int rounds, int size)
-	{
-		memory.SetMedals(rounds, size);
+    public void ToggleDebug()
+    {
+        battlePanel.SetActive(!battlePanel.activeSelf);
+        panelManager.gameObject.SetActive(!panelManager.gameObject.activeSelf);
+    }
 
-		GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
-		GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
+    public void ShowDebug()
+    {
+        battlePanel.SetActive(true);
+        panelManager.gameObject.SetActive(false);
+        SetDebugColor.Invoke();
+    }
 
-		bool isRoundMedalWon = memory.medal.roundsMedal;
-		bool isSizeMedalWon = memory.medal.sizeMedal;
+    private void SetMedalsText(int rounds, int size)
+    {
+        memory.SetMedals(rounds, size);
 
-		if (roundMedal)
-		{
-			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Turnos: {(memory.medal.bestRounds == int.MaxValue ? 0 : memory.medal.bestRounds)}/{memory.medal.maxRounds}";
-			ColorMedal(isRoundMedalWon, roundMedal);
-		}
+        GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
+        GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
 
-		if (sizeMedal)
-		{
-			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Blocos: {(memory.medal.bestSize == int.MaxValue ? 0 : memory.medal.bestSize)}/{memory.medal.maxSize}";
-			ColorMedal(isSizeMedalWon, sizeMedal);
-		}
-	}
+        bool isRoundMedalWon = memory.medal.roundsMedal;
+        bool isSizeMedalWon = memory.medal.sizeMedal;
 
-	private void SetTestMedalsText(int round, int size)
-	{
-		GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
-		GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
+        if (roundMedal)
+        {
+            roundMedal.GetComponent<TooltipTrigger>().tooltipText =
+                $"Medalha Turnos: {(memory.medal.bestRounds == int.MaxValue ? 0 : memory.medal.bestRounds)}/{memory.medal.maxRounds}";
+            ColorMedal(isRoundMedalWon, roundMedal);
+        }
 
-		bool isRoundMedalWon = round <= memory.medal.maxRounds;
-		bool isSizeMedalWon = size <= memory.medal.maxSize;
+        if (sizeMedal)
+        {
+            sizeMedal.GetComponent<TooltipTrigger>().tooltipText =
+                $"Medalha Blocos: {(memory.medal.bestSize == int.MaxValue ? 0 : memory.medal.bestSize)}/{memory.medal.maxSize}";
+            ColorMedal(isSizeMedalWon, sizeMedal);
+        }
+    }
 
-		if (roundMedal)
-		{
-			roundMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Turnos: {(round == int.MaxValue ? 0 : round)}/{memory.medal.maxRounds}";
-			ColorMedal(isRoundMedalWon, roundMedal);
-		}
+    private void SetTestMedalsText(int round, int size)
+    {
+        GameObject roundMedal = GameObject.FindGameObjectWithTag("TurnMedal");
+        GameObject sizeMedal = GameObject.FindGameObjectWithTag("BlocksMedal");
 
-		if (sizeMedal)
-		{
-			sizeMedal.GetComponent<TooltipTrigger>().tooltipText = $"Medalha Blocos: {(size == int.MaxValue ? 0 : size)}/{memory.medal.maxSize}";
-			ColorMedal(isSizeMedalWon, sizeMedal);
-		}
-	}
+        bool isRoundMedalWon = round <= memory.medal.maxRounds;
+        bool isSizeMedalWon = size <= memory.medal.maxSize;
 
-	private void SetStatusText(CellsContainer memory)
-	{
-		GameObject playerStatsUI = statsPanel.transform.Find("PlayerStatsUI").gameObject;
-		GameObject enemyStatsUI = statsPanel.transform.Find("EnemyStatsUI").gameObject;
+        if (roundMedal)
+        {
+            roundMedal.GetComponent<TooltipTrigger>().tooltipText =
+                $"Medalha Turnos: {(round == int.MaxValue ? 0 : round)}/{memory.medal.maxRounds}";
+            ColorMedal(isRoundMedalWon, roundMedal);
+        }
 
-		playerStatsUI.transform.Find("HealthText").GetComponent<TMP_Text>().SetText("Vida: " + memory.playerFighterAttributes.maxLifePoints);
-		playerStatsUI.transform.Find("DefenseText").GetComponent<TMP_Text>().SetText("Defesa: " + memory.playerFighterAttributes.maxDefensePoints);
-		playerStatsUI.transform.Find("ChargeText").GetComponent<TMP_Text>().SetText("Carga: " + memory.playerFighterAttributes.maxChargePoints);
-		playerStatsUI.transform.Find("DamageText").GetComponent<TMP_Text>().SetText("Dano: " + memory.playerFighterAttributes.minAttackPoints);
+        if (sizeMedal)
+        {
+            sizeMedal.GetComponent<TooltipTrigger>().tooltipText =
+                $"Medalha Blocos: {(size == int.MaxValue ? 0 : size)}/{memory.medal.maxSize}";
+            ColorMedal(isSizeMedalWon, sizeMedal);
+        }
+    }
 
-		enemyStatsUI.transform.Find("HealthText").GetComponent<TMP_Text>().SetText("Vida: " + memory.enemyFighterAttributes.maxLifePoints);
-		enemyStatsUI.transform.Find("DefenseText").GetComponent<TMP_Text>().SetText("Defesa: " + memory.enemyFighterAttributes.maxDefensePoints);
-		enemyStatsUI.transform.Find("ChargeText").GetComponent<TMP_Text>().SetText("Carga: " + memory.enemyFighterAttributes.maxChargePoints);
-		enemyStatsUI.transform.Find("DamageText").GetComponent<TMP_Text>().SetText("Dano: " + memory.enemyFighterAttributes.minAttackPoints);
-	}
+    private void SetStatusText(CellsContainer memory)
+    {
+        GameObject playerStatsUI = statsPanel.transform.Find("PlayerStatsUI").gameObject;
+        GameObject enemyStatsUI = statsPanel.transform.Find("EnemyStatsUI").gameObject;
 
-	private void ColorMedal(bool medalWon, GameObject medal)
-	{
-		if (medalWon)
-		{
-			medal.GetComponent<Image>().color = Color.white;
-		}
-		else
-		{
-			medal.GetComponent<Image>().color = Color.black;
-		}
-	}
+        playerStatsUI
+            .transform.Find("HealthText")
+            .GetComponent<TMP_Text>()
+            .SetText("Vida: " + memory.playerFighterAttributes.maxLifePoints);
+        playerStatsUI
+            .transform.Find("DefenseText")
+            .GetComponent<TMP_Text>()
+            .SetText("Defesa: " + memory.playerFighterAttributes.maxDefensePoints);
+        playerStatsUI
+            .transform.Find("ChargeText")
+            .GetComponent<TMP_Text>()
+            .SetText("Carga: " + memory.playerFighterAttributes.maxChargePoints);
+        playerStatsUI
+            .transform.Find("DamageText")
+            .GetComponent<TMP_Text>()
+            .SetText("Dano: " + memory.playerFighterAttributes.minAttackPoints);
 
-	private void SetHintText(CellsContainer memory)
-	{
-		hintPanel.SetText(memory.hint);
-	}
+        enemyStatsUI
+            .transform.Find("HealthText")
+            .GetComponent<TMP_Text>()
+            .SetText("Vida: " + memory.enemyFighterAttributes.maxLifePoints);
+        enemyStatsUI
+            .transform.Find("DefenseText")
+            .GetComponent<TMP_Text>()
+            .SetText("Defesa: " + memory.enemyFighterAttributes.maxDefensePoints);
+        enemyStatsUI
+            .transform.Find("ChargeText")
+            .GetComponent<TMP_Text>()
+            .SetText("Carga: " + memory.enemyFighterAttributes.maxChargePoints);
+        enemyStatsUI
+            .transform.Find("DamageText")
+            .GetComponent<TMP_Text>()
+            .SetText("Dano: " + memory.enemyFighterAttributes.minAttackPoints);
+    }
+
+    private void ColorMedal(bool medalWon, GameObject medal)
+    {
+        if (medalWon)
+        {
+            medal.GetComponent<Image>().color = Color.white;
+        }
+        else
+        {
+            medal.GetComponent<Image>().color = Color.black;
+        }
+    }
+
+    private void SetHintText(CellsContainer memory)
+    {
+        hintPanel.SetText(memory.hint);
+    }
 }
