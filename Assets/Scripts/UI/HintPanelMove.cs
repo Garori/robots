@@ -17,7 +17,7 @@ public class HintPanelMove : MonoBehaviour
     {
         gameObject.SetActive(false);
         canShow = false;
-        HideHintPanel();
+        ShowHintPanel();
     }
 
     public void TogglePanel()
@@ -36,7 +36,6 @@ public class HintPanelMove : MonoBehaviour
     public void ShowHintPanel()
     {
         isShowing = true;
-        gameObject.SetActive(true);
         transform.DOLocalMoveX(showHintPositionX, 0.5f, false);
     }
 
@@ -55,5 +54,6 @@ public class HintPanelMove : MonoBehaviour
         }
         hintPanelText.text = text;
         canShow = true;
+        gameObject.SetActive(true);
     }
 }

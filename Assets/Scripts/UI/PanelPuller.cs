@@ -10,16 +10,11 @@ public class PanelPuller : MonoBehaviour
     [SerializeField] private float openPositionY;
     [SerializeField] private float closedPositionY;
 
-    [Header("Panel Status")]
-    [SerializeField] private GameObject statusPanel;
-    [SerializeField] private float statusOpenPositionY;
-    [SerializeField] private float statusClosedPositionY;
-
     private bool isOpen;
 
     void Start()
     {   
-        OpenPanel();
+        ClosePanel();
     }
 
     public void TogglePanel()
