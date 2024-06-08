@@ -1,22 +1,22 @@
 fileFormatVersion: 2
-guid: 9c0c2830f9adad74da681ef0a8cb31d9
+guid: 4c8ba1254c4075b4fa4eade3f2c5263d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2310352742484501873
-    second: Functions_0
+      213: -2310211449715068039
+    second: Novos_0
   - first:
-      213: 7269876062605948817
-    second: Functions_1
+      213: -2107336161244110283
+    second: Novos_2
   - first:
-      213: 6642443395120425685
-    second: Functions_2
+      213: -6656277432949711282
+    second: Novos_1
   - first:
-      213: 8946622092430891657
-    second: Functions_3
+      213: 6051706386063520837
+    second: Novos_2
   - first:
-      213: 5879923428193002869
-    second: Functions_4
+      213: -7378145539858923229
+    second: Novos_2
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -77,7 +77,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -131,106 +131,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Functions_0
+      name: Novos_0
       rect:
         serializedVersion: 2
         x: 0
         y: 62
         width: 118
         height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 1
+      pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17563a91495001020800000000000000
-      internalID: 2310352742484501873
+      spriteID: 97371bf2dea70ffd0800000000000000
+      internalID: -2310211449715068039
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Functions_1
+      name: Novos_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 118
+        height: 62
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 532a5be2dec31c2e0800000000000000
+      internalID: -2107336161244110283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Novos_1
       rect:
         serializedVersion: 2
         x: 118
         y: 62
         width: 118
         height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 1
+      pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1973eb0f2c9c3e460800000000000000
-      internalID: 7269876062605948817
+      spriteID: e4e5592f0f620a3a0800000000000000
+      internalID: -6656277432949711282
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Functions_2
+      name: Novos_4
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 0
+        width: 118
+        height: 62
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 544774215eafbf350800000000000000
+      internalID: 6051706386063520837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Novos_2
       rect:
         serializedVersion: 2
         x: 236
         y: 62
         width: 118
         height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 1
+      pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5daeace1313be2c50800000000000000
-      internalID: 6642443395120425685
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Functions_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 118
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 98a510f4469c82c70800000000000000
-      internalID: 8946622092430891657
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Functions_4
-      rect:
-        serializedVersion: 2
-        x: 118
-        y: 0
-        width: 118
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 575e0fb643fa99150800000000000000
-      internalID: 5879923428193002869
+      spriteID: 321839bf8bf8b9990800000000000000
+      internalID: -7378145539858923229
       vertices: []
       indices: 
       edges: []

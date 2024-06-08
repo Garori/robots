@@ -21,6 +21,7 @@ TagManager:
   - BlocksMedal
   - TurnMedal
   - PanelManager
+  - NovosBlock
   layers:
   - Default
   - TransparentFX

@@ -51,5 +51,8 @@ public enum Commands
     EIGHT,
     NINE,
     TRUE,
-    NONE
+    NONE,
+
+    //CODIGO ESCRITO 
+    CODE
 }

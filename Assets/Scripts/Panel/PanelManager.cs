@@ -15,6 +15,16 @@ public struct ActionsPrefabs
 }
 
 [Serializable]
+public struct CodePrefabs
+{
+    //AQUI
+    public GameObject codePrefab;
+    // public GameObject defendPrefab;
+    // public GameObject chargePrefab;
+    // public GameObject healPrefab;
+}
+
+[Serializable]
 public struct StructuresPrefabs
 {
     public GameObject ifPrefab;
@@ -91,6 +101,9 @@ public class PanelManager : MonoBehaviour
     private ActionsPrefabs actionsPrefabs;
 
     [SerializeField]
+    private CodePrefabs codePrefabs;
+
+    [SerializeField]
     private StructuresPrefabs structuresPrefabs;
 
     [SerializeField]
@@ -140,6 +153,9 @@ public class PanelManager : MonoBehaviour
         EventManager.BlockEnter += InsertBlock;
         EventManager.BlockExit += RemoveBlock;
 
+        EventManager.CodeEnter += InsertCode;
+        EventManager.CodeExit += RemoveCode;
+
         EventManager.ComparatorEnter += InsertComparator;
         EventManager.ComparatorExit += RemoveComparator;
 
@@ -176,6 +192,47 @@ public class PanelManager : MonoBehaviour
 
         // Remove da lista de blocos
         int index = blocks.IndexOf(block);
+        blocks.RemoveAt(index);
+
+        // Remove a linha correspondente do painel
+        GameObject line = lines[index];
+        lines.RemoveAt(index);
+        linesLayout.RemoveAt(index);
+        Destroy(line);
+        activeLines--;
+
+        OrganizeBlocks();
+    }
+
+    private void InsertCode(BlockController code, GameObject line)
+    {
+        // Pega o index da linha e adiciona o bloco na lista
+        int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
+        blocks.Insert(index, code);
+
+        // Cria a linha para o bloco
+        GameObject newLine = Instantiate(lineObjectPrefab, linesContent);
+        lines.Insert(index, newLine);
+        activeLines++;
+        linesLayout.Insert(index, newLine.GetComponent<HorizontalLayoutGroup>());
+        newLine.transform.SetSiblingIndex(index);
+
+        // Adiciona o bloco na linha
+        code.SetParent(newLine.GetComponent<RectTransform>());
+        code.isInPanel = true;
+
+        OrganizeBlocks();
+    }
+
+    private void RemoveCode(BlockController code)
+    {
+        // Verifica se o bloco está no painel
+        if (!code.isInPanel)
+            return;
+        code.isInPanel = false;
+
+        // Remove da lista de blocos
+        int index = blocks.IndexOf(code);
         blocks.RemoveAt(index);
 
         // Remove a linha correspondente do painel
@@ -412,6 +469,30 @@ public class PanelManager : MonoBehaviour
         return action;
     }
 
+    public GameObject InstantiateCode(Commands command)
+    {
+        GameObject action = null;
+        switch (command)
+        {
+            case Commands.ATTACK:
+                action = Instantiate(codePrefabs.codePrefab, canvas);
+                break;
+            // case Commands.DEFEND:
+            //     action = Instantiate(actionsPrefabs.defendPrefab, canvas);
+            //     break;
+            // case Commands.CHARGE:
+            //     action = Instantiate(actionsPrefabs.chargePrefab, canvas);
+            //     break;
+            // case Commands.HEAL:
+            //     action = Instantiate(actionsPrefabs.healPrefab, canvas);
+            //     break;
+            default:
+                return null;
+        }
+        SetBlockAsOld(action);
+        return action;
+    }
+
     public GameObject InstantiateStructure(Commands command)
     {
         GameObject structure = null;
@@ -599,6 +680,9 @@ public class PanelManager : MonoBehaviour
     {
         EventManager.BlockEnter -= InsertBlock;
         EventManager.BlockExit -= RemoveBlock;
+
+        EventManager.CodeEnter -= InsertCode;
+        EventManager.CodeExit -= RemoveCode;
 
         EventManager.ComparatorEnter -= InsertComparator;
         EventManager.ComparatorExit -= RemoveComparator;

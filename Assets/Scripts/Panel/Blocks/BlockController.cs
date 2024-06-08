@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -112,7 +113,14 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 			Destroy(gameObject);
 			return;
 		}
-		Debug.Log("Colidiu com " + colliding.name);
+		try
+		{
+			Debug.Log("Colidiu com " + colliding.transform.GetChild(0).gameObject.name);
+		}
+		catch(Exception)
+		{
+			Debug.Log("Colidiu com " + colliding.name);
+		}
 		OnEndDragAction();
 	}
 
