@@ -189,7 +189,10 @@ public class GameManager : MonoBehaviour
                 .GetComponent<TMPro.TextMeshProUGUI>()
                 .SetText($"ERRO:\nO CÓDIGO ACABOU ANTES DO FIM DA BATALHA");
         }
-        memory.UpdateFile();
+        if (!BattleData.isTest)
+        {
+            memory.UpdateFile();
+        }
         ShowDebug();
         playerCompiled = false;
         animationManager.StartAnimation(battleStatuses);

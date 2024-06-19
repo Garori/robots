@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -14,6 +16,9 @@ public class CellsContainer
     public Cell[] memory { get; set; }
     public FighterAttributes playerFighterAttributes { get; set; }
     public FighterAttributes enemyFighterAttributes { get; set; }
+    public List<FighterAttributes> testesPlayer { get; set; }
+    public List<FighterAttributes> testesEnemy { get; set; }
+
     public Medal medal { get; set; }
     public string hint { get; set; }
     public bool[] enabledBlocks { get; set; }
@@ -27,6 +32,8 @@ public class CellsContainer
         Medal medal,
         bool[] enabledBlocks,
         string hint,
+        List<FighterAttributes> testesPlayer= null,
+        List<FighterAttributes> testesEnemy = null,
         bool isCustom = true
     )
     {
@@ -35,6 +42,8 @@ public class CellsContainer
         this.memory = compiler.Memory;
         this.playerFighterAttributes = playerFighterAttributes;
         this.enemyFighterAttributes = enemyFighterAttributes;
+        this.testesPlayer = testesPlayer ?? new List<FighterAttributes>();
+        this.testesEnemy = testesEnemy ?? new List<FighterAttributes>();
         this.medal = medal;
         this.hint = hint;
         this.enabledBlocks = enabledBlocks;
@@ -42,11 +51,11 @@ public class CellsContainer
 
     public void Serialize(string fileName)
     {
-        string folderName = isCustom ? "CustomMemories" : "Memories";
         IFormatter formatter = new BinaryFormatter();
         Debug.Log(fileName);
         Debug.Log(FileMode.Create);
         Debug.Log(FileAccess.Write);
+        // fileName = fileName ?? "CustomMemories/testeBatalha";
         using (Stream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
         {
             formatter.Serialize(stream, this);
