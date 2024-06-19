@@ -44,6 +44,9 @@ public class CellsContainer
     {
         string folderName = isCustom ? "CustomMemories" : "Memories";
         IFormatter formatter = new BinaryFormatter();
+        Debug.Log(fileName);
+        Debug.Log(FileMode.Create);
+        Debug.Log(FileAccess.Write);
         using (Stream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
         {
             formatter.Serialize(stream, this);
@@ -53,6 +56,9 @@ public class CellsContainer
     public static CellsContainer Deserialize(string fileName)
     {
         IFormatter formatter = new BinaryFormatter();
+        Debug.Log(fileName);
+        Debug.Log(FileMode.Open);
+        Debug.Log(FileAccess.Read);
         using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
         {
             CellsContainer memory = (CellsContainer)formatter.Deserialize(stream);
