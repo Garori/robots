@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 [Serializable]
 public struct ActionsPrefabs
@@ -84,7 +85,6 @@ public class PanelManager : MonoBehaviour
     // Line info
     private float minLineWidth;
     private float lineHeight;
-    private float colliderHeight;
     private Vector2 endLineSize;
     private RectOffset linePadding;
     private List<HorizontalLayoutGroup> linesLayout;
@@ -131,7 +131,6 @@ public class PanelManager : MonoBehaviour
         RectTransform lineObjectPrefabTransform = lineObjectPrefab.GetComponent<RectTransform>();
         minLineWidth = lineObjectPrefabTransform.sizeDelta.x;
         lineHeight = lineObjectPrefabTransform.sizeDelta.y;
-        colliderHeight = lineObjectPrefab.GetComponent<BoxCollider2D>().size.y;
 
         panelX = canvas.sizeDelta.x - GetComponent<RectTransform>().sizeDelta.x;
 
@@ -167,6 +166,8 @@ public class PanelManager : MonoBehaviour
     {
         // Pega o index da linha e adiciona o bloco na lista
         int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
+        Debug.Log(blocks.Count);
+        Debug.Log("" + index);
         blocks.Insert(index, block);
 
         // Cria a linha para o bloco
@@ -189,11 +190,11 @@ public class PanelManager : MonoBehaviour
         if (!block.isInPanel)
             return;
         block.isInPanel = false;
-
+        Debug.Log("aqui");
         // Remove da lista de blocos
         int index = blocks.IndexOf(block);
         blocks.RemoveAt(index);
-
+ 
         // Remove a linha correspondente do painel
         GameObject line = lines[index];
         lines.RemoveAt(index);
@@ -355,13 +356,9 @@ public class PanelManager : MonoBehaviour
         {
             Vector2 transformSize = new Vector2(maxWidth, lineHeight);
             line.GetComponent<RectTransform>().sizeDelta = transformSize;
-
-            Vector2 colliderSize = new Vector2(maxWidth, colliderHeight);
-            line.GetComponent<BoxCollider2D>().size = colliderSize;
         }
         endLineSize.x = maxWidth;
         endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
-        endLineObject.GetComponent<BoxCollider2D>().size = endLineSize;
     }
 
     public void LoadCommands(List<List<Commands>> commands)

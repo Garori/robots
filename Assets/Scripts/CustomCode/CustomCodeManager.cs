@@ -8,9 +8,11 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
+using UnityEngine.UIElements;
 
 public class CustomCodeManager : MonoBehaviour
 {
+    
     [Header("Managers")]
     public PanelManager panelManager;
 
@@ -22,6 +24,16 @@ public class CustomCodeManager : MonoBehaviour
     public TMP_InputField hintField;
     public TMP_InputField[] inputFields;
     public Transform blocksContainer;
+    public GameObject casePrefab;
+    public TMP_InputField[] caseVariables;
+    public GameObject casesButton;
+    public struct casoDeTeste
+    {
+        public GameObject botao;
+        public TMP_InputField[] variables;
+
+    }
+    public List<casoDeTeste> casos;
 
     public Dictionary<string, int> variables;
 
@@ -175,5 +187,15 @@ public class CustomCodeManager : MonoBehaviour
     public void ClearBlocks()
     {
         panelManager.Clear();
+    }
+    public void CreateCase()
+    {
+        Debug.Log("teste");
+        int nFilhos = casesButton.transform.parent.transform.childCount - 1;
+        casoDeTeste TempVAR = new casoDeTeste();
+        TempVAR.botao = Instantiate(casePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        TempVAR.variables = caseVariables;
+        TempVAR.botao.transform.SetParent(casesButton.transform.parent, false);
+        casos.Add(TempVAR);
     }
 }

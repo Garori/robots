@@ -39,4 +39,6 @@ public class ComparatorController : BlockController
         if (variableSlot2.childBlock == null) return Commands.NONE;
         return variableSlot2.childBlock.commandName;
     }
+
+
 }

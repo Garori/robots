@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -71,23 +72,32 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	}
 
 	public void OnBeginDrag(PointerEventData eventData)
-	{
+	{	
+		Debug.Log("aaaaaaaa");
 		if (eventData.button != PointerEventData.InputButton.Left) return;
-		if (newBlock)
+		if (!isInPanel)
 		{
-			GameObject createdBlock = Instantiate(gameObject, gameObject.transform.parent);
-			createdBlock.name = gameObject.name;
-			createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
-			createdBlock.GetComponent<BlockController>().isEnabled = isEnabled;
-			newBlock = false;
-			TooltipTrigger tooltipTrigger = createdBlock.GetComponent<TooltipTrigger>();
-			if (tooltipTrigger != null)
-			{
-				tooltipTrigger.isTooltipEnabled = false;
-			}
+			GameObject[] gos = {gameObject};
+			Selection.objects = gos;
+			Unsupported.DuplicateGameObjectsUsingPasteboard();
 		}
+			canvasGroup.blocksRaycasts = false;
+		// if (newBlock)
+		// {
+		// 	GameObject createdBlock = Instantiate(gameObject, gameObject.transform.parent);
+		// 	createdBlock.name = gameObject.name;
+		// 	createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
+		// 	createdBlock.GetComponent<BlockController>().isEnabled = isEnabled;
+		// 	// createdBlock.gameObject.canvasGroup.blocksRaycasts = false;
+		// 	newBlock = false;
+		// 	TooltipTrigger tooltipTrigger = createdBlock.GetComponent<TooltipTrigger>();
+		// 	if (tooltipTrigger != null)
+		// 	{
+		// 		tooltipTrigger.isTooltipEnabled = false;
+		// 	}
+		// }
 		isEnabled = true;
-		canvasGroup.alpha = .8f;
+		canvasGroup.alpha = .5f;
 		ResetParent();
 		OnBeginDragAction();
 	}
@@ -101,27 +111,33 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	{
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-		boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
+		// boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
+		Debug.Log("acabou");
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		canvasGroup.alpha = 1f;
-		if (colliding == null)
+		canvasGroup.blocksRaycasts = true;
+		if ((gameObject.tag == "ActionBlock" || gameObject.tag == "StructureBlock" || gameObject.tag == "EndBlock") && transform.parent.tag != "Line" || (gameObject.tag == "VariableBlock") && !(transform.parent.tag == "VariableCollider" || transform.parent.tag == "ForCondition") || (gameObject.tag == "ComparatorBlock") && transform.parent.tag != "ComparatorCollider")
 		{
 			Destroy(gameObject);
-			return;
 		}
-		try
-		{
-			Debug.Log("Colidiu com " + colliding.transform.GetChild(0).gameObject.name);
-		}
-		catch(Exception)
-		{
-			Debug.Log("Colidiu com " + colliding.name);
-		}
-		OnEndDragAction();
+		// if (colliding == null)
+		// {
+		// 	Destroy(gameObject);
+		// 	return;
+		// }
+		// try
+		// {
+		// 	Debug.Log("Colidiu com " + colliding.transform.GetChild(0).gameObject.name);
+		// }
+		// catch(Exception)
+		// {
+		// 	Debug.Log("Colidiu com " + colliding.name);
+		// }
+		// OnEndDragAction();
 	}
 
 	protected virtual void OnEndDragAction()
