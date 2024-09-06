@@ -149,4 +149,9 @@ public class Fighter : MonoBehaviour, IFighter
     {
         return Mathf.Max(defensePoints, 0);
     }
+
+    public int GetDamage()
+    {
+        return Mathf.Max(attackPoints, 0);
+    }
 }

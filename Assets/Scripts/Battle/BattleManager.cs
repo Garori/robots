@@ -67,6 +67,11 @@ public class BattleManager : MonoBehaviour
     {
         if (!player.isDead() && !enemy.isDead()) return;
 
+        if ((player.isDead() || enemy.isDead()) && false)
+        {
+            return;
+        }
+
         if (player.isDead()) isOver = -1;
         else isOver = 1;
     }

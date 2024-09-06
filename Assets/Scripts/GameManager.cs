@@ -87,6 +87,7 @@ public class GameManager : MonoBehaviour
             compilePopupText.SetText(compileResult);
             return;
         }
+        Debug.Log(playerCompiled);
         enemyCompiler.ResetAttributes();
         Debug.Log("Starting Battle");
         List<BattleStatus> battleStatuses = new List<BattleStatus>();
@@ -108,6 +109,7 @@ public class GameManager : MonoBehaviour
                 // Turno a turno da batalha
                 Commands[] actions = new Commands[2];
                 actions[0] = playerCompiler.Run(lastStatus);
+                Debug.Log(lastStatus);
                 actions[1] = enemyCompiler.Run(lastStatus);
                 newStatus = battleManager.PlayRound(actions);
                 // Imprime os textos dos rounds

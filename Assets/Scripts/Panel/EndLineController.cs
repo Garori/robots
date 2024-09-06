@@ -30,6 +30,9 @@ public class EndLineController : MonoBehaviour, IDropHandler
                 case "ActionBlock":
                     EventManager.onBlockEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
                     break;
+                case "ElseBlock":
+                    EventManager.onBlockEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
+                    break;
                 case "StructureBlock":
                     EventManager.onBlockEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
                     break;

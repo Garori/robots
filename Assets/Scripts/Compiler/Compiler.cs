@@ -15,6 +15,8 @@ public class Compiler : MonoBehaviour
     public int TotalCells { get => totalCells; }
     [SerializeField] private bool debug;
 
+    // public bool hasWhileTrue = false;
+
     private void Start()
     {
         memory = new Cell[maxBlocks * 2];
@@ -52,6 +54,7 @@ public class Compiler : MonoBehaviour
                     switch (c.GetComparatorCommand())
                     {
                         case Commands.TRUE:
+                            // hasWhileTrue = true;
                             break;
                         case Commands.EVEN:
                             lineCommands.Add(c.GetVariable1Command());
@@ -175,6 +178,10 @@ public class Compiler : MonoBehaviour
             {
                 case Commands.TRUE:
                     comparatorCell = new TrueCell();
+                    if(mainCommand == Commands.WHILE)
+                    {
+                        structuresStack.Push(PC);
+                    }
                     break;
                 case Commands.EVEN:
                     Commands variableName = lineCommands[2];
@@ -225,6 +232,7 @@ public class Compiler : MonoBehaviour
         if (structuresStack.Count != 0)
         {
             compileResult = "ERRO DE COMPILAÇÃO: A estrutura não foi fechada corretamente";
+            // compileResult = "ERRO DE COMPILAÇÃO: A estrutura não foi fechada corretamente ou existe um While TRUE sem break";
             return false;
         }
         if (!hasAction)
@@ -246,6 +254,7 @@ public class Compiler : MonoBehaviour
             if (PC >= totalCells) throw new PlayerOutOfActionsException();
             Cell cell = memory[PC];
             if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
+            Debug.Log($"Entering cell {cell} at index {PC}");
 
             switch (cell)
             {

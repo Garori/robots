@@ -73,7 +73,6 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
 	public void OnBeginDrag(PointerEventData eventData)
 	{	
-		Debug.Log("aaaaaaaa");
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		if (!isInPanel)
 		{
@@ -120,7 +119,7 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		canvasGroup.alpha = 1f;
 		canvasGroup.blocksRaycasts = true;
-		if ((gameObject.tag == "ActionBlock" || gameObject.tag == "StructureBlock" || gameObject.tag == "EndBlock") && transform.parent.tag != "Line" || (gameObject.tag == "VariableBlock") && !(transform.parent.tag == "VariableCollider" || transform.parent.tag == "ForCondition") || (gameObject.tag == "ComparatorBlock") && transform.parent.tag != "ComparatorCollider")
+		if ((gameObject.tag == "ActionBlock" || gameObject.tag == "StructureBlock" || gameObject.tag == "EndBlock" || gameObject.tag == "ElseBlock") && transform.parent.tag != "Line" || (gameObject.tag == "VariableBlock") && !(transform.parent.tag == "VariableCollider" || transform.parent.tag == "ForCondition") || (gameObject.tag == "ComparatorBlock") && transform.parent.tag != "ComparatorCollider")
 		{
 			Destroy(gameObject);
 		}

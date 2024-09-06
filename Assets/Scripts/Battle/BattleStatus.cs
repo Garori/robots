@@ -35,6 +35,9 @@ public class BattleStatus
         values[Commands.NINE] = 9;
         values[Commands.ROUND] = round;
 
+        values[Commands.PLAYER_DAMAGE] = player.GetDamage();
+        values[Commands.PLAYER_DAMAGE_HALF] = player.GetDamage()/2;
+        values[Commands.PLAYER_DAMAGE_DOUBLE] = player.GetDamage()*2;
         values[Commands.PLAYER_ACTUAL_HEALTH] = player.GetLifePoints();
         values[Commands.PLAYER_ACTUAL_HEALTH_HALF] = player.GetLifePoints() / 2;
         values[Commands.PLAYER_ACTUAL_HEALTH_DOUBLE] = player.GetLifePoints() * 2;
@@ -48,6 +51,9 @@ public class BattleStatus
         values[Commands.PLAYER_ACTUAL_CHARGE_HALF] = player.GetChargePoints() / 2;
         values[Commands.PLAYER_ACTUAL_CHARGE_DOUBLE] = player.GetChargePoints() * 2;
 
+        values[Commands.ENEMY_DAMAGE] = enemy.GetDamage();
+        values[Commands.ENEMY_DAMAGE_HALF] = enemy.GetDamage() / 2;
+        values[Commands.ENEMY_DAMAGE_DOUBLE] = enemy.GetDamage() * 2;
         values[Commands.ENEMY_ACTUAL_HEALTH] = enemy.GetLifePoints();
         values[Commands.ENEMY_ACTUAL_HEALTH_HALF] = enemy.GetLifePoints() / 2;
         values[Commands.ENEMY_ACTUAL_HEALTH_DOUBLE] = enemy.GetLifePoints() * 2;
@@ -70,6 +76,13 @@ public class BattleStatus
 
     public override string ToString()
     {
-        return $"ROUND:{values[Commands.ROUND]}\nplayerAction:{playerAction}\nenemyAction:{enemyAction}\nPLAYER_ACTUAL_HEALTH:{values[Commands.PLAYER_ACTUAL_HEALTH]}\nPLAYER_ACTUAL_HEALTH_HALF:{values[Commands.PLAYER_ACTUAL_HEALTH_HALF]}\nPLAYER_ACTUAL_HEALTH_DOUBLE:{values[Commands.PLAYER_ACTUAL_HEALTH_DOUBLE]}\nPLAYER_MAX_HEALTH:{values[Commands.PLAYER_MAX_HEALTH]}\nPLAYER_MAX_HEALTH_HALF:{values[Commands.PLAYER_MAX_HEALTH_HALF]}\nPLAYER_MAX_HEALTH_DOUBLE:{values[Commands.PLAYER_MAX_HEALTH_DOUBLE]}\nPLAYER_ACTUAL_SHIELD:{values[Commands.PLAYER_ACTUAL_SHIELD]}\nPLAYER_ACTUAL_SHIELD_HALF:{values[Commands.PLAYER_ACTUAL_SHIELD_HALF]}\nPLAYER_ACTUAL_SHIELD_DOUBLE:{values[Commands.PLAYER_ACTUAL_SHIELD_DOUBLE]}\nPLAYER_ACTUAL_CHARGE:{values[Commands.PLAYER_ACTUAL_CHARGE]}\nPLAYER_ACTUAL_CHARGE_HALF:{values[Commands.PLAYER_ACTUAL_CHARGE_HALF]}\nPLAYER_ACTUAL_CHARGE_DOUBLE:{values[Commands.PLAYER_ACTUAL_CHARGE_DOUBLE]}\nENEMY_ACTUAL_HEALTH:{values[Commands.ENEMY_ACTUAL_HEALTH]}\nENEMY_ACTUAL_HEALTH_HALF:{values[Commands.ENEMY_ACTUAL_HEALTH_HALF]}\nENEMY_ACTUAL_HEALTH_DOUBLE:{values[Commands.ENEMY_ACTUAL_HEALTH_DOUBLE]}\nENEMY_MAX_HEALTH:{values[Commands.ENEMY_MAX_HEALTH]}\nENEMY_MAX_HEALTH_HALF:{values[Commands.ENEMY_MAX_HEALTH_HALF]}\nENEMY_MAX_HEALTH_DOUBLE:{values[Commands.ENEMY_MAX_HEALTH_DOUBLE]}\nENEMY_ACTUAL_SHIELD:{values[Commands.ENEMY_ACTUAL_SHIELD]}\nENEMY_ACTUAL_SHIELD_HALF:{values[Commands.ENEMY_ACTUAL_SHIELD_HALF]}\nENEMY_ACTUAL_SHIELD_DOUBLE:{values[Commands.ENEMY_ACTUAL_SHIELD_DOUBLE]}\nENEMY_ACTUAL_CHARGE:{values[Commands.ENEMY_ACTUAL_CHARGE]}\nENEMY_ACTUAL_CHARGE_HALF:{values[Commands.ENEMY_ACTUAL_CHARGE_HALF]}\nENEMY_ACTUAL_CHARGE_DOUBLE:{values[Commands.ENEMY_ACTUAL_CHARGE_DOUBLE]}\n";
+        var retorno = $"playerAction:{playerAction}\nenemyAction:{enemyAction}\n";
+        foreach(KeyValuePair<Commands, int> entry in values)
+        {
+            retorno += $"{entry.Key.ToString().Replace("Commands.","")}:{entry.Value}\n";
+        }
+
+        return retorno;
+        // return $"ROUND:{values[Commands.ROUND]}\nplayerAction:{playerAction}\nenemyAction:{enemyAction}\nPLAYER_ACTUAL_HEALTH:{values[Commands.PLAYER_ACTUAL_HEALTH]}\nPLAYER_ACTUAL_HEALTH_HALF:{values[Commands.PLAYER_ACTUAL_HEALTH_HALF]}\nPLAYER_ACTUAL_HEALTH_DOUBLE:{values[Commands.PLAYER_ACTUAL_HEALTH_DOUBLE]}\nPLAYER_MAX_HEALTH:{values[Commands.PLAYER_MAX_HEALTH]}\nPLAYER_MAX_HEALTH_HALF:{values[Commands.PLAYER_MAX_HEALTH_HALF]}\nPLAYER_MAX_HEALTH_DOUBLE:{values[Commands.PLAYER_MAX_HEALTH_DOUBLE]}\nPLAYER_ACTUAL_SHIELD:{values[Commands.PLAYER_ACTUAL_SHIELD]}\nPLAYER_ACTUAL_SHIELD_HALF:{values[Commands.PLAYER_ACTUAL_SHIELD_HALF]}\nPLAYER_ACTUAL_SHIELD_DOUBLE:{values[Commands.PLAYER_ACTUAL_SHIELD_DOUBLE]}\nPLAYER_ACTUAL_CHARGE:{values[Commands.PLAYER_ACTUAL_CHARGE]}\nPLAYER_ACTUAL_CHARGE_HALF:{values[Commands.PLAYER_ACTUAL_CHARGE_HALF]}\nPLAYER_ACTUAL_CHARGE_DOUBLE:{values[Commands.PLAYER_ACTUAL_CHARGE_DOUBLE]}\nENEMY_ACTUAL_HEALTH:{values[Commands.ENEMY_ACTUAL_HEALTH]}\nENEMY_ACTUAL_HEALTH_HALF:{values[Commands.ENEMY_ACTUAL_HEALTH_HALF]}\nENEMY_ACTUAL_HEALTH_DOUBLE:{values[Commands.ENEMY_ACTUAL_HEALTH_DOUBLE]}\nENEMY_MAX_HEALTH:{values[Commands.ENEMY_MAX_HEALTH]}\nENEMY_MAX_HEALTH_HALF:{values[Commands.ENEMY_MAX_HEALTH_HALF]}\nENEMY_MAX_HEALTH_DOUBLE:{values[Commands.ENEMY_MAX_HEALTH_DOUBLE]}\nENEMY_ACTUAL_SHIELD:{values[Commands.ENEMY_ACTUAL_SHIELD]}\nENEMY_ACTUAL_SHIELD_HALF:{values[Commands.ENEMY_ACTUAL_SHIELD_HALF]}\nENEMY_ACTUAL_SHIELD_DOUBLE:{values[Commands.ENEMY_ACTUAL_SHIELD_DOUBLE]}\nENEMY_ACTUAL_CHARGE:{values[Commands.ENEMY_ACTUAL_CHARGE]}\nENEMY_ACTUAL_CHARGE_HALF:{values[Commands.ENEMY_ACTUAL_CHARGE_HALF]}\nENEMY_ACTUAL_CHARGE_DOUBLE:{values[Commands.ENEMY_ACTUAL_CHARGE_DOUBLE]}\n";
     }
 }

@@ -60,6 +60,7 @@ public struct FighterPrefabs
     public FighterVariableModifiersPrefabs maxHealth;
     public FighterVariableModifiersPrefabs defense;
     public FighterVariableModifiersPrefabs charge;
+    public FighterVariableModifiersPrefabs damage;
 }
 
 [Serializable]
@@ -558,6 +559,15 @@ public class PanelManager : MonoBehaviour
             case Commands.PLAYER_ACTUAL_HEALTH_DOUBLE:
                 variable = Instantiate(variablesPrefabs.player.health.doublePrefab, canvas);
                 break;
+            case Commands.PLAYER_DAMAGE:
+                variable = Instantiate(variablesPrefabs.player.damage.currentPrefab, canvas);
+                break;
+            case Commands.PLAYER_DAMAGE_HALF:
+                variable = Instantiate(variablesPrefabs.player.damage.halfPrefab, canvas);
+                break;
+            case Commands.PLAYER_DAMAGE_DOUBLE:
+                variable = Instantiate(variablesPrefabs.player.damage.doublePrefab, canvas);
+                break;
             case Commands.PLAYER_MAX_HEALTH:
                 variable = Instantiate(variablesPrefabs.player.maxHealth.currentPrefab, canvas);
                 break;
@@ -593,6 +603,15 @@ public class PanelManager : MonoBehaviour
                 break;
             case Commands.ENEMY_ACTUAL_HEALTH_DOUBLE:
                 variable = Instantiate(variablesPrefabs.enemy.health.doublePrefab, canvas);
+                break;
+            case Commands.ENEMY_DAMAGE:
+                variable = Instantiate(variablesPrefabs.enemy.damage.currentPrefab, canvas);
+                break;
+            case Commands.ENEMY_DAMAGE_HALF:
+                variable = Instantiate(variablesPrefabs.enemy.damage.halfPrefab, canvas);
+                break;
+            case Commands.ENEMY_DAMAGE_DOUBLE:
+                variable = Instantiate(variablesPrefabs.enemy.damage.doublePrefab, canvas);
                 break;
             case Commands.ENEMY_MAX_HEALTH:
                 variable = Instantiate(variablesPrefabs.enemy.maxHealth.currentPrefab, canvas);
