@@ -16,6 +16,10 @@ public class BattleManager : MonoBehaviour
     private int round;
     private int isOver;
 
+    public int IsOver { get => isOver; }
+
+    public bool currentlyWhileTrue = false;
+
     private Commands playerAction;
     private Commands enemyAction;
 
@@ -32,7 +36,6 @@ public class BattleManager : MonoBehaviour
     {
         round++;
         if (round > maxRounds) throw new MaxNumberOfRoundsException();
-
         playerAction = actions[0];
         enemyAction = actions[1];
         bool[] attacks = execute();
@@ -63,16 +66,20 @@ public class BattleManager : MonoBehaviour
         return attacks;
     }
 
-    private void checkWin()
-    {
-        if (!player.isDead() && !enemy.isDead()) return;
+    public bool checkWin()
+    {   
+        //O RETORNO DESSA FUNÇÃO NÃO SIGNIFICA QUE QLAGUÉM GANHOU MAS SIM SE ALGUÉM GANHOU E FOI INVALIDADO POR UM WHILE TRUE
 
-        if ((player.isDead() || enemy.isDead()) && false)
+        if ((player.isDead() || enemy.isDead()) && currentlyWhileTrue) //checar se está dentro de um while true
         {
-            return;
+            return true;
         }
+
+        if (!player.isDead() && !enemy.isDead()) return false;
+
 
         if (player.isDead()) isOver = -1;
         else isOver = 1;
+        return false;
     }
 }

@@ -39,6 +39,9 @@ public class EndLineController : MonoBehaviour, IDropHandler
                 case "EndBlock":
                     EventManager.onBlockEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
                     break;
+                case "BreakBlock":
+                    EventManager.onBlockEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
+                    break;
                 case "ComparatorBlock":
                     // EventManager.onComparatorEnter(eventData.pointerDrag.GetComponent<ComparatorController>(), this.gameObject.GetComponent<BlockSlotController>());
                     break;
@@ -46,7 +49,7 @@ public class EndLineController : MonoBehaviour, IDropHandler
                     // EventManager.onVariableEnter(eventData.pointerDrag.GetComponent<VariableController>(), this.gameObject.GetComponent<BlockSlotController>());
                     break;
                 case "CodeBlock":
-                    // EventManager.onBlockEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
+                    EventManager.onBlockEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
                     Debug.Log("Código");
                     break;
                 // case "ActionBlock":

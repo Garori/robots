@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,17 @@ public class Compiler : MonoBehaviour
 
     private int PC;
 
+    private Stack<string> runStructureStack = new Stack<string>();
+
+
     private Cell[] memory;
     public Cell[] Memory { get => memory; }
+    private bool currentlyWhileTrue;
+    public bool CurrentlyWhileTrue { get => currentlyWhileTrue;}
+
+    private BattleManager battleManager;
+
+    public BattleManager BattleManager { get => battleManager; }
     private int totalCells;
     public int TotalCells { get => totalCells; }
     [SerializeField] private bool debug;
@@ -19,12 +29,14 @@ public class Compiler : MonoBehaviour
 
     private void Start()
     {
+        currentlyWhileTrue = false;
         memory = new Cell[maxBlocks * 2];
         ResetAttributes();
     }
 
     public void Compile(Cell[] memory)
     {
+        currentlyWhileTrue  = false;
         this.memory = memory;
         totalCells = memory.Length;
     }
@@ -82,13 +94,17 @@ public class Compiler : MonoBehaviour
 
     public bool Compile(List<List<Commands>> blockCommands, ref string compileResult)
     {
+        // lastBreakIndex = -1;
         if (blockCommands.Count > maxBlocks)
         {
             compileResult = $"ERRO DE COMPILAÇÃO: Não pode haver mais de {maxBlocks} blocos";
             return false;
         }
         Stack<int> structuresStack = new Stack<int>();
+        Stack<int> breakStackIndexes = new Stack<int>();
+        List<int> whilesAndForsList = new List<int> {};
         bool hasAction = false;
+
 
         ResetAttributes();
         foreach (List<Commands> lineCommands in blockCommands)
@@ -106,6 +122,17 @@ public class Compiler : MonoBehaviour
                     hasAction = true;
                     continue;
             }
+            if (mainCommand == Commands.BREAK)
+            {
+                if (whilesAndForsList.Count == 0)
+                {
+                    compileResult = "ERRO DE COMPILAÇÃO: Bloco BREAK sem estrutura correspondente";
+                    return false;
+                }
+                breakStackIndexes.Push(PC);
+                memory[PC] = new BreakCell();
+                continue;
+            }
             if (mainCommand == Commands.END)
             {
                 if (structuresStack.Count == 0)
@@ -120,8 +147,19 @@ public class Compiler : MonoBehaviour
                 lastStructure.jmp = PC - lastStructureIndex;
 
                 if (lastStructure is IfCell || lastStructure is ElseCell) continue;
-
                 memory[PC].jmp = lastStructureIndex - PC - 1;
+                if (lastStructure is WhileCell || lastStructure is ForCell)
+                {
+                    if(breakStackIndexes.Count > 0)
+                    {
+                        PC++;
+                        memory[PC] = new AfterBreakCell();
+                        int lastBreakIndex = breakStackIndexes.Pop();
+                        memory[lastBreakIndex].jmp = PC - lastBreakIndex - 1;
+                    }
+
+                }
+
                 continue;
             }
             if (mainCommand == Commands.ELSE)
@@ -148,6 +186,7 @@ public class Compiler : MonoBehaviour
             }
             if (mainCommand == Commands.FOR)
             {
+                whilesAndForsList.Add(PC);
                 Commands variableName = lineCommands[1];
                 if (variableName == Commands.NONE)
                 {
@@ -178,10 +217,6 @@ public class Compiler : MonoBehaviour
             {
                 case Commands.TRUE:
                     comparatorCell = new TrueCell();
-                    if(mainCommand == Commands.WHILE)
-                    {
-                        structuresStack.Push(PC);
-                    }
                     break;
                 case Commands.EVEN:
                     Commands variableName = lineCommands[2];
@@ -225,6 +260,7 @@ public class Compiler : MonoBehaviour
             else
             {
                 structureStart = new WhileCell(comparatorCell);
+                whilesAndForsList.Add(PC);
             }
             memory[PC] = (Cell)structureStart;
             structuresStack.Push(PC);
@@ -232,7 +268,7 @@ public class Compiler : MonoBehaviour
         if (structuresStack.Count != 0)
         {
             compileResult = "ERRO DE COMPILAÇÃO: A estrutura não foi fechada corretamente";
-            // compileResult = "ERRO DE COMPILAÇÃO: A estrutura não foi fechada corretamente ou existe um While TRUE sem break";
+            // compileResult = "ERRO DE COMPILAÇÃO: Uma estrutura não foi fechada corretamente ou existe um WHILE TRUE sem break";
             return false;
         }
         if (!hasAction)
@@ -246,21 +282,76 @@ public class Compiler : MonoBehaviour
         return true;
     }
 
-    public Commands Run(BattleStatus status)
+    public Commands Run(BattleStatus status, BattleManager battleManager)
     {
+        this.battleManager = battleManager;
         for (int iter = 0; iter < maxIterations; iter++)
         {
             PC++;
             if (PC >= totalCells) throw new PlayerOutOfActionsException();
             Cell cell = memory[PC];
             if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
-            Debug.Log($"Entering cell {cell} at index {PC}");
 
             switch (cell)
             {
                 case ActionCell c:
                     return c.action;
+                case AfterBreakCell c:
+                    battleManager.currentlyWhileTrue = false;
+                    battleManager.checkWin();
+                    if(battleManager.IsOver != 0) return Commands.NONE;
+                    break;
+                case BreakCell c:
+                    battleManager.currentlyWhileTrue = false;
+                    Jump(c);
+                    break;
+                case WhileCell c:
+                    runStructureStack.Push("WhileCell");
+                    if (c.comparatorCell.ToString() == "TrueCell")
+                    {
+                        battleManager.currentlyWhileTrue = true;
+                    }
+                    JumpCond(c, status);
+                    break;
                 case IConditionCell c:
+                    runStructureStack.Push("NotWhileCell");
+                    JumpCond(c, status);
+                    break;
+                case EndCell c:
+                    Jump(c);
+                    break;
+                case ElseCell c:
+                    Jump(c);
+                    break;
+            }
+        }
+        throw new ActionTookTooLongException();
+    }
+
+    public Commands Run(BattleStatus status)
+    {
+        // this.battleManager = battleManager;
+        for (int iter = 0; iter < maxIterations; iter++)
+        {
+            PC++;
+            if (PC >= totalCells) throw new PlayerOutOfActionsException();
+            Cell cell = memory[PC];
+            if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
+
+            switch (cell)
+            {
+                case ActionCell c:
+                    return c.action;
+                case AfterBreakCell c:
+                    break;
+                case BreakCell c:
+                    Jump(c);
+                    break;
+                case WhileCell c:
+                    JumpCond(c, status);
+                    break;
+                case IConditionCell c:
+                    // runStructureStack.Push("NotWhileCell");
                     JumpCond(c, status);
                     break;
                 case EndCell c:
@@ -276,7 +367,22 @@ public class Compiler : MonoBehaviour
 
     private void JumpCond(IConditionCell cell, BattleStatus status)
     {
-        if (!cell.Evaluate(status)) Jump((Cell)cell);
+        string lastStructure = "";
+        try
+        {
+            lastStructure = runStructureStack.Pop();
+        }
+        catch{
+            lastStructure = "NotWhileCell";
+        }
+        if (!cell.Evaluate(status))
+        {
+            if (lastStructure == "WhileCell")
+            {
+                this.battleManager.currentlyWhileTrue = false;
+            }
+            Jump((Cell)cell);
+        } 
     }
 
     private void Jump(Cell cell)

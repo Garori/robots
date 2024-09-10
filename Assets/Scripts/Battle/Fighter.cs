@@ -82,6 +82,7 @@ public class Fighter : MonoBehaviour, IFighter
 
     public bool heal()
     {
+        if(lifePoints<=0) return true; //impede que se cure depois de derrotado enquanto espera por um break em um while
         lifePoints += healedLastRound ? 2 : 1;
         lifePoints = Mathf.Min(lifePoints, maxLifePoints);
         healedLastRound = !healedLastRound;
@@ -125,6 +126,8 @@ public class Fighter : MonoBehaviour, IFighter
             case Commands.HEAL:
                 heal();
                 isDefending = dodgedLastRound = chargedLastRound = false;
+                break;
+            case Commands.NONE:
                 break;
         }
         return success;

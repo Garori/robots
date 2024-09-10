@@ -102,36 +102,40 @@ public class GameManager : MonoBehaviour
         }
         GameObject actualRoundPanel;
         RectTransform actualRoundPanelTransform;
+        bool FirstTime = true;
+        int i = 0;
         try
         {
             do
             {
                 // Turno a turno da batalha
+                i++;
                 Commands[] actions = new Commands[2];
-                actions[0] = playerCompiler.Run(lastStatus);
-                Debug.Log(lastStatus);
+                actions[0] = playerCompiler.Run(lastStatus,battleManager);
                 actions[1] = enemyCompiler.Run(lastStatus);
                 newStatus = battleManager.PlayRound(actions);
-                // Imprime os textos dos rounds
-                actualRoundPanel = Instantiate(roundPanel, roundContent);
-                actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
-                actualRoundPanelTransform
-                    .GetChild(0)
-                    .GetComponent<TMPro.TextMeshProUGUI>()
-                    .SetText($"Round {newStatus.values[Commands.ROUND] - 1}");
-                actualRoundPanelTransform
-                    .GetChild(1)
-                    .GetChild(0)
-                    .GetComponent<TMPro.TextMeshProUGUI>()
-                    .SetText(PlayerStatus(lastStatus, newStatus));
-                actualRoundPanelTransform
-                    .GetChild(1)
-                    .GetChild(1)
-                    .GetComponent<TMPro.TextMeshProUGUI>()
-                    .SetText(EnemyStatus(lastStatus, newStatus));
-                battleStatuses.Add(newStatus);
-                lastStatus = newStatus;
+                if(newStatus.isOver == 0 && !battleManager.checkWin())
+                {
+                    PrintStatus(lastStatus, newStatus);
+                    battleStatuses.Add(newStatus);
+                    lastStatus = newStatus;
+                }
+                else if(battleManager.checkWin() && FirstTime)
+                {
+                    FirstTime = false;
+                    PrintStatus(lastStatus, newStatus);
+                    battleStatuses.Add(newStatus);
+                    lastStatus = newStatus; 
+                }
+                else if(newStatus.isOver != 0)
+                {
+                    FirstTime = false;
+                    PrintStatus(lastStatus, newStatus);
+                    battleStatuses.Add(newStatus);
+                    lastStatus = newStatus;
+                }
             } while (newStatus.isOver == 0);
+            // PrintStatus(lastStatus, newStatus);
             actualRoundPanel = Instantiate(roundPanel, roundContent);
             actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
             actualRoundPanelTransform
@@ -175,12 +179,21 @@ public class GameManager : MonoBehaviour
         }
         catch (MaxNumberOfRoundsException)
         {
+            string msg;
+            if (playerCompiler.BattleManager.currentlyWhileTrue)
+            {
+                msg = $"ERRO:\nA BATALHA FICOU PRESA NO WHILE TRUE";
+            }
+            else
+            {
+                msg = $"ERRO:\nA BATALHA DEMOROU MUITO PARA ACABAR";
+            }
             actualRoundPanel = Instantiate(roundError, roundContent);
             actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
             actualRoundPanelTransform
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
-                .SetText($"ERRO:\nA BATALHA DEMOROU MUITO PARA ACABAR");
+                .SetText(msg);
         }
         catch (PlayerOutOfActionsException)
         {
@@ -198,6 +211,27 @@ public class GameManager : MonoBehaviour
         ShowDebug();
         playerCompiled = false;
         animationManager.StartAnimation(battleStatuses);
+    }
+
+    private void PrintStatus(BattleStatus lastStatus, BattleStatus newStatus)
+    {
+        // Imprime os textos dos rounds
+        GameObject actualRoundPanel = Instantiate(roundPanel, roundContent);
+        RectTransform actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
+        actualRoundPanelTransform
+            .GetChild(0)
+            .GetComponent<TMPro.TextMeshProUGUI>()
+            .SetText($"Round {newStatus.values[Commands.ROUND] - 1}");
+        actualRoundPanelTransform
+            .GetChild(1)
+            .GetChild(0)
+            .GetComponent<TMPro.TextMeshProUGUI>()
+            .SetText(PlayerStatus(lastStatus, newStatus));
+        actualRoundPanelTransform
+            .GetChild(1)
+            .GetChild(1)
+            .GetComponent<TMPro.TextMeshProUGUI>()
+            .SetText(EnemyStatus(lastStatus, newStatus));
     }
 
     public void SetEnemyMemory(CellsContainer memory)

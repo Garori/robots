@@ -17,6 +17,9 @@ TextureImporter:
   - first:
       213: -7378145539858923229
     second: Novos_2
+  - first:
+      213: 5770246117489568892
+    second: Novos_5
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -231,6 +234,27 @@ TextureImporter:
       bones: []
       spriteID: 321839bf8bf8b9990800000000000000
       internalID: -7378145539858923229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Novos_5
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 0
+        width: 118
+        height: 62
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7cea839548041050800000000000000
+      internalID: 5770246117489568892
       vertices: []
       indices: 
       edges: []

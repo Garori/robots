@@ -33,6 +33,7 @@ public struct StructuresPrefabs
     public GameObject whilePrefab;
     public GameObject forPrefab;
     public GameObject endPrefab;
+    public GameObject breakPrefab;
 }
 
 [Serializable]
@@ -167,8 +168,6 @@ public class PanelManager : MonoBehaviour
     {
         // Pega o index da linha e adiciona o bloco na lista
         int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
-        Debug.Log(blocks.Count);
-        Debug.Log("" + index);
         blocks.Insert(index, block);
 
         // Cria a linha para o bloco
@@ -191,7 +190,6 @@ public class PanelManager : MonoBehaviour
         if (!block.isInPanel)
             return;
         block.isInPanel = false;
-        Debug.Log("aqui");
         // Remove da lista de blocos
         int index = blocks.IndexOf(block);
         blocks.RemoveAt(index);
@@ -285,6 +283,7 @@ public class PanelManager : MonoBehaviour
 
     private void InsertVariable(VariableController variable, BlockSlotController variableSlot)
     {
+
         if (variableSlot.isOccupied())
         {
             Destroy(variable.gameObject);
@@ -375,6 +374,10 @@ public class PanelManager : MonoBehaviour
                 case Commands.ELSE:
                     GameObject elseBlock = InstantiateStructure(mainCommand);
                     InsertBlock(elseBlock.GetComponent<ElseController>(), endLineObject);
+                    break;
+                case Commands.BREAK:
+                    GameObject breakBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(breakBlock.GetComponent<BreakController>(), endLineObject);
                     break;
                 case Commands.END:
                     GameObject endBlock = InstantiateStructure(mainCommand);
@@ -472,7 +475,7 @@ public class PanelManager : MonoBehaviour
         GameObject action = null;
         switch (command)
         {
-            case Commands.ATTACK:
+            case Commands.CODE:
                 action = Instantiate(codePrefabs.codePrefab, canvas);
                 break;
             // case Commands.DEFEND:
@@ -510,6 +513,9 @@ public class PanelManager : MonoBehaviour
                 break;
             case Commands.END:
                 structure = Instantiate(structuresPrefabs.endPrefab, canvas);
+                break;
+            case Commands.BREAK:
+                structure = Instantiate(structuresPrefabs.breakPrefab, canvas);
                 break;
             default:
                 return null;
