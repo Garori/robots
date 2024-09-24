@@ -28,6 +28,7 @@ public class StructureController : BlockController, IDropHandler
 
     public Commands GetComparatorCommand()
     {
+        Debug.Log(comparatorSlot);
         if (comparatorSlot.childBlock == null) return Commands.NONE;
         return comparatorSlot.childBlock.commandName;
     }

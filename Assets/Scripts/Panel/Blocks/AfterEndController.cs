@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class AfterBreakController : BlockController
+public class AfterEndController : BlockController
 {
     protected override void OnBeginDragAction()
     {

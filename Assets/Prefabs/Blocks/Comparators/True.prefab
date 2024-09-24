@@ -104,7 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInPanel: 0
   canDisable: 0
-  commandName: 14
+  commandName: 50
   structureSlot: {fileID: 0}
   variableSlot1: {fileID: 0}
   variableSlot2: {fileID: 0}

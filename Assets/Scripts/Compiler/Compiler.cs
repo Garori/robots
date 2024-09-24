@@ -15,8 +15,8 @@ public class Compiler : MonoBehaviour
 
     private Cell[] memory;
     public Cell[] Memory { get => memory; }
-    private bool currentlyWhileTrue;
-    public bool CurrentlyWhileTrue { get => currentlyWhileTrue;}
+    private bool currentlyWhileLoop;
+    public bool CurrentlyWhileTrue { get => currentlyWhileLoop;}
 
     private BattleManager battleManager;
 
@@ -29,14 +29,14 @@ public class Compiler : MonoBehaviour
 
     private void Start()
     {
-        currentlyWhileTrue = false;
+        currentlyWhileLoop = false;
         memory = new Cell[maxBlocks * 2];
         ResetAttributes();
     }
 
     public void Compile(Cell[] memory)
     {
-        currentlyWhileTrue  = false;
+        currentlyWhileLoop  = false;
         this.memory = memory;
         totalCells = memory.Length;
     }
@@ -107,8 +107,18 @@ public class Compiler : MonoBehaviour
 
 
         ResetAttributes();
+        PC = -1;
         foreach (List<Commands> lineCommands in blockCommands)
         {
+            try
+            {
+                if (memory[PC].GetType() == typeof(AfterEndCell))
+                {
+                    PC--;
+                }
+            }
+            catch {}
+
             PC++;
             Commands mainCommand = lineCommands[0];
             switch (mainCommand)
@@ -150,15 +160,16 @@ public class Compiler : MonoBehaviour
                 memory[PC].jmp = lastStructureIndex - PC - 1;
                 if (lastStructure is WhileCell || lastStructure is ForCell)
                 {
-                    if(breakStackIndexes.Count > 0)
+                    whilesAndForsList.RemoveAt(whilesAndForsList.Count -1);
+                    if (breakStackIndexes.Count > 0)
                     {
-                        PC++;
-                        memory[PC] = new AfterBreakCell();
                         int lastBreakIndex = breakStackIndexes.Pop();
-                        memory[lastBreakIndex].jmp = PC - lastBreakIndex - 1;
+                        memory[lastBreakIndex].jmp = PC - lastBreakIndex;
                     }
 
                 }
+                PC++;
+                memory[PC] = new AfterEndCell();
 
                 continue;
             }
@@ -277,6 +288,10 @@ public class Compiler : MonoBehaviour
             return false;
         }
         totalCells = PC + 1;
+        // foreach (Cell cell in memory)
+        // {
+        //     Debug.Log("bbbb" + cell);
+        // }
         ResetAttributes();
         compileResult = "COMPILAÇÃO BEM SUCEDIDA!!!";
         return true;
@@ -291,26 +306,27 @@ public class Compiler : MonoBehaviour
             if (PC >= totalCells) throw new PlayerOutOfActionsException();
             Cell cell = memory[PC];
             if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
+            Debug.Log($"Entering cell {cell} at index {PC}");
 
             switch (cell)
             {
                 case ActionCell c:
                     return c.action;
-                case AfterBreakCell c:
-                    battleManager.currentlyWhileTrue = false;
+                case AfterEndCell c:
+                    battleManager.currentlyWhileLoop = false;
                     battleManager.checkWin();
                     if(battleManager.IsOver != 0) return Commands.NONE;
                     break;
                 case BreakCell c:
-                    battleManager.currentlyWhileTrue = false;
+                    battleManager.currentlyWhileLoop = false;
                     Jump(c);
                     break;
                 case WhileCell c:
                     runStructureStack.Push("WhileCell");
-                    if (c.comparatorCell.ToString() == "TrueCell")
-                    {
-                        battleManager.currentlyWhileTrue = true;
-                    }
+                    battleManager.currentlyWhileLoop = true;
+                    // if (c.comparatorCell.ToString() == "TrueCell")
+                    // {
+                    // }
                     JumpCond(c, status);
                     break;
                 case IConditionCell c:
@@ -337,12 +353,13 @@ public class Compiler : MonoBehaviour
             if (PC >= totalCells) throw new PlayerOutOfActionsException();
             Cell cell = memory[PC];
             if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
+            Debug.Log($"Entering cell {cell} at index {PC}");
 
             switch (cell)
             {
                 case ActionCell c:
                     return c.action;
-                case AfterBreakCell c:
+                case AfterEndCell c:
                     break;
                 case BreakCell c:
                     Jump(c);
@@ -362,6 +379,7 @@ public class Compiler : MonoBehaviour
                     break;
             }
         }
+        return Commands.NONE;
         throw new ActionTookTooLongException();
     }
 
@@ -379,7 +397,7 @@ public class Compiler : MonoBehaviour
         {
             if (lastStructure == "WhileCell")
             {
-                this.battleManager.currentlyWhileTrue = false;
+                this.battleManager.currentlyWhileLoop = false;
             }
             Jump((Cell)cell);
         } 

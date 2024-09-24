@@ -18,7 +18,7 @@ public class BattleManager : MonoBehaviour
 
     public int IsOver { get => isOver; }
 
-    public bool currentlyWhileTrue = false;
+    public bool currentlyWhileLoop = false;
 
     private Commands playerAction;
     private Commands enemyAction;
@@ -68,9 +68,9 @@ public class BattleManager : MonoBehaviour
 
     public bool checkWin()
     {   
-        //O RETORNO DESSA FUNÇÃO NÃO SIGNIFICA QUE QLAGUÉM GANHOU MAS SIM SE ALGUÉM GANHOU E FOI INVALIDADO POR UM WHILE TRUE
+        //O RETORNO DESSA FUNÇÃO NÃO SIGNIFICA QUE ALGUÉM GANHOU MAS SIM SE ALGUÉM GANHOU E FOI INVALIDADO POR AINDA ESTAR DENTRO DE UM WHILE
 
-        if ((player.isDead() || enemy.isDead()) && currentlyWhileTrue) //checar se está dentro de um while true
+        if ((player.isDead() || enemy.isDead()) && currentlyWhileLoop) //checar se está dentro de um while
         {
             return true;
         }

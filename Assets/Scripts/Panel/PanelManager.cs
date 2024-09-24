@@ -284,6 +284,7 @@ public class PanelManager : MonoBehaviour
     private void InsertVariable(VariableController variable, BlockSlotController variableSlot)
     {
 
+        // Debug.Log("aaaaaaaa" + variable);
         if (variableSlot.isOccupied())
         {
             Destroy(variable.gameObject);

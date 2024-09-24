@@ -514,8 +514,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 797283227}
   m_HandleRect: {fileID: 797283226}
   m_Direction: 2
-  m_Value: 1.0000565
-  m_Size: 0.97883815
+  m_Value: 1.0000613
+  m_Size: 0.9788383
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7174,6 +7174,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1169775074 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7884603086885338301, guid: 2d59e7d0b438df848a51c63ff20c2b3f, type: 3}
+  m_PrefabInstance: {fileID: 633040676}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1174633216
 GameObject:
   m_ObjectHideFlags: 0
@@ -7552,7 +7557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015258789, y: -224.67549}
+  m_AnchoredPosition: {x: 0.000015258789, y: -224.65697}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1219929019
@@ -12710,7 +12715,7 @@ MonoBehaviour:
     whilePrefab: {fileID: 1568604364865003685}
     forPrefab: {fileID: 8776310827894537031}
     endPrefab: {fileID: 1899570168}
-    breakPrefab: {fileID: 0}
+    breakPrefab: {fileID: 5098474515681652567, guid: 2a5b2a36494878a4db9de3d9008520c9, type: 3}
   comparatorsPrefabs:
     truePrefab: {fileID: 5900296651072692540}
     equalsPrefab: {fileID: 7189521622505510300}
@@ -12736,7 +12741,7 @@ MonoBehaviour:
         halfPrefab: {fileID: 3322863772314128499, guid: aa1d3c0ef15432d43891466df0f570fb, type: 3}
         doublePrefab: {fileID: 3159504691115343084, guid: f918415ee57112d41a71cb750db2d765, type: 3}
       damage:
-        currentPrefab: {fileID: 0}
+        currentPrefab: {fileID: 1169775074}
         halfPrefab: {fileID: 0}
         doublePrefab: {fileID: 0}
     enemy:

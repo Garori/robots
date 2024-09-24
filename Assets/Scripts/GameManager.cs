@@ -111,7 +111,9 @@ public class GameManager : MonoBehaviour
                 // Turno a turno da batalha
                 i++;
                 Commands[] actions = new Commands[2];
+                Debug.Log("player");
                 actions[0] = playerCompiler.Run(lastStatus,battleManager);
+                Debug.Log("inimigo");
                 actions[1] = enemyCompiler.Run(lastStatus);
                 newStatus = battleManager.PlayRound(actions);
                 if(newStatus.isOver == 0 && !battleManager.checkWin())
@@ -180,9 +182,9 @@ public class GameManager : MonoBehaviour
         catch (MaxNumberOfRoundsException)
         {
             string msg;
-            if (playerCompiler.BattleManager.currentlyWhileTrue)
+            if (playerCompiler.BattleManager.currentlyWhileLoop)
             {
-                msg = $"ERRO:\nA BATALHA FICOU PRESA NO WHILE TRUE";
+                msg = $"ERRO:\nA BATALHA FICOU PRESA NO WHILE";
             }
             else
             {
@@ -216,6 +218,10 @@ public class GameManager : MonoBehaviour
     private void PrintStatus(BattleStatus lastStatus, BattleStatus newStatus)
     {
         // Imprime os textos dos rounds
+        if (lastStatus.values[Commands.PLAYER_ACTUAL_HEALTH] == 0 || lastStatus.values[Commands.ENEMY_ACTUAL_HEALTH] == 0)
+        {
+            return;
+        }
         GameObject actualRoundPanel = Instantiate(roundPanel, roundContent);
         RectTransform actualRoundPanelTransform = actualRoundPanel.GetComponent<RectTransform>();
         actualRoundPanelTransform
