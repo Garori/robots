@@ -1,3 +1,4 @@
+using System.IO.MemoryMappedFiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,9 +20,16 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField]
     private ButtonController customLevelClearedButtonPrefab;
+    
+    [SerializeField]
+    private GameObject createLevelButton;
 
     private void Start()
     {
+        if(!Memories.getToEdit())
+        {
+            createLevelButton.SetActive(false);
+        }
         Memories.UpdateMemories();
 
         for (int i = 0; i < Memories.memoriesLength; i++)
@@ -55,13 +63,31 @@ public class LevelManager : MonoBehaviour
             ButtonController button = Instantiate(prefab, transform);
             button.Init(i + Memories.memoriesLength, LoadLevel, memory.medal);
         }
+
     }
 
     public void LoadLevel(int level)
     {
-        BattleData.selectedLevel = level;
+        if (Memories.getToEdit()){
+            BattleData.selectedLevel = level;
+            BattleData.isTest = true;
+            Memories.setNewLevel(false);
+            Memories.setToEdit(false);
+            SceneManager.LoadScene("CustomCode");
+        }
+        else{
+            BattleData.selectedLevel = level;
+            BattleData.isTest = false;
+            SceneManager.LoadScene("Battle");
+        }
+    }
+
+    public void CreateNewLevel()
+    {
+        BattleData.selectedLevel = -1;
         BattleData.isTest = false;
-        SceneManager.LoadScene("Battle");
+        Memories.setNewLevel(true);
+        SceneManager.LoadScene("CustomCode");
     }
 
     public void BackButton()

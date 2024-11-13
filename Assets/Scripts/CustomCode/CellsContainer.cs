@@ -1,3 +1,4 @@
+using System.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using UnityEngine;
 [System.Serializable]
 public class CellsContainer
 {
-    private string fileName;
+    public string fileName;
     public bool isCustom;
     public int totalCells;
     public Cell[] memory { get; set; }
@@ -52,9 +53,9 @@ public class CellsContainer
     public void Serialize(string fileName)
     {
         IFormatter formatter = new BinaryFormatter();
-        Debug.Log(fileName);
-        Debug.Log(FileMode.Create);
-        Debug.Log(FileAccess.Write);
+        // Debug.Log(fileName);
+        // Debug.Log(FileMode.Create);
+        // Debug.Log(FileAccess.Write);
         // fileName = fileName ?? "CustomMemories/testeBatalha";
         using (Stream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
         {
@@ -65,13 +66,20 @@ public class CellsContainer
     public static CellsContainer Deserialize(string fileName)
     {
         IFormatter formatter = new BinaryFormatter();
-        Debug.Log(fileName);
-        Debug.Log(FileMode.Open);
-        Debug.Log(FileAccess.Read);
+        // Debug.Log(fileName);
+        // Debug.Log(FileMode.Open);
+        // Debug.Log(FileAccess.Read);
         using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
         {
             CellsContainer memory = (CellsContainer)formatter.Deserialize(stream);
             memory.fileName = fileName;
+            // if (memory.testesEnemy != null)
+            // {
+            //     foreach (var cell in memory.testesEnemy)
+            //     {
+            //         Debug.Log(cell);
+            //     }
+            // }
             return memory;
         }
     }

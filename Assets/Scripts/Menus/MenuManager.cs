@@ -16,12 +16,15 @@ public class MenuManager : MonoBehaviour
 
 	public void PlayGame()
 	{
+		Memories.setToEdit(false);
 		SceneManager.LoadScene(levelSelectSceneName);
 	}
 
 	public void CreateMode()
-	{
-		SceneManager.LoadScene(creatorModeSceneName);
+	{	
+		Memories.setToEdit(true);
+		SceneManager.LoadScene(levelSelectSceneName);
+		// SceneManager.LoadScene(creatorModeSceneName);
 	}
 
 	public void QuitGame()

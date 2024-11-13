@@ -206,6 +206,7 @@ public class PanelManager : MonoBehaviour
 
     private void InsertCode(BlockController code, GameObject line)
     {
+        Debug.Log("me chamou");
         // Pega o index da linha e adiciona o bloco na lista
         int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
         blocks.Insert(index, code);
@@ -220,6 +221,11 @@ public class PanelManager : MonoBehaviour
         // Adiciona o bloco na linha
         code.SetParent(newLine.GetComponent<RectTransform>());
         code.isInPanel = true;
+        code.gameObject.SetActive(false);
+        GameObject codeInput = Instantiate(codePrefabs.codePrefab, canvas);
+        codeInput.transform.SetParent(newLine.GetComponent<RectTransform>());
+
+
 
         OrganizeBlocks();
     }
@@ -326,10 +332,13 @@ public class PanelManager : MonoBehaviour
             GameObject blockGameObject = blocks[i].gameObject;
             HorizontalLayoutGroup line = linesLayout[i];
             blocksPrint += $"{blockGameObject.name}\n";
-
+                var aux = leftPadding;
             if (blockGameObject.CompareTag("ElseBlock") || blockGameObject.CompareTag("EndBlock"))
                 leftPadding -= tabPadding;
+            if (blockGameObject.CompareTag("CodeBlock"))
+                leftPadding = minPadding;
             leftPadding = Mathf.Max(leftPadding, minPadding);
+
 
             RectOffset padding = new RectOffset(
                 leftPadding,
@@ -344,13 +353,15 @@ public class PanelManager : MonoBehaviour
                 maxWidth,
                 leftPadding + blockTransform.sizeDelta.x * blockTransform.localScale.x
             );
-
+            if (blockGameObject.CompareTag("CodeBlock"))
+                leftPadding = aux;
             if (
                 blockGameObject.CompareTag("ElseBlock")
                 || blockGameObject.CompareTag("StructureBlock")
                 || blockGameObject.CompareTag("ForBlock")
             )
                 leftPadding += tabPadding;
+
         }
 
         foreach (GameObject line in lines)
@@ -369,6 +380,10 @@ public class PanelManager : MonoBehaviour
         Clear();
         foreach (List<Commands> lineCommands in commands)
         {
+            if(lineCommands.Count == 0)
+            {
+                continue;
+            }
             Commands mainCommand = lineCommands[0];
             switch (mainCommand)
             {
@@ -398,13 +413,11 @@ public class PanelManager : MonoBehaviour
                 case Commands.IF:
                 case Commands.WHILE:
                     GameObject structureBlock = InstantiateStructure(mainCommand);
-                    StructureController structureController =
-                        structureBlock.GetComponent<StructureController>();
+                    StructureController structureController = structureBlock.GetComponent<StructureController>();
                     InsertBlock(structureController, endLineObject);
 
                     GameObject comparator = InstantiateComparator(lineCommands[1]);
-                    ComparatorController comparatorController =
-                        comparator.GetComponent<ComparatorController>();
+                    ComparatorController comparatorController = comparator.GetComponent<ComparatorController>();
                     InsertComparator(comparatorController, structureController.comparatorSlot);
 
                     switch (lineCommands[1])
@@ -432,6 +445,10 @@ public class PanelManager : MonoBehaviour
                             );
                             break;
                     }
+                    break;
+                case Commands.CODE:
+                    GameObject codeblock = InstantiateCode(mainCommand);
+                    InsertBlock(codeblock.GetComponent<BlockController>(), endLineObject);
                     break;
                 default:
                     GameObject actionBlock = InstantiateAction(mainCommand);
@@ -473,11 +490,11 @@ public class PanelManager : MonoBehaviour
 
     public GameObject InstantiateCode(Commands command)
     {
-        GameObject action = null;
+        GameObject code = null;
         switch (command)
         {
             case Commands.CODE:
-                action = Instantiate(codePrefabs.codePrefab, canvas);
+                code = Instantiate(codePrefabs.codePrefab, canvas);
                 break;
             // case Commands.DEFEND:
             //     action = Instantiate(actionsPrefabs.defendPrefab, canvas);
@@ -491,8 +508,8 @@ public class PanelManager : MonoBehaviour
             default:
                 return null;
         }
-        SetBlockAsOld(action);
-        return action;
+        SetBlockAsOld(code);
+        return code;
     }
 
     public GameObject InstantiateStructure(Commands command)

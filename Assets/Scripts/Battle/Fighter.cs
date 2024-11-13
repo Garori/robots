@@ -5,10 +5,10 @@ using UnityEngine;
 public class Fighter : MonoBehaviour, IFighter
 {
     [Header("Starting Attributes")]
-    [SerializeField] private int maxLifePoints;
-    [SerializeField] private int minAttackPoints;
-    [SerializeField] private int maxDefensePoints;
-    [SerializeField] private int maxChargePoints;
+    private int maxLifePoints;
+    private int minAttackPoints;
+    private int maxDefensePoints;
+    private int maxChargePoints;
 
     private int lifePoints;
     private int attackPoints;

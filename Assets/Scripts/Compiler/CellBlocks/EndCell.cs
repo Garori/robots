@@ -10,4 +10,8 @@ class EndCell : Cell
     {
 
     }
+    public override Commands GetCommand()
+    {
+        return Commands.END;
+    }
 }

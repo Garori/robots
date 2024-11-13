@@ -8,8 +8,8 @@ public class BattleManager : MonoBehaviour
     public GameManager manager;
 
     [Header("Robots")]
-    [SerializeField] private Fighter player;
-    [SerializeField] private Fighter enemy;
+    [SerializeField] public Fighter player;
+    [SerializeField] public Fighter enemy;
 
     [Header("Battle Parameters")]
     [SerializeField] private int maxRounds;

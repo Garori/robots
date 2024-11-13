@@ -1,3 +1,4 @@
+using System.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEditor.PackageManager;
 
 public class GameManager : MonoBehaviour
 {
@@ -71,30 +73,65 @@ public class GameManager : MonoBehaviour
             // Get child block controller commandname
             BlockController blockController = child.GetComponent<BlockController>();
             Commands commandName = blockController.commandName;
-
-            child.gameObject.SetActive(memory.isBlockEnabled(commandName));
+            try
+            {
+                child.gameObject.SetActive(memory.isBlockEnabled(commandName));
+            }
+            catch (Exception ex)    
+            {
+                child.gameObject.SetActive(false);
+            }
         }
     }
 
-    public void RunBattle()
+    public void RunBattles()
     {
+        // roda todos os testes
+        BattleStatus lastStatus;
+        if (memory.testesEnemy != null)
+        {
+            for (int i = 0; i < memory.testesEnemy.Count; i++)
+            {
+                lastStatus = battleManager.InitBattleAttributes(
+                memory.testesPlayer[i],
+                memory.testesEnemy[i]
+                );
+                // memory.playerFighterAttributes = memory.testesPlayer[i];
+                // memory.enemyFighterAttributes = memory.testesEnemy[i];
+                Debug.Log("Carregando teste: " + i);
+                Debug.Log(battleManager.enemy.getMaxLifePoints());
+
+                if (RunBattle(lastStatus, "teste"))
+                {
+                    return;
+                }
+            }
+        }
+
+        lastStatus = battleManager.InitBattleAttributes(
+            memory.playerFighterAttributes,
+            memory.enemyFighterAttributes
+        );
+        RunBattle(lastStatus, "principal");
+
+    }
+    public bool RunBattle(BattleStatus statusDeBatalha, String tipo)
+    {
+        // roda uma batalha
         string compileResult = "";
+        bool deuErro = false;
         List<BlockController> blocks = panelManager.blocks;
         playerCompiled = playerCompiler.Compile(blocks, ref compileResult);
         if (!playerCompiled)
         {
             compilePopupText.transform.parent.gameObject.SetActive(true);
             compilePopupText.SetText(compileResult);
-            return;
+            return false;
         }
-        Debug.Log(playerCompiled);
         enemyCompiler.ResetAttributes();
         Debug.Log("Starting Battle");
         List<BattleStatus> battleStatuses = new List<BattleStatus>();
-        BattleStatus lastStatus = battleManager.InitBattleAttributes(
-            memory.playerFighterAttributes,
-            memory.enemyFighterAttributes
-        );
+        BattleStatus lastStatus = statusDeBatalha;
         BattleStatus newStatus;
         foreach (Transform child in roundContent.transform)
         {
@@ -111,9 +148,9 @@ public class GameManager : MonoBehaviour
                 // Turno a turno da batalha
                 i++;
                 Commands[] actions = new Commands[2];
-                Debug.Log("player");
+                // Debug.Log("player");
                 actions[0] = playerCompiler.Run(lastStatus,battleManager);
-                Debug.Log("inimigo");
+                // Debug.Log("inimigo");
                 actions[1] = enemyCompiler.Run(lastStatus);
                 newStatus = battleManager.PlayRound(actions);
                 if(newStatus.isOver == 0 && !battleManager.checkWin())
@@ -178,6 +215,10 @@ public class GameManager : MonoBehaviour
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
                 .SetText($"ERRO:\nJOGADOR DEMOROU MUITO PARA ESCOLHER UMA AÇÃO");
+            if (tipo == "teste")
+            {
+                deuErro = true;
+            }
         }
         catch (MaxNumberOfRoundsException)
         {
@@ -196,6 +237,10 @@ public class GameManager : MonoBehaviour
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
                 .SetText(msg);
+            if (tipo == "teste")
+            {
+                deuErro = true;
+            }
         }
         catch (PlayerOutOfActionsException)
         {
@@ -205,6 +250,10 @@ public class GameManager : MonoBehaviour
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
                 .SetText($"ERRO:\nO CÓDIGO ACABOU ANTES DO FIM DA BATALHA");
+            if (tipo == "teste")
+            {
+                deuErro = true;
+            }
         }
         if (!BattleData.isTest)
         {
@@ -212,7 +261,21 @@ public class GameManager : MonoBehaviour
         }
         ShowDebug();
         playerCompiled = false;
-        animationManager.StartAnimation(battleStatuses);
+        if (tipo != "teste")
+        {
+            animationManager.StartAnimation(battleStatuses);
+        }
+        if (tipo == "teste" && deuErro){
+            var texto = actualRoundPanelTransform
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .text;
+            actualRoundPanelTransform
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText($"Durante um dos testes ocorreu o seguinte erro\n\n{texto}");
+        }
+        return deuErro;
     }
 
     private void PrintStatus(BattleStatus lastStatus, BattleStatus newStatus)

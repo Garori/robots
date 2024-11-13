@@ -43,14 +43,14 @@ public class EventManager : MonoBehaviour
         if (BlockExit != null) BlockExit(block);
     }
 
-    public static void onCodeEnter(BlockController block, GameObject line)
+    public static void onCodeEnter(BlockController code, GameObject line)
     {
-        if (CodeEnter != null) CodeEnter(block, line);
+        if (CodeEnter != null) CodeEnter(code, line);
     }
 
-    public static void onCodeExit(BlockController block)
+    public static void onCodeExit(BlockController code)
     {
-        if (CodeExit != null) CodeExit(block);
+        if (CodeExit != null) CodeExit(code);
     }
 
     public static void onComparatorEnter(ComparatorController comparator, BlockSlotController blockCondition)

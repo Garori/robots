@@ -18,7 +18,7 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	private Image image;
 
 	private float scaledWidth;
-	public bool isEnabled { get; private set; }
+	public bool isEnabled { get; set; }
 
 	protected GameObject colliding;
 	private bool newBlock;
@@ -44,7 +44,9 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	private void Start()
 	{
 		canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-		panelManager = GameObject.FindGameObjectWithTag("PanelManager").GetComponent<PanelManager>();
+		panelManager = canvas.gameObject.transform.Find("Panel").GetComponent<PanelManager>();
+
+		// panelManager = GameObject.FindGameObjectWithTag("PanelManager").GetComponent<PanelManager>();
 
 		canvasTransform = canvas.GetComponent<RectTransform>();
 		scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;
@@ -110,32 +112,19 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	{
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+		// Debug.Log(transform.parent.name);
 		// boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
-		Debug.Log("acabou");
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		canvasGroup.alpha = 1f;
 		canvasGroup.blocksRaycasts = true;
-		if ((gameObject.tag == "ActionBlock" || gameObject.tag == "StructureBlock" || gameObject.tag == "EndBlock" || gameObject.tag == "ElseBlock" || gameObject.tag == "BreakBlock") && transform.parent.tag != "Line" || (gameObject.tag == "VariableBlock") && !(transform.parent.tag == "VariableCollider" || transform.parent.tag == "ForCondition") || (gameObject.tag == "ComparatorBlock") && transform.parent.tag != "ComparatorCollider")
+		if ((gameObject.tag == "CodeBlock" || gameObject.tag == "ActionBlock" || gameObject.tag == "StructureBlock" || gameObject.tag == "EndBlock" || gameObject.tag == "ElseBlock" || gameObject.tag == "BreakBlock") && transform.parent.tag != "Line" || (gameObject.tag == "VariableBlock") && !(transform.parent.tag == "VariableCollider" || transform.parent.tag == "ForCondition") || (gameObject.tag == "ComparatorBlock") && transform.parent.tag != "ComparatorCollider")
 		{
 			Destroy(gameObject);
 		}
-		// if (colliding == null)
-		// {
-		// 	Destroy(gameObject);
-		// 	return;
-		// }
-		// try
-		// {
-		// 	Debug.Log("Colidiu com " + colliding.transform.GetChild(0).gameObject.name);
-		// }
-		// catch(Exception)
-		// {
-		// 	Debug.Log("Colidiu com " + colliding.name);
-		// }
 		// OnEndDragAction();
 	}
 
@@ -146,12 +135,14 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
+		Debug.Log("OnTriggerEnter2D");
 		if (!OnValidTriggerEnter2D(other)) return;
 		colliding = other.gameObject;
 	}
 
 	private void OnTriggerExit2D(Collider2D other)
 	{
+		Debug.Log("OnTriggerExit2D");
 		if (!OnValidTriggerExit2D(other)) return;
 		colliding = null;
 	}

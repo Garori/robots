@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 public class NotEqualsCell : ComparatorCell
 {
@@ -14,4 +16,18 @@ public class NotEqualsCell : ComparatorCell
     {
         return battleStatus.values[variable1] != battleStatus.values[variable2];
     }
+
+    public override List<Commands> GetVariables()
+    {
+        List<Commands> variables = new List<Commands>();
+        variables.Add(variable1);
+        variables.Add(variable2);
+
+        return variables;
+    }
+    public override Commands GetCommand()
+    {
+        return Commands.NOT_EQUALS;
+    }
 }
+

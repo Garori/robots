@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class StructureController : BlockController, IDropHandler
+public class StructureController : BlockController
 {
     public BlockSlotController comparatorSlot;
     protected override void OnBeginDragAction()

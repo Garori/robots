@@ -22,4 +22,5 @@ public abstract class Cell
     {
         
     }
+    public abstract Commands GetCommand();
 }

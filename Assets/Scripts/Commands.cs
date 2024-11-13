@@ -52,15 +52,13 @@ public enum Commands
     NINE,
     TRUE,
     NONE,
-
     PLAYER_DAMAGE,
     PLAYER_DAMAGE_HALF,
     PLAYER_DAMAGE_DOUBLE,
     ENEMY_DAMAGE,
     ENEMY_DAMAGE_HALF,
     ENEMY_DAMAGE_DOUBLE,
-
-    //CODIGO ESCRITO 
     CODE,
-    BREAK
+    BREAK,
+    ERROR
 }

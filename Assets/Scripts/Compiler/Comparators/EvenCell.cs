@@ -12,4 +12,12 @@ public class EvenCell : ComparatorCell
     {
         return battleStatus.values[variable] % 2 == 0;
     }
+    public Commands GetVariable()
+    {
+        return variable;
+    }
+    public override Commands GetCommand()
+    {
+        return Commands.EVEN;
+    }
 }

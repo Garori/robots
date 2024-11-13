@@ -17,4 +17,9 @@ class WhileCell : Cell, IConditionCell
     {
         return comparatorCell.Evaluate(battleStatus);
     }
+
+    public override Commands GetCommand()
+    {
+        return Commands.WHILE;
+    }
 }

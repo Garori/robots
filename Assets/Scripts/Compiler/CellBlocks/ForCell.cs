@@ -5,9 +5,9 @@ class ForCell : Cell, IConditionCell
     private int maxCount;
     private int count;
 
-    public ForCell(Commands varible) : base()
+    public ForCell(Commands variable) : base()
     {
-        this.variable = varible;
+        this.variable = variable;
         maxCount = -1;
         count = -1;
     }
@@ -28,5 +28,15 @@ class ForCell : Cell, IConditionCell
     public override void ResetCell()
     {
         count = maxCount;
+    }
+
+    public Commands GetVariable()
+    {
+        return variable;
+    }
+
+    public override Commands GetCommand()
+    {
+        return Commands.FOR;
     }
 }

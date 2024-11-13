@@ -12,4 +12,8 @@ class ActionCell : Cell
     {
         return action.ToString();
     }
+    public override Commands GetCommand()
+    {
+        return Commands.NONE;
+    }
 }
