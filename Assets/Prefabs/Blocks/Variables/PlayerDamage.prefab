@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7294859344103567819}
   - component: {fileID: 761628914788102874}
   - component: {fileID: 1391344840128631380}
+  - component: {fileID: 1050185210860286228}
   m_Layer: 5
   m_Name: PlayerDamage
   m_TagString: VariableBlock
@@ -107,7 +108,7 @@ MonoBehaviour:
   canDisable: 0
   commandName: 52
   blockSlot: {fileID: 0}
-  canUseInFor: 0
+  canUseInFor: 1
 --- !u!114 &761628914788102874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,3 +133,19 @@ SortingGroup:
   m_SortingLayerID: -696356193
   m_SortingLayer: 5
   m_SortingOrder: 0
+--- !u!58 &1050185210860286228
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7884603086885338301}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 12

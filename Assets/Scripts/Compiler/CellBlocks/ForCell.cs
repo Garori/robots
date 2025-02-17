@@ -1,9 +1,14 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 class ForCell : Cell, IConditionCell
 {
     private Commands variable;
     private int maxCount;
     private int count;
+    public List<ConditionalCell> conditionalList { get; set; }
+    public ComparatorCell comparatorCell { get; set; } = null;
+
 
     public ForCell(Commands variable) : base()
     {

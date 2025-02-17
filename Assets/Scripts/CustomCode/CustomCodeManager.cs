@@ -15,6 +15,7 @@ using System;
 using UnityEngine.UIElements;
 using Unity.Mathematics;
 using JetBrains.Annotations;
+using System.Linq;
 
 public class CustomCodeManager : MonoBehaviour
 {
@@ -64,6 +65,7 @@ public class CustomCodeManager : MonoBehaviour
 
         Debug.Log(Memories.getToEdit());
         Debug.Log(Memories.getNewLevel());
+        Debug.Log("é teste? " + BattleData.isTest);
         caseVariablesContainer  =    casesPopUp.gameObject.transform.GetChild(0).Find("caseVariables").gameObject;
         textoCasoNumero         =    casesPopUp.gameObject.transform.GetChild(0).Find("textoCasoNumero").gameObject.GetComponent<TMP_Text>();
         saveCaseButton          =    casesPopUp.gameObject.transform.GetChild(0).Find("salvarCaseBTN").gameObject;
@@ -72,18 +74,20 @@ public class CustomCodeManager : MonoBehaviour
         {
             if (!Memories.getNewLevel() && !Memories.getToEdit())
             {
+                Debug.Log("entrou no if not new level e not to edit");
                 GameObject botaoExport = GameObject.Find("ExportButton");
                 Debug.Log(botaoExport);
                 botaoExport.GetComponentInChildren<TMP_Text>().text = "Salvar";
                 BattleData.levelMemory = Memories.GetMemory(BattleData.selectedLevel);
-                BattleData.levelCommands = compiler.Decompile(BattleData.levelMemory.memory);
+                // BattleData.levelBlocks = compiler.Decompile(BattleData.levelMemory.memory);
                 Memories.setToEdit(true);
             }
             caseVariablesContainer.SetActive(true);
             saveCaseButton.SetActive(true);
             deleteCaseButton.SetActive(true);
             carregandoDepoisDoTesteDaBatalha = true;
-            panelManager.LoadCommands(BattleData.levelCommands);
+            Debug.Log(BattleData.levelMemory.memory.ToList().Count());
+            panelManager.LoadCommands(BattleData.levelMemory.memory.ToList());
             foreach (TMP_InputField inputField in inputFields)
             {
                 switch (inputField.name)
@@ -222,7 +226,11 @@ public class CustomCodeManager : MonoBehaviour
 
             int index = (int)command;
             if (index < 0) continue;
-            if (index >= enabledBlocks.Length) continue;
+            if (index >= enabledBlocks.Length) 
+            {
+                blockController.isEnabled = false;
+                continue;
+            }
 
             blockController.isEnabled = enabledBlocks[index];
         }
@@ -239,15 +247,31 @@ public class CustomCodeManager : MonoBehaviour
     {
         if (!Compile()) return;
 
+        foreach(Cell c in compiler.Memory)
+        {
+            try
+            {
+                Debug.Log("--" + c.ToString());
+
+            }
+            catch
+            {
+
+            }
+        }
         BattleData.isTest = true;
         BattleData.levelMemory = CreateCellsContainer();
+        foreach(Cell c in BattleData.levelMemory.memory.ToList())
+        {
+            // Debug.Log("--" + c);
+        }
         try
         {
             BattleData.levelMemory.fileName = Memories.GetMemory(BattleData.selectedLevel).fileName;
         }
         catch (Exception ex)
         {}
-        BattleData.levelCommands = compiler.GetCommands(panelManager.blocks);
+        // BattleData.levelCommands = compiler.GetCommands(panelManager.blocks);
 
         panelManager.KillEvents();
         SceneManager.LoadScene("Battle");

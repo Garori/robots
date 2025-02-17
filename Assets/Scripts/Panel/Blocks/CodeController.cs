@@ -8,14 +8,14 @@ public class CodeController : BlockController
 	public string CodeWithin;
 	protected override void OnBeginDragAction()
 	{
-		// Debug.Log("aaaaaa");
+		Debug.Log("on begin drag de code");
 		EventManager.onCodeExit(this);
 	}
 
 	protected override void OnEndDragAction()
 	{
 		// Debug.Log("aaaaaa");
-		EventManager.onCodeEnter(this, colliding);
+		// EventManager.onCodeEnter(this, colliding);
 	}
 
 	protected override bool OnValidTriggerEnter2D(Collider2D other)

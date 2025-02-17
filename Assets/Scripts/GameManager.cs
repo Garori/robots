@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEditor.PackageManager;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -43,11 +44,13 @@ public class GameManager : MonoBehaviour
     {
         if (BattleData.isTest)
         {
+            Debug.Log("istest");
             memory = BattleData.levelMemory;
             SetTestMedalsText(int.MaxValue, int.MaxValue);
         }
         else
         {
+            Debug.Log("nao istest");
             memory = Memories.GetMemory(BattleData.selectedLevel);
             SetMedalsText(int.MaxValue, int.MaxValue);
         }
@@ -75,10 +78,12 @@ public class GameManager : MonoBehaviour
             Commands commandName = blockController.commandName;
             try
             {
+                // Debug.Log("" + commandName);
                 child.gameObject.SetActive(memory.isBlockEnabled(commandName));
             }
-            catch (Exception ex)    
+            catch (Exception e)    
             {
+                Debug.Log("deu erro");
                 child.gameObject.SetActive(false);
             }
         }
@@ -101,7 +106,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Carregando teste: " + i);
                 Debug.Log(battleManager.enemy.getMaxLifePoints());
 
-                if (RunBattle(lastStatus, "teste"))
+                if (RunBattle(lastStatus, "teste",i))
                 {
                     return;
                 }
@@ -115,7 +120,7 @@ public class GameManager : MonoBehaviour
         RunBattle(lastStatus, "principal");
 
     }
-    public bool RunBattle(BattleStatus statusDeBatalha, String tipo)
+    public bool RunBattle(BattleStatus statusDeBatalha, string tipo, int testeNum = -1)
     {
         // roda uma batalha
         string compileResult = "";
@@ -202,8 +207,8 @@ public class GameManager : MonoBehaviour
                 {
                     SetMedalsText(newStatus.values[Commands.ROUND] - 1, blocks.Count);
                     memory.SetWin(true);
-                    List<List<Commands>> commands = playerCompiler.GetCommands(blocks);
-                    SetLastCode(commands);
+                    Cell[] cells = playerCompiler.Memory;
+                    SetLastCode(cells);
                 }
             }
         }
@@ -273,7 +278,7 @@ public class GameManager : MonoBehaviour
             actualRoundPanelTransform
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
-                .SetText($"Durante um dos testes ocorreu o seguinte erro\n\n{texto}");
+                .SetText($"Durante o caso de teste {testeNum} ocorreu o seguinte erro\n\n{texto}");
         }
         return deuErro;
     }
@@ -467,10 +472,20 @@ public class GameManager : MonoBehaviour
 
     private void LoadLastCode(CellsContainer memory)
     {
-        panelManager.LoadCommands(memory.lastUserCode);
+        if (memory.lastUserCode != null)
+        {
+            try
+            {
+                panelManager.LoadCommands(memory.lastUserCode.ToList());
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
     }
 
-    private void SetLastCode(List<List<Commands>> commands)
+    private void SetLastCode(Cell[] commands)
     {
         memory.lastUserCode = commands;
     }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9041337522849266474}
   - component: {fileID: 5789907668093254883}
   m_Layer: 5
-  m_Name: Text
+  m_Name: CodeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9b578c9a84314184ba252618f43cee0e, type: 2}
-  m_sharedMaterial: {fileID: -2288008110360190430, guid: 9b578c9a84314184ba252618f43cee0e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ecc4d2fceb1b7c84d9e7710671074ab6, type: 2}
+  m_sharedMaterial: {fileID: 664633266327681669, guid: ecc4d2fceb1b7c84d9e7710671074ab6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -254,8 +254,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Code here...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9b578c9a84314184ba252618f43cee0e, type: 2}
-  m_sharedMaterial: {fileID: -2288008110360190430, guid: 9b578c9a84314184ba252618f43cee0e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ecc4d2fceb1b7c84d9e7710671074ab6, type: 2}
+  m_sharedMaterial: {fileID: 664633266327681669, guid: ecc4d2fceb1b7c84d9e7710671074ab6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -356,9 +356,10 @@ GameObject:
   - component: {fileID: 7832717976530979931}
   - component: {fileID: 3198547521366939322}
   - component: {fileID: 8772446898963117731}
+  - component: {fileID: 2235089732501165087}
   m_Layer: 5
   m_Name: CodeField
-  m_TagString: CodeBlock
+  m_TagString: CodeInputBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -524,7 +525,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 9b578c9a84314184ba252618f43cee0e, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: ecc4d2fceb1b7c84d9e7710671074ab6, type: 2}
   m_OnFocusSelectAll: 0
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -557,6 +558,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e8770e4f8a30d40b7627cb778933fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInPanel: 0
+  canDisable: 0
+  commandName: 58
+  CodeWithin: 
 --- !u!114 &8772446898963117731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -577,3 +582,15 @@ MonoBehaviour:
   m_FlexibleWidth: 125
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!225 &2235089732501165087
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5875740061002749651}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

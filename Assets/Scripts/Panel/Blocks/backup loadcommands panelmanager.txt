@@ -1,0 +1,176 @@
+public void LoadCommands(List<List<Commands>> commands)
+    {
+        if (commands == null || commands.Count == 0)
+            return;
+        Clear();
+        foreach (List<Commands> lineCommands in commands)
+        {
+            if(lineCommands.Count == 0)
+            {
+                continue;
+            }
+            Commands mainCommand = lineCommands[0];
+            switch (mainCommand)
+            {
+                case Commands.ELSE:
+                    GameObject elseBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(elseBlock.GetComponent<ElseController>(), endLineObject);
+                    break;
+                case Commands.BREAK:
+                    GameObject breakBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(breakBlock.GetComponent<BreakController>(), endLineObject);
+                    break;
+                case Commands.END:
+                    GameObject endBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(endBlock.GetComponent<EndController>(), endLineObject);
+                    break;
+                case Commands.FOR:
+                    GameObject forBlock = InstantiateStructure(mainCommand);
+                    ForController forController = forBlock.GetComponent<ForController>();
+                    InsertBlock(forController, endLineObject);
+
+                    GameObject forVariable = InstantiateVariable(lineCommands[1]);
+                    InsertVariable(
+                        forVariable.GetComponent<VariableController>(),
+                        forController.variableSlot
+                    );
+                    break;
+                case Commands.IF:
+                case Commands.WHILE:
+                    GameObject structureBlock = InstantiateStructure(mainCommand);
+                    StructureController structureController = structureBlock.GetComponent<StructureController>();
+                    InsertBlock(structureController, endLineObject);
+
+                    GameObject comparator = InstantiateComparator(lineCommands[1]);
+                    ComparatorController comparatorController = comparator.GetComponent<ComparatorController>();
+                    InsertComparator(comparatorController, structureController.comparatorSlot);
+
+                    switch (lineCommands[1])
+                    {
+                        case Commands.TRUE:
+                            break;
+                        case Commands.EVEN:
+                            GameObject variable = InstantiateVariable(lineCommands[2]);
+                            InsertVariable(
+                                variable.GetComponent<VariableController>(),
+                                comparatorController.variableSlot1
+                            );
+                            break;
+                        default:
+                            GameObject variable1 = InstantiateVariable(lineCommands[2]);
+                            InsertVariable(
+                                variable1.GetComponent<VariableController>(),
+                                comparatorController.variableSlot1
+                            );
+
+                            GameObject variable2 = InstantiateVariable(lineCommands[3]);
+                            InsertVariable(
+                                variable2.GetComponent<VariableController>(),
+                                comparatorController.variableSlot2
+                            );
+                            break;
+                    }
+                    break;
+                case Commands.CODE:
+                    GameObject codeblock = InstantiateCode(mainCommand);
+                    InsertBlock(codeblock.GetComponent<BlockController>(), endLineObject);
+                    break;
+                default:
+                    GameObject actionBlock = InstantiateAction(mainCommand);
+                    InsertBlock(actionBlock.GetComponent<BlockController>(), endLineObject);
+                    break;
+            }
+        }
+        OrganizeBlocks();
+    }
+
+
+
+
+
+    public void LoadCommands(List<BlockController> blocks)
+    {
+        if (blocks == null || blocks.Count == 0)
+            return;
+        Clear();
+        foreach (BlockController block in blocks)
+        {
+            // if(lineCommands.Count == 0)
+            // {
+            //     continue;
+            // }
+            Commands mainCommand = block.commandName;
+            switch (mainCommand)
+            {
+                case Commands.ELSE:
+                    GameObject elseBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(elseBlock.GetComponent<ElseController>(), endLineObject);
+                    break;
+                case Commands.BREAK:
+                    GameObject breakBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(breakBlock.GetComponent<BreakController>(), endLineObject);
+                    break;
+                case Commands.END:
+                    GameObject endBlock = InstantiateStructure(mainCommand);
+                    InsertBlock(endBlock.GetComponent<EndController>(), endLineObject);
+                    break;
+                case Commands.FOR:
+                    GameObject forBlock = InstantiateStructure(mainCommand);
+                    ForController forController = forBlock.GetComponent<ForController>();
+                    InsertBlock(forController, endLineObject);
+
+                    GameObject forVariable = InstantiateVariable((block as ForController).GetVariableCommand());
+                    InsertVariable(
+                        forVariable.GetComponent<VariableController>(),
+                        forController.variableSlot
+                    );
+                    break;
+                case Commands.IF:
+                case Commands.WHILE:
+                    GameObject structureBlock = InstantiateStructure(mainCommand);
+                    StructureController structureController = structureBlock.GetComponent<StructureController>();
+                    InsertBlock(structureController, endLineObject);
+
+                    ComparatorController comparator = (block as StructureController).comparatorSlot.childBlock as ComparatorController;
+                    GameObject comparatorGO = InstantiateComparator(comparator.commandName);
+                    ComparatorController comparatorController = comparatorGO.GetComponent<ComparatorController>();
+                    InsertComparator(comparatorController, structureController.comparatorSlot);
+
+                    switch (structureController.commandName)
+                    {
+                        case Commands.TRUE:
+                            break;
+                        case Commands.EVEN:
+                            GameObject variable = InstantiateVariable(comparator.GetVariable1Command());
+                            InsertVariable(
+                                variable.GetComponent<VariableController>(),
+                                comparatorController.variableSlot1
+                            );
+                            break;
+                        default:
+                            GameObject variable1 = InstantiateVariable(comparator.GetVariable1Command());
+                            InsertVariable(
+                                variable1.GetComponent<VariableController>(),
+                                comparatorController.variableSlot1
+                            );
+
+                            GameObject variable2 = InstantiateVariable(comparator.GetVariable2Command());
+                            InsertVariable(
+                                variable2.GetComponent<VariableController>(),
+                                comparatorController.variableSlot2
+                            );
+                            break;
+                    }
+                    break;
+                case Commands.CODE:
+                    GameObject codeblock = InstantiateCode(mainCommand);
+                    InsertCode(codeblock.GetComponent<BlockController>(), endLineObject);
+                    break;
+                default:
+                    GameObject actionBlock = InstantiateAction(mainCommand);
+                    InsertBlock(actionBlock.GetComponent<BlockController>(), endLineObject);
+                    break;
+            }
+        }
+        OrganizeBlocks();
+    }

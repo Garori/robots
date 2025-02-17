@@ -25,7 +25,7 @@ public class EndLineController : MonoBehaviour, IDropHandler
         // print("chamou o pai");
         if (eventData.pointerDrag != null)
         {
-            // Debug.Log(eventData.pointerDrag.tag);
+            Debug.Log("ondrop endline "+eventData.pointerDrag.tag);
             switch (eventData.pointerDrag.tag)   
             {
                 case "ActionBlock":
@@ -50,7 +50,11 @@ public class EndLineController : MonoBehaviour, IDropHandler
                 //     // EventManager.onVariableEnter(eventData.pointerDrag.GetComponent<VariableController>(), this.gameObject.GetComponent<BlockSlotController>());
                 //     break;
                 case "CodeBlock":
-                    EventManager.onCodeEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject);
+                    EventManager.onCodeEnter(eventData.pointerDrag.GetComponent<BlockController>(), this.gameObject,codeWithin: eventData.pointerDrag.GetComponent<CodeController>().CodeWithin);
+                    Debug.Log("Código");
+                    break;
+                case "CodeInputBlock":
+                    EventManager.onCodeEnter(eventData.pointerDrag.gameObject.transform.GetChild(0).gameObject.GetComponent<BlockController>(), this.gameObject,codeWithin: eventData.pointerDrag.GetComponent<CodeInputController>().CodeWithin);
                     Debug.Log("Código");
                     break;
                 default:

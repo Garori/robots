@@ -13,7 +13,7 @@ public class ForController : BlockController
 
     protected override void OnEndDragAction()
     {
-        EventManager.onBlockEnter(this, colliding);
+        // EventManager.onBlockEnter(this, colliding);
     }
 
     protected override bool OnValidTriggerEnter2D(Collider2D other)

@@ -19678,7 +19678,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -146.50024, y: 112.30301}
+  m_AnchoredPosition: {x: -146.50027, y: 112.30301}
   m_SizeDelta: {x: -293, y: -224.092}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1890078914
@@ -20668,6 +20668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxIterations: 10
   maxBlocks: 100
+  aaaa: 
   debug: 0
 --- !u!4 &2019167229
 Transform:
@@ -22175,7 +22176,8 @@ MonoBehaviour:
     chargePrefab: {fileID: 609017230}
     healPrefab: {fileID: 9064075343006468050}
   codePrefabs:
-    codePrefab: {fileID: 5875740061002749651, guid: 32b44f0031c4d884c9c8154bd86ad36c, type: 3}
+    codePrefab: {fileID: 3420969519576910239, guid: 17b689805c5afb44d9d7808aab42acc4, type: 3}
+    codeInputPrefab: {fileID: 5875740061002749651, guid: 32b44f0031c4d884c9c8154bd86ad36c, type: 3}
   structuresPrefabs:
     ifPrefab: {fileID: 409827315735615260}
     elsePrefab: {fileID: 7572864661468500761}
@@ -25420,7 +25422,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961071684193938561, guid: 454b32e99d615b04eb4d84d0cd806bf5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000015258789
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 961071684193938561, guid: 454b32e99d615b04eb4d84d0cd806bf5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.000030518
       objectReference: {fileID: 0}
     - target: {fileID: 961071684607317913, guid: 454b32e99d615b04eb4d84d0cd806bf5, type: 3}
       propertyPath: m_SizeDelta.x

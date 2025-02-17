@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7819558871505393571}
   - component: {fileID: 2254823907367188266}
   - component: {fileID: 3681846236274432659}
+  - component: {fileID: -3401896637414680913}
   m_Layer: 0
   m_Name: RoundCounter
   m_TagString: VariableBlock
@@ -107,7 +108,7 @@ MonoBehaviour:
   canDisable: 0
   commandName: 39
   blockSlot: {fileID: 0}
-  canUseInFor: 0
+  canUseInFor: 1
 --- !u!114 &2254823907367188266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,3 +133,19 @@ SortingGroup:
   m_SortingLayerID: -696356193
   m_SortingLayer: 5
   m_SortingOrder: 0
+--- !u!58 &-3401896637414680913
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456640017469652649}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 12

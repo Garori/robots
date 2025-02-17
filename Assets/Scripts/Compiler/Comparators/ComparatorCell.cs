@@ -13,6 +13,10 @@ public abstract class ComparatorCell
     {
         return null;
     }
+    public virtual List<int> GetVariablesInt()
+    {
+        return null;
+    }
 
     public abstract Commands GetCommand();
 }

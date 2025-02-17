@@ -15,7 +15,7 @@ public class ComparatorController : BlockController
 
     protected override void OnEndDragAction()
     {
-        EventManager.onComparatorEnter(this, colliding.GetComponent<BlockSlotController>());
+        // EventManager.onComparatorEnter(this, colliding.GetComponent<BlockSlotController>());
     }
 
     protected override bool OnValidTriggerEnter2D(Collider2D other)

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,7 +22,7 @@ public struct CodePrefabs
 {
     //AQUI
     public GameObject codePrefab;
-    // public GameObject defendPrefab;
+    public GameObject codeInputPrefab;
     // public GameObject chargePrefab;
     // public GameObject healPrefab;
 }
@@ -187,6 +189,7 @@ public class PanelManager : MonoBehaviour
     private void RemoveBlock(BlockController block)
     {
         // Verifica se o bloco está no painel
+        Debug.Log("entrou no block remove");
         if (!block.isInPanel)
             return;
         block.isInPanel = false;
@@ -204,9 +207,9 @@ public class PanelManager : MonoBehaviour
         OrganizeBlocks();
     }
 
-    private void InsertCode(BlockController code, GameObject line)
+    private void InsertCode(BlockController code, GameObject line, string codeWithin ="")
     {
-        Debug.Log("me chamou");
+        // Debug.Log("me chamou");
         // Pega o index da linha e adiciona o bloco na lista
         int index = line.Equals(endLineObject) ? activeLines : lines.IndexOf(line);
         blocks.Insert(index, code);
@@ -222,9 +225,18 @@ public class PanelManager : MonoBehaviour
         code.SetParent(newLine.GetComponent<RectTransform>());
         code.isInPanel = true;
         code.gameObject.SetActive(false);
-        GameObject codeInput = Instantiate(codePrefabs.codePrefab, canvas);
+        // Destroy(code.gameObject.GetComponent<UnityEngine.UI.Image>());
+        (code as CodeController).CodeWithin = codeWithin;
+        GameObject codeInput = Instantiate(codePrefabs.codeInputPrefab, canvas);
         codeInput.transform.SetParent(newLine.GetComponent<RectTransform>());
-
+        codeInput.GetComponent<CodeInputController>().CodeWithin = codeWithin;
+        code.SetParent(codeInput.GetComponent<RectTransform>());
+        codeInput.GetComponent<CodeInputController>().isInPanel = true;
+        code.transform.SetAsFirstSibling();
+        if (codeWithin != "")
+        {
+            codeInput.GetComponent<CodeInputController>().SetInputField(codeWithin);
+        }
 
 
         OrganizeBlocks();
@@ -233,12 +245,16 @@ public class PanelManager : MonoBehaviour
     private void RemoveCode(BlockController code)
     {
         // Verifica se o bloco está no painel
+        Debug.Log("entrou");
         if (!code.isInPanel)
             return;
         code.isInPanel = false;
 
         // Remove da lista de blocos
-        int index = blocks.IndexOf(code);
+        Debug.Log("count e index");
+        Debug.Log(blocks.Count);
+        int index = blocks.IndexOf(code.gameObject.transform.GetChild(0).gameObject.GetComponent<CodeController>() as BlockController);
+        Debug.Log(index);
         blocks.RemoveAt(index);
 
         // Remove a linha correspondente do painel
@@ -249,6 +265,7 @@ public class PanelManager : MonoBehaviour
         activeLines--;
 
         OrganizeBlocks();
+        // Verifica se o bloco está no painel
     }
 
     private void InsertComparator(ComparatorController comparator, BlockSlotController blockSlot)
@@ -373,20 +390,51 @@ public class PanelManager : MonoBehaviour
         endLineObject.GetComponent<RectTransform>().sizeDelta = endLineSize;
     }
 
-    public void LoadCommands(List<List<Commands>> commands)
+    public void LoadCommands(List<Cell> cells)
     {
-        if (commands == null || commands.Count == 0)
+        foreach (Cell cell in cells)
+        {
+            try
+            {
+                Commands mainCommand = cell.GetCommand();
+                Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaa"  +mainCommand);
+            }
+            catch
+            {
+                break;
+            }
+        }
+        if (cells == null || cells.Count == 0)
             return;
         Clear();
-        foreach (List<Commands> lineCommands in commands)
+        foreach (Cell cell in cells)
         {
-            if(lineCommands.Count == 0)
+            if(cell == null)
             {
                 continue;
             }
-            Commands mainCommand = lineCommands[0];
+            if (cell.isFromACodeBlock)
+            {
+                continue;
+            }
+            // if(lineCommands.Count == 0)
+            // {
+            //     continue;
+            // }
+            switch (cell)
+            {
+                case IfCell c:
+                    Debug.Log("da pra fazer sem comandos");
+                    break;
+            }
+
+
+            Commands mainCommand = cell.GetCommand();
+            Debug.Log(mainCommand);
             switch (mainCommand)
             {
+                case Commands.NONE:
+                    break;
                 case Commands.ELSE:
                     GameObject elseBlock = InstantiateStructure(mainCommand);
                     InsertBlock(elseBlock.GetComponent<ElseController>(), endLineObject);
@@ -404,7 +452,7 @@ public class PanelManager : MonoBehaviour
                     ForController forController = forBlock.GetComponent<ForController>();
                     InsertBlock(forController, endLineObject);
 
-                    GameObject forVariable = InstantiateVariable(lineCommands[1]);
+                    GameObject forVariable = InstantiateVariable((cell as ForCell).GetVariable());
                     InsertVariable(
                         forVariable.GetComponent<VariableController>(),
                         forController.variableSlot
@@ -414,31 +462,41 @@ public class PanelManager : MonoBehaviour
                 case Commands.WHILE:
                     GameObject structureBlock = InstantiateStructure(mainCommand);
                     StructureController structureController = structureBlock.GetComponent<StructureController>();
+                    ComparatorCell comparator = null;
                     InsertBlock(structureController, endLineObject);
-
-                    GameObject comparator = InstantiateComparator(lineCommands[1]);
-                    ComparatorController comparatorController = comparator.GetComponent<ComparatorController>();
+                    try
+                    {
+                        comparator = (cell as IConditionCell).conditionalList[0].comparator;
+                    }
+                    catch (Exception ex)
+                    {
+                        //só serve para as primeiras 8 fases criadas para o tcc do Carlos, Lucas e Francisco
+                        comparator = (cell as IConditionCell).comparatorCell;
+                    }
+                    Debug.Log(comparator);
+                    GameObject comparatorGO = InstantiateComparator(comparator.GetCommand());
+                    ComparatorController comparatorController = comparatorGO.GetComponent<ComparatorController>();
                     InsertComparator(comparatorController, structureController.comparatorSlot);
 
-                    switch (lineCommands[1])
+                    switch (comparator.GetCommand())
                     {
                         case Commands.TRUE:
                             break;
                         case Commands.EVEN:
-                            GameObject variable = InstantiateVariable(lineCommands[2]);
+                            GameObject variable = InstantiateVariable(comparator.GetVariables()[0]);
                             InsertVariable(
                                 variable.GetComponent<VariableController>(),
                                 comparatorController.variableSlot1
                             );
                             break;
                         default:
-                            GameObject variable1 = InstantiateVariable(lineCommands[2]);
+                            GameObject variable1 = InstantiateVariable(comparator.GetVariables()[0]);
                             InsertVariable(
                                 variable1.GetComponent<VariableController>(),
                                 comparatorController.variableSlot1
                             );
 
-                            GameObject variable2 = InstantiateVariable(lineCommands[3]);
+                            GameObject variable2 = InstantiateVariable(comparator.GetVariables()[1]);
                             InsertVariable(
                                 variable2.GetComponent<VariableController>(),
                                 comparatorController.variableSlot2
@@ -448,10 +506,15 @@ public class PanelManager : MonoBehaviour
                     break;
                 case Commands.CODE:
                     GameObject codeblock = InstantiateCode(mainCommand);
-                    InsertBlock(codeblock.GetComponent<BlockController>(), endLineObject);
+                    // Debug.Log("zzzz" + codeblock.ToString());
+                    // Debug.Log("zzzz" + endLineObject.ToString());
+                    // Debug.Log("zzzz" + (cell as CodeCell).CodeWithin);
+                    InsertCode(codeblock.GetComponent<CodeController>(), endLineObject,(cell as CodeCell).CodeWithin);
                     break;
                 default:
                     GameObject actionBlock = InstantiateAction(mainCommand);
+                    // Debug.Log("xxxx" + mainCommand);
+                    // Debug.Log("zzzz" + actionBlock.ToString());
                     InsertBlock(actionBlock.GetComponent<BlockController>(), endLineObject);
                     break;
             }
@@ -496,15 +559,6 @@ public class PanelManager : MonoBehaviour
             case Commands.CODE:
                 code = Instantiate(codePrefabs.codePrefab, canvas);
                 break;
-            // case Commands.DEFEND:
-            //     action = Instantiate(actionsPrefabs.defendPrefab, canvas);
-            //     break;
-            // case Commands.CHARGE:
-            //     action = Instantiate(actionsPrefabs.chargePrefab, canvas);
-            //     break;
-            // case Commands.HEAL:
-            //     action = Instantiate(actionsPrefabs.healPrefab, canvas);
-            //     break;
             default:
                 return null;
         }

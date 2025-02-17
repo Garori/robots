@@ -35,6 +35,7 @@ public class BattleManager : MonoBehaviour
     public BattleStatus PlayRound(Commands[] actions)
     {
         round++;
+        Debug.Log(round);
         if (round > maxRounds) throw new MaxNumberOfRoundsException();
         playerAction = actions[0];
         enemyAction = actions[1];
@@ -70,7 +71,7 @@ public class BattleManager : MonoBehaviour
     {   
         //O RETORNO DESSA FUNÇÃO NÃO SIGNIFICA QUE ALGUÉM GANHOU MAS SIM SE ALGUÉM GANHOU E FOI INVALIDADO POR AINDA ESTAR DENTRO DE UM WHILE
 
-        if ((player.isDead() || enemy.isDead()) && currentlyWhileLoop) //checar se está dentro de um while
+        if (enemy.isDead() && currentlyWhileLoop) //checar se está dentro de um while
         {
             return true;
         }

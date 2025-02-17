@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3788217238061418507}
   - component: {fileID: 8167477233792234403}
   - component: {fileID: 5619172492997712548}
+  - component: {fileID: 6459850598848245732}
   m_Layer: 0
   m_Name: 6_SixVariable
   m_TagString: VariableBlock
@@ -106,3 +107,19 @@ MonoBehaviour:
   commandName: 46
   blockSlot: {fileID: 0}
   canUseInFor: 1
+--- !u!58 &6459850598848245732
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3839581060450399150}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 12

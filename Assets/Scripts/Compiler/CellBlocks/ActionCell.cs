@@ -14,6 +14,6 @@ class ActionCell : Cell
     }
     public override Commands GetCommand()
     {
-        return Commands.NONE;
+        return action;
     }
 }

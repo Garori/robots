@@ -1,3 +1,4 @@
+using System;
 public enum Commands
 {
     DEFEND,
@@ -60,5 +61,14 @@ public enum Commands
     ENEMY_DAMAGE_DOUBLE,
     CODE,
     BREAK,
-    ERROR
+    ERROR,
+    OPEN_PARENTHESIS,
+    CLOSE_PARENTHESIS,
+    GREATER_EQUALS,
+    LESSER,
+    LESSER_EQUALS,
+    AND,
+    OR,
+    NOT,
+    NUMBER
 }

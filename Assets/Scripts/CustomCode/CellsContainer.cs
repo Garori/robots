@@ -24,7 +24,7 @@ public class CellsContainer
     public string hint { get; set; }
     public bool[] enabledBlocks { get; set; }
     public bool isLevelCleared { get; set; }
-    public List<List<Commands>> lastUserCode { get; set; }
+    public Cell[] lastUserCode { get; set; }
 
     public CellsContainer(
         Compiler compiler,
@@ -99,7 +99,7 @@ public class CellsContainer
         isLevelCleared = isLevelCleared || won;
     }
 
-    public void SetLastCode(List<List<Commands>> lastUserCode)
+    public void SetLastCode(Cell[] lastUserCode)
     {
         this.lastUserCode = lastUserCode;
     }

@@ -114,5 +114,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInPanel: 0
-  canDisable: 0
+  canDisable: 1
   commandName: 58
+  CodeWithin: 
