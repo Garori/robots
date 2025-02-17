@@ -77,7 +77,7 @@ public class Compiler : MonoBehaviour
         dict.Add(")", (cond.IndexOf(")") != -1) ? cond.IndexOf(")") : int.MaxValue);
         dict.Add("&&", (cond.IndexOf("&&") != -1) ? cond.IndexOf("&&") : int.MaxValue);
         dict.Add("||", (cond.IndexOf("||") != -1) ? cond.IndexOf("||") : int.MaxValue);
-        dict.Add("EVEN", (cond.IndexOf("EVEN") != -1) ? cond.IndexOf("EVEN") : int.MaxValue);
+        dict.Add("even", (cond.IndexOf("even") != -1) ? cond.IndexOf("even") : int.MaxValue);
         dict.Add("!", (cond.IndexOf("!") != -1) ? cond.IndexOf("!") : int.MaxValue);
         // bool stillHasTokens = true;
         // int k = 0;
@@ -182,6 +182,12 @@ public class Compiler : MonoBehaviour
             aaaa += cond+", ";
         }
         listaAUX = listaAUX.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+        Debug.Log("____________________________________________________________");
+        Debug.Log($"listaAUX = {listaAUX}");
+        foreach (string cond in listaAUX){
+            Debug.Log(cond);
+        }
+        Debug.Log("____________________________________________________________");
         return listaAUX;
 
     }
@@ -228,7 +234,7 @@ public class Compiler : MonoBehaviour
                         throw new Exception("ERRO DE COMPILAÇÃO: Alguma estrutura de repetição em um bloco CODE não foi aberta corretamente, '{' era esperado");
                     }
 
-                    if (lastStructure == "If")
+                    if (lastStructure == "if")
                     {
                         // Debug.Log("é verdade e eu atesto");
                         lastStructureWasAnIfAndItReceivedAnEndBlock = true;
@@ -240,8 +246,8 @@ public class Compiler : MonoBehaviour
                     continue;
                     // break;
                 case "{":
-                    string a = "}      \n     ";
-                    Debug.Log($"'{a.Trim()}'");
+                    // string a = "}      \n     ";
+                    // Debug.Log($"'{a.Trim()}'");
                     // flagFaltaAbrirChaves = false;
                     // lastStructure = structures.Pop();
                     // if (notOpenedStucture != "")
@@ -275,9 +281,9 @@ public class Compiler : MonoBehaviour
                 // todo
 
             }
-            else if (conditionStart != -1 || line.IndexOf("Else") == 0)
+            else if (conditionStart != -1 || line.IndexOf("else") == 0)
             {
-                string functionOrStructure = "Else";
+                string functionOrStructure = "else";
                 if (conditionStart != -1)
                 {
                     functionOrStructure = line.Substring(0, conditionStart).Trim();
@@ -307,7 +313,7 @@ public class Compiler : MonoBehaviour
                                 commands.RemoveAt(commands.Count - 1);
                             }
                             Debug.Log("antes de empurrar else = " + line.Substring(line.Length-1).Trim());
-                            if (line.Substring(line.Length-1).Trim() != "E" || line.Substring(line.Length-1).Trim() == "{")
+                            if (line.Substring(line.Length-1).Trim() != "e" || line.Substring(line.Length-1).Trim() == "{")
                             {
                                 if (line.Substring(line.Length-1).Trim() == "{")
                                 {
@@ -432,9 +438,12 @@ public class Compiler : MonoBehaviour
                                 case ")":
                                     tokenTraduzido = "CLOSE_PARENTHESIS";
                                     break;
-                                case "EVEN":
+                                case "even":
                                     tokenTraduzido = "EVEN";
                                     hasAtLeastOneBool = true;
+                                    break;
+                                case "ROUND":
+                                    tokenTraduzido = "ROUND";
                                     break;
                                 default:
                                     // string[] numbers = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "ZERO" };
@@ -449,10 +458,6 @@ public class Compiler : MonoBehaviour
                                     }
                                     try 
                                     {
-                                        if (token == "ROUND"){
-                                            tokenTraduzido = "ROUND";
-                                            break;
-                                        }
                                         string[] token_parts = token.Split('_');
                                         if(token_parts.Length == 1){
                                             throw new Exception("");
@@ -847,6 +852,15 @@ public class Compiler : MonoBehaviour
         Stack<int> structuresStack = new Stack<int>();
         Stack<int> breakStackIndexes = new Stack<int>();
         List<int> whilesAndForsList = new List<int> { };
+        Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        foreach (List<Commands> a in blockCommands){
+            Debug.Log("------");
+            foreach(Commands caaa in a){
+                Debug.Log("" + caaa);
+            }
+            Debug.Log("------");
+        }
+        Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         foreach (List<Commands> lineCommands in blockCommands)
         {
             // Debug.Log(lineCommands);
