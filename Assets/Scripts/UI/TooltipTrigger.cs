@@ -10,12 +10,20 @@ public class TooltipTrigger : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("start tooltiptrigger");
         isTooltipEnabled = true;
-    }	
+    }
+
+    private void Awake()
+    {
+        Debug.Log("awake tooltiptrigger");
+        isTooltipEnabled = true;
+    }
 
     // calls tooltip when mouse hovers over object
     public void OnMouseEnter()
     {
+        // Debug.Log("entrou mouse");
         if (!isTooltipEnabled) return;
         ShowTooltip();
     }

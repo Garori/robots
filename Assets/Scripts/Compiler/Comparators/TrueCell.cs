@@ -5,4 +5,8 @@ public class TrueCell : ComparatorCell
     {
         return true;
     }
+    public override Commands GetCommand()
+    {
+        return Commands.TRUE;
+    }
 }

@@ -10,4 +10,8 @@ class AfterEndCell : Cell
     {
 
     }
+    public override Commands GetCommand()
+    {
+        return Commands.NONE;
+    }
 }

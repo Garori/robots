@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4696334997503450255}
   - component: {fileID: -1333762817139699764}
   - component: {fileID: 4320946101995637152}
+  - component: {fileID: 7910454569620423362}
   m_Layer: 5
   m_Name: EnemyDoubleLife
   m_TagString: VariableBlock
@@ -107,7 +108,7 @@ MonoBehaviour:
   canDisable: 0
   commandName: 29
   blockSlot: {fileID: 0}
-  canUseInFor: 0
+  canUseInFor: 1
 --- !u!114 &-1333762817139699764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,3 +133,19 @@ SortingGroup:
   m_SortingLayerID: -696356193
   m_SortingLayer: 5
   m_SortingOrder: 0
+--- !u!58 &7910454569620423362
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6618906331500240236}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 12

@@ -1,3 +1,5 @@
+using System;
+
 [System.Serializable]
 class BreakCell : Cell
 {
@@ -9,5 +11,9 @@ class BreakCell : Cell
     public BreakCell() : base(0)
     {
 
+    }
+    public override Commands GetCommand()
+    {
+        return Commands.BREAK;
     }
 }

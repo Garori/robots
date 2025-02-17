@@ -35,7 +35,8 @@ public class AnimationManager : MonoBehaviour
                 if (isHit) animations[defendPosition] = "Damaged";
                 return animations;
             default:
-                return null;
+                if (isHit) animations[defendPosition] = "Damaged";
+                return animations;
         }
     }
 
@@ -52,14 +53,13 @@ public class AnimationManager : MonoBehaviour
         {
             string[] playerAnimations = GetAnimations(battleStatus.playerAction, battleStatus.playerHit, 0);
             string[] enemyAnimations = GetAnimations(battleStatus.enemyAction, battleStatus.enemyHit, 1);
-
-            Debug.Log("Starting animations");
+            // Debug.Log("Starting animations");
 
             for (int i = 0; i < playerAnimations.Length; i++)
             {
                 if (playerAnimations[i] == "Idle" && enemyAnimations[i] == "Idle") continue;
-                Debug.Log("Player animation " + i + ": " + playerAnimations[i]);
-                Debug.Log("Enemy animation " + i + ": " + enemyAnimations[i]);
+                // Debug.Log("Player animation " + i + ": " + playerAnimations[i]);
+                // Debug.Log("Enemy animation " + i + ": " + enemyAnimations[i]);
                 Coroutine playerCoroutine = StartCoroutine(CO_PlayAnimation(playerArmature, playerAnimations[i]));
                 Coroutine enemyCoroutine = StartCoroutine(CO_PlayAnimation(enemyArmature, enemyAnimations[i]));
 

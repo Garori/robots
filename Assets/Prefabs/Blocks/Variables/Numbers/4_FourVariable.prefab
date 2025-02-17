@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2726774321408507938}
   - component: {fileID: 6925889751972658058}
   - component: {fileID: 6682865560182182541}
+  - component: {fileID: -2985449624110759823}
   m_Layer: 0
   m_Name: 4_FourVariable
   m_TagString: VariableBlock
@@ -106,3 +107,19 @@ MonoBehaviour:
   commandName: 44
   blockSlot: {fileID: 0}
   canUseInFor: 1
+--- !u!58 &-2985449624110759823
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2597996357606783879}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 12

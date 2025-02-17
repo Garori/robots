@@ -2,6 +2,7 @@
 public abstract class Cell
 {
     public int jmp { get; set; }
+    public bool isFromACodeBlock { get; set; } = false;
 
     public Cell()
     {
@@ -22,4 +23,5 @@ public abstract class Cell
     {
         
     }
+    public abstract Commands GetCommand();
 }

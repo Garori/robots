@@ -18,7 +18,7 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	private Image image;
 
 	private float scaledWidth;
-	public bool isEnabled { get; private set; }
+	public bool isEnabled { get; set; }
 
 	protected GameObject colliding;
 	private bool newBlock;
@@ -34,17 +34,32 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		newBlock = true;
 		isInPanel = false;
 		isEnabled = true;
-
+		// if(gameObject.tag == "CodeInputBlock")
+		// {
+		// 	rectTransform = gameObject.transform.GetChild(0).gameObject.GetComponent<RectTransform>();
+		// }
+		// else
+		// {
 		rectTransform = GetComponent<RectTransform>();
+	// }
 		canvasGroup = GetComponent<CanvasGroup>();
 		boxCollider2D = GetComponent<BoxCollider2D>();
 		image = GetComponent<Image>();
+		canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+		panelManager = canvas.gameObject.transform.Find("Panel").GetComponent<PanelManager>();
+
+		// panelManager = GameObject.FindGameObjectWithTag("PanelManager").GetComponent<PanelManager>();
+
+		canvasTransform = canvas.GetComponent<RectTransform>();
+		scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;
 	}
 
 	private void Start()
 	{
 		canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-		panelManager = GameObject.FindGameObjectWithTag("PanelManager").GetComponent<PanelManager>();
+		panelManager = canvas.gameObject.transform.Find("Panel").GetComponent<PanelManager>();
+
+		// panelManager = GameObject.FindGameObjectWithTag("PanelManager").GetComponent<PanelManager>();
 
 		canvasTransform = canvas.GetComponent<RectTransform>();
 		scaledWidth = rectTransform.sizeDelta.x * rectTransform.localScale.x / 2f;
@@ -80,20 +95,14 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 			Selection.objects = gos;
 			Unsupported.DuplicateGameObjectsUsingPasteboard();
 		}
-			canvasGroup.blocksRaycasts = false;
-		// if (newBlock)
+		// try
 		// {
-		// 	GameObject createdBlock = Instantiate(gameObject, gameObject.transform.parent);
-		// 	createdBlock.name = gameObject.name;
-		// 	createdBlock.transform.SetSiblingIndex(gameObject.transform.GetSiblingIndex());
-		// 	createdBlock.GetComponent<BlockController>().isEnabled = isEnabled;
-		// 	// createdBlock.gameObject.canvasGroup.blocksRaycasts = false;
-		// 	newBlock = false;
-		// 	TooltipTrigger tooltipTrigger = createdBlock.GetComponent<TooltipTrigger>();
-		// 	if (tooltipTrigger != null)
-		// 	{
-		// 		tooltipTrigger.isTooltipEnabled = false;
-		// 	}
+		canvasGroup.blocksRaycasts = false;
+		// }
+		// catch (Exception e)
+		// {
+		// 	canvasGroup = gameObject.transform.parent.GetChild(0).gameObject.GetComponent<CanvasGroup>();
+		// 	canvasGroup.blocksRaycasts = false;
 		// }
 		isEnabled = true;
 		canvasGroup.alpha = .5f;
@@ -109,34 +118,33 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 	public void OnDrag(PointerEventData eventData)
 	{
 		if (eventData.button != PointerEventData.InputButton.Left) return;
+		// if (gameObject.tag == "CodeBlock")
+		// {
+			
+		// }
+		// Debug.Log(rectTransform);
+		// Debug.Log(eventData.delta);
+		// Debug.Log(canvas);
+		
 		rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+		Debug.Log(eventData.pointerCurrentRaycast.gameObject.tag);
+		Debug.Log(eventData.pointerDrag.gameObject.GetComponent<CanvasGroup>().blocksRaycasts);
+		// Debug.Log(transform.parent.tag);
 		// boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
-		Debug.Log("acabou");
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		canvasGroup.alpha = 1f;
 		canvasGroup.blocksRaycasts = true;
-		if ((gameObject.tag == "ActionBlock" || gameObject.tag == "StructureBlock" || gameObject.tag == "EndBlock" || gameObject.tag == "ElseBlock" || gameObject.tag == "BreakBlock") && transform.parent.tag != "Line" || (gameObject.tag == "VariableBlock") && !(transform.parent.tag == "VariableCollider" || transform.parent.tag == "ForCondition") || (gameObject.tag == "ComparatorBlock") && transform.parent.tag != "ComparatorCollider")
+		Debug.Log("on end drag block controller obj: "+ gameObject.tag);
+		Debug.Log("on end drag block controller caiu em:" + transform.parent.tag);
+		if ((gameObject.tag == "CodeInputBlock" ||  gameObject.tag == "CodeBlock" || gameObject.tag == "ActionBlock" || gameObject.tag == "StructureBlock" || gameObject.tag == "EndBlock" || gameObject.tag == "ElseBlock" || gameObject.tag == "BreakBlock") && transform.parent.tag != "Line" || (gameObject.tag == "VariableBlock") && !(transform.parent.tag == "VariableCollider" || transform.parent.tag == "ForCondition") || (gameObject.tag == "ComparatorBlock") && transform.parent.tag != "ComparatorCollider")
 		{
 			Destroy(gameObject);
 		}
-		// if (colliding == null)
-		// {
-		// 	Destroy(gameObject);
-		// 	return;
-		// }
-		// try
-		// {
-		// 	Debug.Log("Colidiu com " + colliding.transform.GetChild(0).gameObject.name);
-		// }
-		// catch(Exception)
-		// {
-		// 	Debug.Log("Colidiu com " + colliding.name);
-		// }
-		// OnEndDragAction();
+		OnEndDragAction();
 	}
 
 	protected virtual void OnEndDragAction()
@@ -146,12 +154,14 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
+		Debug.Log("OnTriggerEnter2D");
 		if (!OnValidTriggerEnter2D(other)) return;
 		colliding = other.gameObject;
 	}
 
 	private void OnTriggerExit2D(Collider2D other)
 	{
+		Debug.Log("OnTriggerExit2D");
 		if (!OnValidTriggerExit2D(other)) return;
 		colliding = null;
 	}
@@ -168,6 +178,9 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 
 	public void SetParent(Transform parent)
 	{
+		// Debug.Log("parent = " + parent);
+		// Debug.Log("rect = " + rectTransform);
+		rectTransform = GetComponent<RectTransform>();
 		rectTransform.SetParent(parent);
 		rectTransform.anchoredPosition = Vector2.zero;
 	}

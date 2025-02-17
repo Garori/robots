@@ -1,9 +1,13 @@
+using UnityEditor.Experimental;
 using UnityEngine;
 
 public static class Memories
 {
     private static CellsContainer[] memories;
     private static CellsContainer[] customMemories;
+    private static bool toEditLevelSelect { get; set; }
+
+    private static bool isNewLevel { get; set; }
     public static int memoriesLength
     {
         get { return memories.Length; }
@@ -28,10 +32,16 @@ public static class Memories
         for (int i = 0; i < fileNames.Length; i++)
         {
             memories[i] = CellsContainer.Deserialize(fileNames[i]);
+            int k =0;
+            foreach (bool a in memories[i].enabledBlocks)
+            {
+                // Debug.Log($"{i} {a} {k}");
+                k++;
+            }
         }
-
         return memories;
     }
+
 
     public static CellsContainer GetMemory(int level)
     {
@@ -50,4 +60,25 @@ public static class Memories
         memories = GetFiles("Memories");
         customMemories = GetFiles("CustomMemories");
     }
+
+    public static void setToEdit(bool editValue)
+    {
+        toEditLevelSelect = editValue;
+    }
+
+    public static bool getToEdit()
+    {
+        return toEditLevelSelect;
+    }
+
+    public static void setNewLevel(bool editValue)
+    {
+        isNewLevel = editValue;
+    }
+
+    public static bool getNewLevel()
+    {
+        return isNewLevel;
+    }
+
 }

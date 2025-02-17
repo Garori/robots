@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4829894850477928264}
   - component: {fileID: -5707992576909307967}
   - component: {fileID: -5704140491763932022}
+  - component: {fileID: 252686441412974307}
   m_Layer: 5
   m_Name: EnemyDoubleMaxLife
   m_TagString: VariableBlock
@@ -107,7 +108,7 @@ MonoBehaviour:
   canDisable: 0
   commandName: 32
   blockSlot: {fileID: 0}
-  canUseInFor: 0
+  canUseInFor: 1
 --- !u!114 &-5707992576909307967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,3 +133,19 @@ SortingGroup:
   m_SortingLayerID: -696356193
   m_SortingLayer: 5
   m_SortingOrder: 0
+--- !u!58 &252686441412974307
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4302233947469334082}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 12

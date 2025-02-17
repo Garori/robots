@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3862845334491239920}
   - component: {fileID: -1893200835211194593}
   - component: {fileID: -35323981663609670}
+  - component: {fileID: -3081298489275718300}
   m_Layer: 5
   m_Name: EnemyLife
   m_TagString: VariableBlock
@@ -107,7 +108,7 @@ MonoBehaviour:
   canDisable: 0
   commandName: 27
   blockSlot: {fileID: 0}
-  canUseInFor: 0
+  canUseInFor: 1
 --- !u!114 &-1893200835211194593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,3 +133,19 @@ SortingGroup:
   m_SortingLayerID: -696356193
   m_SortingLayer: 5
   m_SortingOrder: 0
+--- !u!58 &-3081298489275718300
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3224652059313513288}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 12

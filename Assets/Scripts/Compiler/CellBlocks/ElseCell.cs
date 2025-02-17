@@ -10,4 +10,9 @@ class ElseCell : Cell
     {
 
     }
+
+    public override Commands GetCommand()
+    {
+        return Commands.ELSE;
+    }
 }

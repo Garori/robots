@@ -23,6 +23,7 @@ TagManager:
   - PanelManager
   - BreakBlock
   - CodeBlock
+  - CodeInputBlock
   layers:
   - Default
   - TransparentFX

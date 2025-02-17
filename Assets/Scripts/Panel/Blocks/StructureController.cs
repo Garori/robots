@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class StructureController : BlockController, IDropHandler
+public class StructureController : BlockController
 {
     public BlockSlotController comparatorSlot;
     protected override void OnBeginDragAction()
@@ -13,7 +13,7 @@ public class StructureController : BlockController, IDropHandler
 
     protected override void OnEndDragAction()
     {
-        EventManager.onBlockEnter(this, colliding);
+        // EventManager.onBlockEnter(this, colliding);
     }
 
     protected override bool OnValidTriggerEnter2D(Collider2D other)

@@ -1,3 +1,4 @@
+using System;
 public enum Commands
 {
     DEFEND,
@@ -52,15 +53,22 @@ public enum Commands
     NINE,
     TRUE,
     NONE,
-
     PLAYER_DAMAGE,
     PLAYER_DAMAGE_HALF,
     PLAYER_DAMAGE_DOUBLE,
     ENEMY_DAMAGE,
     ENEMY_DAMAGE_HALF,
     ENEMY_DAMAGE_DOUBLE,
-
-    //CODIGO ESCRITO 
     CODE,
-    BREAK
+    BREAK,
+    ERROR,
+    OPEN_PARENTHESIS,
+    CLOSE_PARENTHESIS,
+    GREATER_EQUALS,
+    LESSER,
+    LESSER_EQUALS,
+    AND,
+    OR,
+    NOT,
+    NUMBER
 }

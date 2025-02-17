@@ -8,8 +8,8 @@ public class BattleManager : MonoBehaviour
     public GameManager manager;
 
     [Header("Robots")]
-    [SerializeField] private Fighter player;
-    [SerializeField] private Fighter enemy;
+    [SerializeField] public Fighter player;
+    [SerializeField] public Fighter enemy;
 
     [Header("Battle Parameters")]
     [SerializeField] private int maxRounds;
@@ -35,6 +35,7 @@ public class BattleManager : MonoBehaviour
     public BattleStatus PlayRound(Commands[] actions)
     {
         round++;
+        Debug.Log(round);
         if (round > maxRounds) throw new MaxNumberOfRoundsException();
         playerAction = actions[0];
         enemyAction = actions[1];
@@ -70,7 +71,7 @@ public class BattleManager : MonoBehaviour
     {   
         //O RETORNO DESSA FUNÇÃO NÃO SIGNIFICA QUE ALGUÉM GANHOU MAS SIM SE ALGUÉM GANHOU E FOI INVALIDADO POR AINDA ESTAR DENTRO DE UM WHILE
 
-        if ((player.isDead() || enemy.isDead()) && currentlyWhileLoop) //checar se está dentro de um while
+        if (enemy.isDead() && currentlyWhileLoop) //checar se está dentro de um while
         {
             return true;
         }

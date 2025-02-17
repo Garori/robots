@@ -15,7 +15,7 @@ public class EventManager : MonoBehaviour
     public delegate void RemoveBlock(BlockController block);
     public static event RemoveBlock BlockExit;
 
-    public delegate void InsertCode(BlockController code, GameObject line);
+    public delegate void InsertCode(BlockController code, GameObject line, string codeWithin = "");
     public static event InsertCode CodeEnter;
 
     public delegate void RemoveCode(BlockController code);
@@ -43,14 +43,14 @@ public class EventManager : MonoBehaviour
         if (BlockExit != null) BlockExit(block);
     }
 
-    public static void onCodeEnter(BlockController block, GameObject line)
+    public static void onCodeEnter(BlockController code, GameObject line, string codeWithin = "")
     {
-        if (CodeEnter != null) CodeEnter(block, line);
+        if (CodeEnter != null) CodeEnter(code, line, codeWithin);
     }
 
-    public static void onCodeExit(BlockController block)
+    public static void onCodeExit(BlockController code)
     {
-        if (CodeExit != null) CodeExit(block);
+        if (CodeExit != null) CodeExit(code);
     }
 
     public static void onComparatorEnter(ComparatorController comparator, BlockSlotController blockCondition)
