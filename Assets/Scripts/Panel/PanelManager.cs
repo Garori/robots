@@ -237,7 +237,7 @@ public class PanelManager : MonoBehaviour
         {
             codeInput.GetComponent<CodeInputController>().SetInputField(codeWithin);
         }
-        
+
         code.transform.parent.Find("Text Area").Find("CodeText").GetComponent<TMP_Text>().enableWordWrapping = false;
 
 
@@ -470,7 +470,7 @@ public class PanelManager : MonoBehaviour
                     {
                         comparator = (cell as IConditionCell).conditionalList[0].comparator;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //só serve para as primeiras 8 fases criadas para o tcc do Carlos, Lucas e Francisco
                         comparator = (cell as IConditionCell).comparatorCell;

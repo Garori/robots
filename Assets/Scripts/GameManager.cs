@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
                 // Debug.Log("" + commandName);
                 child.gameObject.SetActive(memory.isBlockEnabled(commandName));
             }
-            catch (Exception e)    
+            catch (Exception)    
             {
                 Debug.Log("deu erro");
                 child.gameObject.SetActive(false);
@@ -477,7 +477,7 @@ public class GameManager : MonoBehaviour
             {
                 panelManager.LoadCommands(memory.lastUserCode.ToList());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
