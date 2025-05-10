@@ -6,13 +6,15 @@ class ForCell : Cell, IConditionCell
     private Commands variable;
     private int maxCount;
     private int count;
+    private int number;
     public List<ConditionalCell> conditionalList { get; set; }
     public ComparatorCell comparatorCell { get; set; } = null;
 
 
-    public ForCell(Commands variable) : base()
+    public ForCell(Commands variable, int number = -1) : base()
     {
         this.variable = variable;
+        this.number = number;
         maxCount = -1;
         count = -1;
     }
@@ -20,8 +22,13 @@ class ForCell : Cell, IConditionCell
     public bool Evaluate(BattleStatus battleStatus)
     {
         if (maxCount == -1)
-        {
-            maxCount = battleStatus.values[variable];
+        {   
+            if (variable == Commands.NUMBER){
+                maxCount = number;
+            }
+            else{
+                maxCount = battleStatus.values[variable];
+            }
             count = maxCount;
         }
         count--;

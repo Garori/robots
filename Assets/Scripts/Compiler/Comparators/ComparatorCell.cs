@@ -13,7 +13,7 @@ public abstract class ComparatorCell
     {
         return null;
     }
-    public virtual List<int> GetVariablesInt()
+    public virtual List<float> GetVariablesNumbers()
     {
         return null;
     }

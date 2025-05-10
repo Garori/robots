@@ -10,13 +10,13 @@ public class TooltipTrigger : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("start tooltiptrigger");
+        // Debug.Log("start tooltiptrigger");
         isTooltipEnabled = true;
     }
 
     private void Awake()
     {
-        Debug.Log("awake tooltiptrigger");
+        // Debug.Log("awake tooltiptrigger");
         isTooltipEnabled = true;
     }
 

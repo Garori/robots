@@ -5,21 +5,21 @@ public class NotEqualsCell : ComparatorCell
 {
     private Commands variable1;
     private Commands variable2;
-    private int variable1INT;
-    private int variable2INT;
+    private float variable1NUMBER;
+    private float variable2NUMBER;
 
-    public NotEqualsCell(Commands variable1, Commands variable2, int variable1INT = -1, int variable2INT = -1) : base()
+    public NotEqualsCell(Commands variable1, Commands variable2, float variable1NUMBER = -1, float variable2NUMBER = -1) : base()
     {
         this.variable1 = variable1;
         this.variable2 = variable2;
-        this.variable1INT = variable1INT;
-        this.variable2INT = variable2INT;
+        this.variable1NUMBER = variable1NUMBER;
+        this.variable2NUMBER = variable2NUMBER;
     }
 
     public override bool Evaluate(BattleStatus battleStatus)
     {
-        int aux1 = variable1 != Commands.NUMBER ? battleStatus.values[variable1] : variable1INT;
-        int aux2 = variable2 != Commands.NUMBER ? battleStatus.values[variable2] : variable2INT;
+        float aux1 = variable1 != Commands.NUMBER ? battleStatus.values[variable1] : variable1NUMBER;
+        float aux2 = variable2 != Commands.NUMBER ? battleStatus.values[variable2] : variable2NUMBER;
         return aux1 != aux2;
     }
 
@@ -32,11 +32,11 @@ public class NotEqualsCell : ComparatorCell
         return variables;
     }
 
-    public override List<int> GetVariablesInt()
+    public override List<float> GetVariablesNumbers()
     {
-        List<int> variables = new List<int>();
-        variables.Add(variable1INT);
-        variables.Add(variable2INT);
+        List<float> variables = new List<float>();
+        variables.Add(variable1NUMBER);
+        variables.Add(variable2NUMBER);
 
         return variables;
     }

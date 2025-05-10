@@ -1,0 +1,127 @@
+using System.ComponentModel.Design;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Runtime.InteropServices.ComTypes;
+using Unity.Mathematics;
+using UnityEditor.Experimental.TerrainAPI;
+using UnityEngine;
+using System.Data.SqlTypes;
+using System.Diagnostics.Tracing;
+using Unity.Collections.LowLevel.Unsafe;
+using System.Collections;
+using System.Runtime.InteropServices;
+
+public class Help : MonoBehaviour
+{
+
+    List<string> First = new List<string>();
+
+    private void S(Queue<Token> tokens)
+    {
+        while (tokens.Count > 0)
+        {
+            Token tk = tokens.Dequeue();
+            if (tk.t == "(")
+            {
+                // ADD COMMAND PARENTHESIS
+                S();
+                if (tk.t == ")")
+                {
+                    // ADD COMMAND PARENTHESIS
+                }
+
+            }
+            else if (tk.t == "not")
+            {
+                // ADD COMMAND not
+                if (tk.t == "(")
+                {
+                    // ADD COMMAND PARENTHESIS
+                    S();
+                if (tk.t == ")")
+                    {
+                        // ADD COMMAND PARENTHESIS
+                    }
+
+                }
+            }
+            //IF NO CONGJUNTO DE S1
+            S1();
+            //F NO CONJUNTO DE S2
+            S2();
+        }
+
+    }
+
+    private void S1()
+    {
+        if (tk.t == "(")
+        {
+            // ADD COMMAND PARENTHESIS
+            S();
+                if (tk.t == ")")
+            {
+                // ADD COMMAND PARENTHESIS
+                S11()
+            }
+        }
+        else if (tk.t == "boolean" || tk.t == "function" || tk.t == "!" OU INTEIRO)
+        {
+            S3()
+            S11()
+        }
+    }
+
+    private void S11()
+    {
+        if (tk.t == "||")
+        {
+            S1()
+        }
+        else{
+
+        }
+    }
+
+    private void S2()
+    {
+        if (tokens.Count == 0)
+        {
+            return;
+        }
+        string expecting = "";
+        while (tokens.Count > 0 && callerOpen)
+        {
+
+        }
+    }
+
+    private void S3(Queue<Token> tokens)
+    {
+        if (tokens.Count == 0)
+        {
+            return;
+        }
+        string expecting = "";
+        while (tokens.Count > 0 && callerOpen)
+        {
+
+        }
+    }
+
+    private void S4(Queue<Token> tokens)
+    {
+        if (tokens.Count == 0)
+        {
+            return;
+        }
+        string expecting = "";
+        while (tokens.Count > 0 && callerOpen)
+        {
+
+        }
+    }
+
+}

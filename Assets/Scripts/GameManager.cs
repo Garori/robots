@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEditor.PackageManager;
 using System.Linq;
 
 public class GameManager : MonoBehaviour
@@ -44,13 +43,13 @@ public class GameManager : MonoBehaviour
     {
         if (BattleData.isTest)
         {
-            Debug.Log("istest");
+            // Debug.Log("istest");
             memory = BattleData.levelMemory;
             SetTestMedalsText(int.MaxValue, int.MaxValue);
         }
         else
         {
-            Debug.Log("nao istest");
+            // Debug.Log("nao istest");
             memory = Memories.GetMemory(BattleData.selectedLevel);
             SetMedalsText(int.MaxValue, int.MaxValue);
         }

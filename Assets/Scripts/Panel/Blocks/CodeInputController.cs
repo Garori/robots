@@ -8,8 +8,6 @@ using System.Linq;
 using Unity.Mathematics;
 using TMPro;
 using System;
-using UnityEditor.PackageManager;
-using UnityEditor.Events;
 
 public class CodeInputController : BlockController
 {
@@ -50,7 +48,9 @@ public class CodeInputController : BlockController
 	// }
 	public void OnValueChanged()
 	{
-		if(inputField.caretPosition == 0){return;}
+		gameObject.transform.GetChild(0).GetComponent<CodeController>().CodeWithin = inputField.text;
+		this.CodeWithin = inputField.text;
+		if (inputField.caretPosition == 0){return;}
 		// int posAtual = inputField.caretPosition;
 		// string toCompare = inputField.text;
 		// inputField.text = Regex.Replace(inputField.text, @"<(\/)?color(?(1)|=#[ABCEDF0-9]{6,8})>", "", RegexOptions.Multiline);
@@ -79,12 +79,12 @@ public class CodeInputController : BlockController
 		{
 			if (posAtual == inputField.text.Length - 1)
 			{
-			inputField.onValueChanged.RemoveAllListeners();
-			inputField.text += new string(' ', balanco);
-			inputField.caretPosition += balanco;
-			inputField.selectionAnchorPosition += balanco;
-			inputField.stringPosition += balanco;
-			inputField.onValueChanged.AddListener((_) => OnValueChanged());
+				inputField.onValueChanged.RemoveAllListeners();
+				inputField.text += new string(' ', balanco);
+				inputField.caretPosition += balanco;
+				inputField.selectionAnchorPosition += balanco;
+				inputField.stringPosition += balanco;
+				inputField.onValueChanged.AddListener((_) => OnValueChanged());
 			}
 			else
 			{

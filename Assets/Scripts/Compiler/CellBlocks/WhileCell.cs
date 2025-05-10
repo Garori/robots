@@ -136,6 +136,18 @@ class WhileCell : Cell, IConditionCell
                 toSolve.RemoveAt(cont);
                 cont--;
             }
+            else if (index >= 1 && toSolve[index - 1].tipo == typeof(NegativeCell))
+            {
+                //se o index atual for maior ou igual a 1 e o token anterior for um -
+                //o resultado é invertido
+                toSolve[index - 1].numericalValue = -1 * toSolve[index].numericalValue;
+                //e este vira um float
+                toSolve[index - 1].tipo = typeof(float);
+                //o not é retirado da lista
+                toSolve.RemoveAt(index);
+
+                index--;
+            }
             cont++;
         }
         return toSolve;

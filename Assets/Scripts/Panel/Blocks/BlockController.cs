@@ -91,9 +91,12 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		if (eventData.button != PointerEventData.InputButton.Left) return;
 		if (!isInPanel)
 		{
-			GameObject[] gos = {gameObject};
-			Selection.objects = gos;
-			Unsupported.DuplicateGameObjectsUsingPasteboard();
+			// GameObject[] gos = {gameObject};
+			// Selection.objects = gos;
+			// Unsupported.DuplicateGameObjectsUsingPasteboard();
+			GameObject duplicate = Instantiate(gameObject);
+			duplicate.transform.SetParent(transform.parent, false);
+			duplicate.name = name;
 		}
 		// try
 		// {
@@ -127,8 +130,6 @@ public class BlockController : MonoBehaviour, IPointerDownHandler, IBeginDragHan
 		// Debug.Log(canvas);
 		
 		rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-		Debug.Log(eventData.pointerCurrentRaycast.gameObject.tag);
-		Debug.Log(eventData.pointerDrag.gameObject.GetComponent<CanvasGroup>().blocksRaycasts);
 		// Debug.Log(transform.parent.tag);
 		// boxCollider2D.enabled = (rectTransform.anchoredPosition.x + scaledWidth) >= panelManager.panelX;
 	}
