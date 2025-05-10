@@ -70,5 +70,6 @@ public enum Commands
     AND,
     OR,
     NOT,
-    NUMBER
+    NUMBER,
+    NEGATIVE
 }

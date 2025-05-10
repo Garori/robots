@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using Unity.Mathematics;
-using UnityEditor.Experimental.TerrainAPI;
 using UnityEngine;
 
 public class Compiler2 : MonoBehaviour

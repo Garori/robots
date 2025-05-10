@@ -1,16 +1,39 @@
-using System.ComponentModel.Design;
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using Unity.Mathematics;
-using UnityEditor.Experimental.TerrainAPI;
+using System.Text.RegularExpressions;
 using UnityEngine;
-using System.Data.SqlTypes;
+using System.Globalization;
+using System.Threading;
+public struct Temporario
+{
+    public string token;
+    public List<Temporario> lista;
+};
+public struct Token
+{
+    public Token(string _name, string _t, Commands _command, string _accepts, bool _reserved = true)
+    {
+        name = _name;
+        t = _t;
+        command = _command;
+        reserved = _reserved;
+        // expects = expects_dict2[_t];
+        accepts = _accepts;
+
+    }
+    public string name;
+    public string t;
+    Commands command;
+    // Stack<string> expects;
+    string accepts;
+    public bool reserved;
+};
 
 public class Compiler : MonoBehaviour
 {
+    
     [SerializeField] private int maxIterations = 10;
     [SerializeField] private int maxBlocks = 100;
 
@@ -24,7 +47,6 @@ public class Compiler : MonoBehaviour
     private bool currentlyWhileLoop;
     public bool CurrentlyWhileTrue { get => currentlyWhileLoop;}
 
-    public string aaaa ="";
     private BattleManager battleManager;
 
     public BattleManager BattleManager { get => battleManager; }
@@ -32,17 +54,89 @@ public class Compiler : MonoBehaviour
     public int TotalCells { get => totalCells; }
     [SerializeField] private bool debug;
 
-    private Stack<int> intsStackConditionals = new Stack<int>();
+    private Queue<dynamic> numbersQueueConditionals = new Queue<dynamic>();
+    // private Queue<float> floatsQueueConditionals = new Queue<float>();
 
-    // public bool hasWhileTrue = false;
 
+    private string current_token = "";
+    // private string current_line = "";
+    private Stack<string> stack_parenthesis = new Stack<string>();
+    private Stack<string> stack_braces = new Stack<string>();
+    
+    private Dictionary<string, Dictionary<string, dynamic>> known_tokens = new Dictionary<string, Dictionary<string, dynamic>>()
+    {
+        {"\n",              new Dictionary<string,dynamic>(){{"t", "newLine"},     {"reserved", true},{"Commands",""}}},
+        {"if",              new Dictionary<string,dynamic>(){{"t", "conditional_structure"},   {"reserved", true}, {"Commands",Commands.IF}}},
+        {"while",           new Dictionary<string,dynamic>(){{"t", "conditional_structure"},   {"reserved", true},{"Commands",Commands.WHILE}}},
+        {"for",             new Dictionary<string,dynamic>(){{"t", "for"},   {"reserved", true},  {"Commands",Commands.FOR}}},
+        {"else",            new Dictionary<string,dynamic>(){{"t", "else"},        {"reserved", true},  {"Commands",Commands.ELSE}}},
+        {"break",           new Dictionary<string,dynamic>(){{"t", "instruction"}, {"reserved", true},  {"Commands",Commands.BREAK}}},
+        {"(",               new Dictionary<string,dynamic>(){{"t", "("},           {"reserved", true}, {"Commands",Commands.OPEN_PARENTHESIS}}},
+        {")",               new Dictionary<string,dynamic>(){{"t", ")"},           {"reserved", true}, {"Commands",Commands.CLOSE_PARENTHESIS}}},
+        {"{",               new Dictionary<string,dynamic>(){{"t", "{"},           {"reserved", true}, {"Commands",""}}},
+        {"}",               new Dictionary<string,dynamic>(){{"t", "}"},           {"reserved", true}, {"Commands",Commands.END}}},
+        {";",               new Dictionary<string,dynamic>(){{"t", ";"},           {"reserved", true},  {"Commands",""}}},
+        {"attack",          new Dictionary<string,dynamic>(){{"t", "action"},      {"reserved", true}, {"Commands",Commands.ATTACK}}},
+        {"defend",          new Dictionary<string,dynamic>(){{"t", "action"},      {"reserved", true}, {"Commands",Commands.DEFEND}}},
+        {"heal",            new Dictionary<string,dynamic>(){{"t", "action"},      {"reserved", true}, {"Commands",Commands.HEAL}}},
+        {"charge",          new Dictionary<string,dynamic>(){{"t", "action"},      {"reserved", true}, {"Commands",Commands.CHARGE}}},
+        {"even",            new Dictionary<string,dynamic>(){{"t", "function_boolean"}, {"args", new List<string>{"int"}},{"reserved", true}, {"Commands",Commands.EVEN}}},
+        {"J_V_MAX",         new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_MAX_HEALTH}}},
+        {"J_V_MAX_DOBRO",   new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_MAX_HEALTH_DOUBLE}}},
+        {"J_V_MAX_MET",     new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_MAX_HEALTH_HALF}}},
+        {"J_V_ATUAL",       new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_HEALTH}}},
+        {"J_V_ATUAL_DOBRO", new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_HEALTH_DOUBLE}}},
+        {"J_V_ATUAL_MET",   new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_HEALTH_HALF}}},
+        {"J_DANO",          new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_DAMAGE}}},
+        {"J_DANO_DOBRO",    new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_DAMAGE_DOUBLE}}},
+        {"J_DANO_MET",      new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_DAMAGE_HALF}}},
+        {"J_DEF",           new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_SHIELD}}},
+        {"J_DEF_DOBRO",     new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_SHIELD_DOUBLE}}},
+        {"J_DEF_MET",       new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_SHIELD_HALF}}},
+        {"J_CARGA",         new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_CHARGE}}},
+        {"J_CARGA_DOBRO",   new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_CHARGE_DOUBLE}}},
+        {"J_CARGA_MET",     new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.PLAYER_ACTUAL_CHARGE_HALF}}},
+        {"I_V_MAX",         new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_MAX_HEALTH}}},
+        {"I_V_MAX_DOBRO",   new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_MAX_HEALTH_DOUBLE}}},
+        {"I_V_MAX_MET",     new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_MAX_HEALTH_HALF}}},
+        {"I_V_ATUAL",       new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_HEALTH}}},
+        {"I_V_ATUAL_DOBRO", new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_HEALTH_DOUBLE}}},
+        {"I_V_ATUAL_MET",   new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_HEALTH_HALF}}},
+        {"I_DANO",          new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_DAMAGE}}},
+        {"I_DANO_DOBRO",    new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_DAMAGE_DOUBLE}}},
+        {"I_DANO_MET",      new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_DAMAGE_HALF}}},
+        {"I_DEF",           new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_SHIELD}}},
+        {"I_DEF_DOBRO",     new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_SHIELD_DOUBLE}}},
+        {"I_DEF_MET",       new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_SHIELD_HALF}}},
+        {"I_CARGA",         new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_CHARGE}}},
+        {"I_CARGA_DOBRO",   new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_CHARGE_DOUBLE}}},
+        {"I_CARGA_MET",     new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ENEMY_ACTUAL_CHARGE_HALF}}},
+        {"ROUND",           new Dictionary<string,dynamic>(){{"t", "int"},         {"reserved", true}, {"Commands", Commands.ROUND}}},
+        {"!",               new Dictionary<string,dynamic>(){{"t", "logical"},     {"reserved", true}, {"Commands",Commands.NOT}}},
+        {"&&",              new Dictionary<string,dynamic>(){{"t", "logical"},     {"reserved", true}, {"Commands",Commands.AND}}},
+        {"||",              new Dictionary<string,dynamic>(){{"t", "logical"},     {"reserved", true}, {"Commands",Commands.OR}}},
+        {">",               new Dictionary<string,dynamic>(){{"t", "comparation"}, {"reserved", true}, {"Commands",Commands.GREATER}}},
+        {">=",              new Dictionary<string,dynamic>(){{"t", "comparation"}, {"reserved", true}, {"Commands",Commands.GREATER_EQUALS}}},
+        {"<",               new Dictionary<string,dynamic>(){{"t", "comparation"}, {"reserved", true}, {"Commands",Commands.LESSER}}},
+        {"<=",              new Dictionary<string,dynamic>(){{"t", "comparation"}, {"reserved", true}, {"Commands",Commands.LESSER_EQUALS}}},
+        {"==",              new Dictionary<string,dynamic>(){{"t", "comparation"}, {"reserved", true}, {"Commands",Commands.EQUALS}}},
+        {"!=",              new Dictionary<string,dynamic>(){{"t", "comparation"}, {"reserved", true}, {"Commands",Commands.NOT_EQUALS}}},
+        {"-",               new Dictionary<string,dynamic>(){{"t", "neg"},         {"reserved", true}, {"Commands",Commands.NEGATIVE}}},
+        {"true",            new Dictionary<string,dynamic>(){{"t", "boolean"},     {"reserved", true}, {"Commands",Commands.TRUE}}},
+        {"false",           new Dictionary<string,dynamic>(){{"t", "boolean"},     {"reserved", true}, {"Commands",Commands.TRUE } }},
+    };
+    Dictionary<string,dynamic> intToken = new Dictionary<string, dynamic>(){{"t", "int"}, {"reserved", true}, {"Commands", Commands.NUMBER}};
+    Dictionary<string, dynamic> floatToken = new Dictionary<string, dynamic>() { { "t", "float" }, { "reserved", true }, { "Commands", Commands.NUMBER } };
+
+    private int codeInputBlockNumber = 0;
+    private int codeCompilerLine = 1;
     private void Start()
     {
+        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         currentlyWhileLoop = false;
         memory = new Cell[maxBlocks * 2];
         ResetAttributes();
     }
-
     public void Compile(Cell[] memory)
     {
         currentlyWhileLoop  = false;
@@ -58,487 +152,419 @@ public class Compiler : MonoBehaviour
             if (cell != null) cell.ResetCell(); 
         }
     }
+    
+    string tk;
+    Dictionary<string, dynamic> token;
+    List<string> firstBlocks = new List<string>{"conditional_structure", "for", "action", "identifier", "}", "instruction", "else"};
+    List<string> firstExpressions = new List<string> { "int", "float", "function", "(", "!", "boolean" };
 
-    public struct Temporario {
-        public string token;
-        public List<Temporario> lista;
-    }
+    Queue<string> tokens = new Queue<string>();
+    List<Commands> lineCommands = new List<Commands>();
+    List<List<Commands>> commands = new List<List<Commands>>();
 
-
-
-    public List<string> GetTokensList(string cond)
-    {
-        // Debug.Log("inicial = " + cond);
-        cond = cond.Trim();
-        List<string> lista = new List<string>();
-        Dictionary<string,int> dict = new Dictionary<string,int>();
-        // dict.Add
-        dict.Add("(", (cond.IndexOf("(") != -1) ? cond.IndexOf("(") : int.MaxValue);
-        dict.Add(")", (cond.IndexOf(")") != -1) ? cond.IndexOf(")") : int.MaxValue);
-        dict.Add("&&", (cond.IndexOf("&&") != -1) ? cond.IndexOf("&&") : int.MaxValue);
-        dict.Add("||", (cond.IndexOf("||") != -1) ? cond.IndexOf("||") : int.MaxValue);
-        dict.Add("even", (cond.IndexOf("even") != -1) ? cond.IndexOf("even") : int.MaxValue);
-        dict.Add("!", (cond.IndexOf("!") != -1) ? cond.IndexOf("!") : int.MaxValue);
-        // bool stillHasTokens = true;
-        // int k = 0;
-        // foreach(int i in dict.Values)
-        // {
-        //     if (i == int.MaxValue)
-        //     {
-        //         k++;
-        //     }
-        // }
-        // // if (indexAbre == int.MaxValue && indexFecha == int.MaxValue && indexAnd == int.MaxValue && indexOr == int.MaxValue && indexEven == int.MaxValue)
-        // if(k==6)
-        // {
-        //     lista.Add(cond);
-        //     // aaaa += cond;
-        //     return lista;
-        // }
-        int minValue = int.MaxValue;
-        string minKey = "";
-        foreach (string key in dict.Keys)
+    private void getTokenFromStr(string type = "", string name = ""){
+        float auxVarFloat;
+        int auxVarInt;
+        if (tokens.Count == 0){
+            throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} o código terminou abruptamente, parece estar incompleto");
+        }
+        tk = tokens.Dequeue();
+        if (known_tokens.ContainsKey(tk)){
+            token = known_tokens[tk];
+        }
+        else if (int.TryParse(tk, out auxVarInt))
         {
-            // Debug.Log("value = " + i);
-            if (dict[key] < minValue)
+            token = intToken;
+            numbersQueueConditionals.Enqueue(auxVarInt);
+            // Debug.Log($"Pushed {auxVarInt}");
+
+        }
+        else if (float.TryParse(tk, out auxVarFloat)){
+            token = floatToken;
+            numbersQueueConditionals.Enqueue(auxVarFloat);
+            // Debug.Log($"Pushed {auxVarFloat}");
+        }
+        else
+        {
+            throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} o token '{tk}' não foi reconhecido");
+        }
+
+        if(type != "" && type != token["t"]){
+            throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} era esperado um token de tipo '{type}' mas, ao invés disso, recebeu um tipo '{token["t"]}'");
+        }
+        else if(name != "" && name != tk)
+        {
+            switch(tk){
+                case "\n":
+                    tk ="\\n";
+                    break;
+                case "\r":
+                    tk ="\\r";
+                    break;
+                case "\t":
+                    tk = "\\t";
+                    break;
+                default:
+                    break;
+            }
+            throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} era esperado '{name}' mas, ao invés disso, recebeu um '{tk}'");
+        }
+
+        // erro = "nao reconhecido";
+    }
+    private void action(){
+        Debug.Log("entrei em action");
+        getTokenFromStr(name: "(");
+        getTokenFromStr(name: ")");
+        getTokenFromStr(name: ";");
+        Debug.Log("saí de action");
+    }
+    private void comparation(Dictionary<string,dynamic> token_){
+        Debug.Log("entrei em comparation");
+
+        Commands comparator;
+        getTokenFromStr();
+        if(token["t"] == "comparation" || token["t"] == "operation")
+        {
+            comparator = token["Commands"];
+        }
+        else{throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} era esperado um token de comparação ou operação mas, ao invés disso, recebeu o token '{tk}' foi recebido");}
+        getTokenFromStr();
+        if (token["t"] == "int" || token["t"] == "float" || token["t"] == "function_int" || token["t"] == "function_float")
+        {
+            lineCommands.Add(comparator);
+            lineCommands.Add(token_["Commands"]);
+            lineCommands.Add(token["Commands"]);
+        }
+        Debug.Log("saí de comparation");
+
+    }
+    private void function(bool askForSemicolon = false){
+        Debug.Log("entrei em function");
+        List<string> args = new List<string>(token["args"]);
+        getTokenFromStr(name: "(");
+        foreach (string arg_t in args){
+            getTokenFromStr(type: arg_t);
+            lineCommands.Add(token["Commands"]);
+            getTokenFromStr(name: ")");
+            if(askForSemicolon) {getTokenFromStr(name: ";");}
+        }
+        Debug.Log("saí de function");
+
+    }
+    private void expression(bool pushParenthesis = true)
+    {
+        Debug.Log("entrei em expression");
+        if (pushParenthesis) {stack_parenthesis.Push("");}
+        getTokenFromStr();
+        if (firstExpressions.Contains(token["t"])){
+            if (token["t"] == "("){
+                lineCommands.Add(token["Commands"]);
+                expression();
+                getTokenFromStr(name: ")");
+                lineCommands.Add(token["Commands"]);
+            }
+            else if(token["t"] == "int" || token["t"] == "float" || token["t"] == "function_int" || token["t"] == "function_float")
             {
-                if (key == "!" && cond[dict[key] + 1] == '=') { continue; }
-                minValue = dict[key];
-                minKey = key;
+                comparation(token);
+            }
+            else if(token["t"] == "boolean"){
+                if(tk == "false"){ lineCommands.Add(Commands.NOT); }
+                lineCommands.Add(token["Commands"]);
+            }
+            else if(token["t"] == "function_boolean"){
+                lineCommands.Add(token["Commands"]);
+                function();
+            }
+            //fazer para function_number
+            if(tokens.Count > 0 && tokens.Peek() == "&&"){
+                getTokenFromStr();
+                Debug.Log($"estou em && e dei peek em {stack_parenthesis.Peek()}");
+                if (stack_parenthesis.Peek() == "||"){
+                    throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} há '&&' e '||' misturados dentro de um mesmo parenteses\nPor favor indique com clareza a ordem de operações separando expressões com e's e expressões com ou's com parenteses");
+                }
+                stack_parenthesis.Pop();
+                stack_parenthesis.Push("&&");
+                lineCommands.Add(token["Commands"]);
+                expression(false);
+            }
+            else if (tokens.Count > 0 && tokens.Peek() == "||")
+            {
+                Debug.Log($"estou em || e dei peek em {stack_parenthesis.Peek()}");
+                getTokenFromStr();
+                if (stack_parenthesis.Peek() == "&&"){
+                    throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} há '&&' e '||' misturados dentro de um mesmo parenteses\nPor favor indique com clareza a ordem de operações separando expressões com e's e expressões com ou's com parenteses");
+                }
+                stack_parenthesis.Pop();
+                stack_parenthesis.Push("||");
+                lineCommands.Add(token["Commands"]);
+                expression(false);
+            }
+            else if(firstExpressions.Contains(tokens.Peek()))
+            {
+                expression(false);
             }
         }
-        // while (indexAbre < int.MaxValue || indexFecha < int.MaxValue || indexAnd < int.MaxValue || indexOr < int.MaxValue || indexEven < int.MaxValue)
-        while (minKey != "")
-        {
-            lista.Add(cond.Substring(0, minValue).Trim()); 
-            // aaaa += lista.Last() + ",";
-            lista.Add(cond.Substring(minValue, minKey.Length).Trim());
-            // aaaa += lista.Last() + ",";
-            cond = cond.Substring(minValue + minKey.Length);
-            minValue = int.MaxValue;
-            minKey = "";
-            Dictionary<string, int> aux = new Dictionary<string, int>(dict);
-            foreach (string key in dict.Keys)
-            {
-                aux[key] = (cond.IndexOf(key) != -1) ? cond.IndexOf(key) : int.MaxValue;
-                // Debug.Log("value = " + i);
-                if (aux[key] < minValue)
-                {
-                    if (key == "!" && cond[aux[key] + 1] == '=') { continue; }
-                    minValue = aux[key];
-                    minKey = key;
-                }
-            }
-            dict = aux;
-        }
-        lista.Add(cond);
-        // aaaa += cond;
-        // Debug.Log("tamanho lista final = " + lista.Count);
-        return lista;
+        else{ throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} uma expressão foi mal formada"); }
+        if(pushParenthesis) {stack_parenthesis.Pop();}
+        Debug.Log("saí de expression");
+
+    }
+    private void for_()
+    {
+        getTokenFromStr(name:"(");
+        getTokenFromStr(type: "int");
+        lineCommands.Add(token["Commands"]);
+        getTokenFromStr(name: ")");
+        getTokenFromStr(name: "{");
+        stack_braces.Push("for");
     }
 
-    public List<string> GetEveryCommand(List<string> lista)
-    {
-        List<string> listaAUX = new List<string>();
-        // Debug.Log("aaaaaaaaaaaaaaaa " + listaAUX.Count);
-        foreach (string cond in lista)
+    private void conditionalStructure(){
+        Debug.Log("entrei em conditional structure");
+        string thisConditionalStructure = tk;
+        getTokenFromStr(name: "(");
+        lineCommands.Add(token["Commands"]);
+        expression();
+        getTokenFromStr(name: ")");
+        lineCommands.Add(token["Commands"]);
+        getTokenFromStr();
+        while (token["t"] == "newLine"){
+            codeCompilerLine++;
+            getTokenFromStr();
+        }
+        if (tk != "{")
         {
-            Debug.Log("cond = " + cond);
-            char[] aux = {'>','<','=','!'};
-            int index = cond.IndexOfAny(aux);
-            // Debug.Log("INDEX OF ANY  = " + index);
-            if (index != -1)
-            {
-                Debug.Log(index);
-                Debug.Log(cond.Length);
-                if(cond == "!")
-                {
-                    listaAUX.Add(cond);
-                    continue;
+            throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} era esperado o token '{{' mas, ao invés disso, recebeu o token '{tk}' foi recebido");
+        }
+        stack_braces.Push(thisConditionalStructure);
+        Debug.Log("saí de conditional structure");
+
+    }
+
+    private void instruction()
+    {
+        Debug.Log("entrei em instruction");
+
+        getTokenFromStr(name: ";");
+        Debug.Log("saí de instruction");
+
+    }
+    private void else_(){
+        Debug.Log("entrei em else");
+        if (commands[commands.Count - 1][0] == Commands.END){
+            commands.RemoveAt(commands.Count - 1);
+        }
+        getTokenFromStr(name:"{");
+        stack_braces.Push("else");
+        Debug.Log("saí de else");
+    }
+    private void end_(){
+        Debug.Log("entrei em end");
+        stack_braces.Pop();
+        // lineCommands.Add(token["Commands"]);
+        Debug.Log("saí de end");
+    }
+    private void callFuncByString(string f_name){
+        switch(f_name)
+        {
+            case "conditional_structure":
+                conditionalStructure();
+                break;
+            case "action":
+                action();
+                break;
+            case "instruction":
+                instruction();
+                break;
+            case "}":
+                end_();
+                break;
+            case "for":
+                for_();
+                break;
+            case "else":
+                else_();
+                break;
+        }
+    }
+    
+    private void parser(){
+
+        codeCompilerLine = 1;
+        Debug.Log("---------------------------------------------------\nENTREI NO PARSER");
+        Debug.Log(tokens.Count);
+        while (tokens.Count > 0)
+        {
+            lineCommands = new List<Commands>();
+            tk = tokens.Dequeue();
+            Debug.Log($"desinfileirei '{tk}'");
+            if (tk == "\n"){
+                codeCompilerLine++ ;
+                continue;
+            }
+            if (known_tokens.ContainsKey(tk)){
+                token = known_tokens[tk];
+                if (firstBlocks.Contains(token["t"])){
+                    lineCommands.Add(token["Commands"]);
+                    callFuncByString(token["t"]);
+                    // string __c = "";
+                    // foreach (Commands _c_ in lineCommands){
+                    //     __c += $"'{_c_.ToString()}',";
+                    // }
+                    //     Debug.Log(__c.ToString());
+                    commands.Add(lineCommands);
                 }
-                string comparator = cond.Substring(index,2);
-                if(comparator[1] != '='){
-                    // Debug.Log(comparator[0]);
-                    listaAUX.Add(comparator[0].ToString());
-                    listaAUX.Add(cond.Substring(0,index));
-                    Debug.Log(cond.Substring(0, index));
-                    listaAUX.Add(cond.Substring(index+1));
-                    Debug.Log(cond.Substring(index + 1));
+                else if (tk == "\n"){
+                    codeCompilerLine++;
                 }
                 else
                 {
-                    listaAUX.Add(comparator);
-                    listaAUX.Add(cond.Substring(0, index));
-                    listaAUX.Add(cond.Substring(index + 2));
+                    throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} o token '{tk}' não era esperado");
                 }
+
+            }else if(Regex.IsMatch(tk,"[A-z_][A-z0-9_]*"))
+            {
+                throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} o token '{tk}' não foi reconhecido");
+            }
+            else
+            {
+                throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} o token '{tk}' não foi reconhecido");
+            }
+        }
+        if(stack_braces.Count != 0){
+            throw new Exception($"ERRO DE COMPILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, alguma chaves foi aberta e não foi fechada!");
+        }
+    }
+
+    private void checkTokenContinuation(ref Queue<string> written_code, ref string tk, string pattern)
+    {
+        // string c_token = tk;
+        // Debug.Log(written_code.ToString());
+        // written_code.Peek();
+        if (pattern == "[\\W]" && written_code.Count > 0 && known_tokens.ContainsKey(tk+written_code.Peek()))
+        {
+            while (written_code.Count > 0 && known_tokens.ContainsKey(tk + written_code.Peek())){
+                tk += written_code.Dequeue();
+            }
+            return;
+        }
+        else if(pattern == "[\\W]" && written_code.Count > 0 && ! known_tokens.ContainsKey(tk + written_code.Peek()) && known_tokens.ContainsKey(tk))
+        {
+            //trata de números negativos
+            if (tk != "-"){
+                return;
+            }
+            while(Regex.IsMatch(written_code.Peek(), "[0-9]")){
+                tk += written_code.Dequeue();
+            }
+            if(written_code.Peek() == "."){
+                tk += written_code.Dequeue();
+                while (written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), "[0-9]"))
+                {
+                    tk += written_code.Dequeue();
+                }
+            }
+            return;
+        }
+        else if(pattern == "[\\W]" && written_code.Count > 0 && !known_tokens.ContainsKey(tk + written_code.Peek()) && !known_tokens.ContainsKey(tk))
+        {
+            if (Regex.IsMatch(written_code.Peek(), pattern))
+            {
+                throw new Exception($"ERRO DE COMPIILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} token '{tk+written_code.Peek()}' não reconhecido");
 
             }
             else
             {
-                listaAUX.Add(cond);
+                throw new Exception($"ERRO DE COMPIILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} token '{tk}' não reconhecido");
             }
         }
-        foreach (string cond in listaAUX){
-            aaaa += cond+", ";
+        while (written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), pattern))
+        {
+            tk += written_code.Dequeue();
         }
-        listaAUX = listaAUX.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-        Debug.Log("____________________________________________________________");
-        Debug.Log($"listaAUX = {listaAUX}");
-        foreach (string cond in listaAUX){
-            Debug.Log(cond);
+        // Isso aqui me ajuda a ter um ponto só em números
+        if (written_code.Count > 0 && pattern == "[0-9]" && written_code.Peek() == ".")
+        {
+            tk += written_code.Dequeue();
+            while (written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), pattern))
+            {
+                tk += written_code.Dequeue();
+            }
         }
-        Debug.Log("____________________________________________________________");
-        return listaAUX;
 
     }
-    public List<List<Commands>> GetCodeCommands(CodeController codeBlock)
-    {
-        List<List<Commands>> commands = new List<List<Commands>>();
-        // bool flagFaltaAbrirChaves = false;
-        Stack<string> structures = new Stack<string>();
-        string lastStructure = "";
-        string notOpenedStucture = "";
-        bool lastStructureWasAnIfAndItReceivedAnEndBlock = false;
-        foreach (string rawLine in codeBlock.CodeWithin.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
-        {
-            string line = rawLine.Trim();
-            List<Commands> lineCommandsCode = new List<Commands>();
-            switch (line)
-            {
-                case "attack();":
-                case "defend();":
-                case "charge();":
-                case "dodge();":
-                case "heal();":
-                // case "END":
-                case "break;":
-                // case "ELSE":
-                case "continue;":
-                    lastStructureWasAnIfAndItReceivedAnEndBlock = false;
-                    Debug.Log("line = " + line);
-                    // if(flagFaltaAbrirChaves) {throw new Exception("ERRO DE COMPILAÇÃO: Alguma estrutura de repetição em um bloco CODE não foi aberta corretamente, '{' era esperado"); }
-                    line = line.Replace("();","").ToUpper();
-                    lineCommandsCode.Add((Commands)Enum.Parse(typeof(Commands), line));
-                    commands.Add(lineCommandsCode);
-                    continue;
-                    // break;
-                case "}":
-                    // if (!flagChaves) {throw new Exception("ERRO DE COMPILAÇ");}
-                    // Debug.Log($"last estrutura = {Structures[Structures.Count-1]}");
-                    try
-                    {
-                        lastStructure = structures.Pop();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("ERRO DE COMPILAÇÃO: Alguma estrutura de repetição em um bloco CODE não foi aberta corretamente, '{' era esperado");
-                    }
 
-                    if (lastStructure == "if")
-                    {
-                        // Debug.Log("é verdade e eu atesto");
-                        lastStructureWasAnIfAndItReceivedAnEndBlock = true;
-                    }
-                    // if (flagFaltaAbrirChaves) { throw new Exception("ERRO DE COMPILAÇÃO: Alguma estrutura de repetição em um bloco CODE não foi aberta corretamente, '{' era esperado"); }
-                    lineCommandsCode.Add(Commands.END);
-                    commands.Add(lineCommandsCode);
-                    Debug.Log("line = " + line);
-                    continue;
-                    // break;
-                case "{":
-                    // string a = "}      \n     ";
-                    // Debug.Log($"'{a.Trim()}'");
-                    // flagFaltaAbrirChaves = false;
-                    // lastStructure = structures.Pop();
-                    // if (notOpenedStucture != "")
-                    // {
-                    structures.Push(notOpenedStucture);
-                    notOpenedStucture = "";
-                    // }
-                    // commands.Add(lineCommandsCode);
-                    continue;
-                // break;
-                // default:
-                //     //todo ver se consigo ler as linhas não padrões e fazer operações matemáticas
-                //     break;
-                case "attack()":
-                case "defend()":
-                case "charge()":
-                case "dodge()":
-                case "heal()":
-                // case "END":
-                case "break":
-                // case "ELSE":
-                case "continue":
-                    throw new Exception("ERRO DE COMPILAÇÃO: ';' era esperado");
+    private List<List<Commands>> newCodeCompiler(CodeController codeBlock){
 
-            }
-            int conditionStart = line.IndexOf('(');
-            string[] userVars = { };
-            string[] userFuncs = { };
-            if (userVars.Contains(line))
-            {
-                // todo
-
-            }
-            else if (conditionStart != -1 || line.IndexOf("else") == 0)
-            {
-                string functionOrStructure = "else";
-                if (conditionStart != -1)
-                {
-                    functionOrStructure = line.Substring(0, conditionStart).Trim();
-                }
-                if(userFuncs.Contains(functionOrStructure))
-                {
-                    // todo
-                    // commands.Add(lineCommandsCode);
-                    continue;
-                }
-                print(functionOrStructure);
-                switch (functionOrStructure)
-                {
-                    case "for":
-                    case "if":
-                    case "while": // FOR, IF , WHILE
-                    case "else":
-                        notOpenedStucture = functionOrStructure;
-
-                        // if (flagFaltaAbrirChaves) { throw new Exception("ERRO DE COMPILAÇÃO: Alguma estrutura de repetição em um bloco CODE não foi aberta corretamente, '{' era esperado"); }
-                        Debug.Log("line = " + line);
-                        Debug.Log("AAAAAAAAAAA = " + line.Substring(line.Length-1).Trim());                        
-                        if (functionOrStructure == "else")
-                        {
-                            if (lastStructureWasAnIfAndItReceivedAnEndBlock)
-                            {
-                                commands.RemoveAt(commands.Count - 1);
-                            }
-                            Debug.Log("antes de empurrar else = " + line.Substring(line.Length-1).Trim());
-                            if (line.Substring(line.Length-1).Trim() != "e" || line.Substring(line.Length-1).Trim() == "{")
-                            {
-                                if (line.Substring(line.Length-1).Trim() == "{")
-                                {
-                                    Debug.Log("entrei no lugar de empurrar 1");
-                                    structures.Push(functionOrStructure);
-                                    notOpenedStucture = "";
-                                }
-                            }
-
-                            Commands elseCommand = (Commands)Enum.Parse(typeof(Commands), "ELSE");
-                            // lastStructure = "ELSE";
-                            lineCommandsCode.Add(elseCommand);
-                            lastStructureWasAnIfAndItReceivedAnEndBlock = false;
-                            break;
-                        }
-
-                        lastStructureWasAnIfAndItReceivedAnEndBlock = false;
-
-                        conditionStart = line.IndexOf('(');
-                        int conditionEnd = line.LastIndexOf(')');
-                        // if (line.Substring(0,5).IndexOf("WHILE")==-1 && line.Substring(0, 5).IndexOf("IF") == -1 && line.Substring(0, 5).IndexOf("FOR") == -1)
-                        // {
-                        //     throw new Exception("ERRO DE COMPILAÇÃO: Variável ou chamada não reconhecida em um bloco CODE");
-                        // }
-                        // if (conditionStart == -1 || conditionEnd == -1)
-                        // {
-
-                        // }
-                        // Debug.Log(conditionStart);
-                        // Debug.Log(conditionEnd);
-                        // Debug.Log(line.Substring(conditionStart, conditionEnd - conditionStart+1));
-                        // Debug.Log(line.Substring(conditionStart + 1, conditionEnd - conditionStart - 1));
-                        Debug.Log("antes de empurrar resto = " + line.Substring(conditionEnd).Trim());
-                        if (line.Substring(conditionEnd).Trim() == ")" || (conditionEnd < line.Length && line.Substring(conditionEnd,2).Trim() == "){"))
-                        {
-                            if (line.Substring(conditionEnd).Trim() == "){")
-                            {
-                                Debug.Log("entrei no lugar de empurrar 2");
-                                structures.Push(functionOrStructure);
-                                notOpenedStucture = "";
-                            }
-                            // Debug.Log("safe")
-                        }
-                        else
-                        {
-                            Debug.Log("nao safe");
-                            throw new Exception("ERRO DE COMPILAÇÃO: A declaração de alguma estrutura de repetição dentro de um bloco CODE está incorreta");
-                        }
-
-                        List<string> ListaCondicionais = new List<string>();
-                        Temporario rawCondicao = new Temporario();
-                        rawCondicao.token = line.Substring(conditionStart, conditionEnd - conditionStart+1);
-                        // rawCondicao.token = line.Substring(conditionStart + 1, conditionEnd - conditionStart - 1);
-                        // Debug.Log("RAW CONDITION = " + rawCondicao.token);
-                        ListaCondicionais = GetTokensList(rawCondicao.token);
-                        ListaCondicionais = ListaCondicionais.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-                        ListaCondicionais = GetEveryCommand(ListaCondicionais);
-                        
-                        Commands mainCommand = (Commands)Enum.Parse(typeof(Commands), line.Substring(0, conditionStart).Trim().ToUpper());
-
-                        lastStructure = line.Substring(0, conditionStart).Trim();
-                        // Debug.Log("comando pelo método de INDEX OF: "+mainCommand);
-                        // List<string> splittedLine = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
-                        // Debug.Log("sou uma estrutura "+splittedLine[0]);
-                        print(mainCommand);
-                        lineCommandsCode.Add(mainCommand);
-                        // foreach (string token in splittedLine.GetRange(1, splittedLine.Count-1))
-                        bool hasAtLeastOneBool = false;
-                        foreach (string _token in ListaCondicionais)
-                        {
-                            string token = _token.Trim();
-                            string tokenTraduzido= "";
-                            Debug.Log($"token atual = '{token}'");
-                            switch (token)
-                            {
-                                case ">":
-                                    tokenTraduzido = "GREATER";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "!":
-                                    tokenTraduzido = "NOT";
-                                    break;
-                                case "==":
-                                    tokenTraduzido = "EQUALS";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "!=":
-                                    tokenTraduzido = "NOT_EQUALS";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "true":
-                                    tokenTraduzido = "TRUE";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "false":
-                                    //faz adicionar um NOT true
-                                    lineCommandsCode.Add((Commands)Enum.Parse(typeof(Commands), "NOT"));
-                                    tokenTraduzido = "TRUE";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case ">=":
-                                    tokenTraduzido = "GREATER_EQUALS";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "<":
-                                    tokenTraduzido = "LESSER";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "<=":
-                                    tokenTraduzido = "LESSER_EQUALS";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "&&":
-                                    tokenTraduzido = "AND";
-                                    break;
-                                case "||":
-                                    tokenTraduzido = "OR";
-                                    break;
-                                case "(":
-                                    tokenTraduzido = "OPEN_PARENTHESIS";
-                                    break;
-                                case ")":
-                                    tokenTraduzido = "CLOSE_PARENTHESIS";
-                                    break;
-                                case "even":
-                                    tokenTraduzido = "EVEN";
-                                    hasAtLeastOneBool = true;
-                                    break;
-                                case "ROUND":
-                                    tokenTraduzido = "ROUND";
-                                    break;
-                                default:
-                                    // string[] numbers = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "ZERO" };
-                                    // if(numbers.Contains(token.Trim())) {tokenTraduzido = token; break;}
-                                    int number;
-                                    if(int.TryParse(token.Trim(), out number))
-                                    {
-                                        tokenTraduzido = "NUMBER";
-                                        intsStackConditionals.Push(number);
-                                        Debug.Log($"pushed {number}");
-                                        break;
-                                    }
-                                    try 
-                                    {
-                                        string[] token_parts = token.Split('_');
-                                        if(token_parts.Length == 1){
-                                            throw new Exception("");
-                                        }
-                                        string[] para_testar = {"DANO", "DEF", "CARGA", "MAX", "ATUAL"};
-                                        if (para_testar.Contains(token_parts[token_parts.Count() - 1]))
-                                        {
-                                            token += "_";
-                                            token_parts = token.Split('_');
-                                        }
-                                        print($"tokeeeeeeeeeeen {token}");
-                                        foreach(string t in token_parts)
-                                        {
-                                            print(t);
-                                        }
-                                        if (token_parts[0]=="J") tokenTraduzido += "PLAYER_";
-                                        else if (token_parts[0]=="I") tokenTraduzido += "ENEMY_";
-                                        else { tokenTraduzido = "ERROR"; break; }
-                                        if (token_parts[1] == "V") 
-                                        {
-                                            if(token_parts[2] == "MAX") tokenTraduzido += "MAX_HEALTH";
-                                            else if (token_parts[2] == "MAX") tokenTraduzido += "ACTUAL_HEALTH";
-                                            else { tokenTraduzido = "ERROR"; break; }
-                                        }
-                                        else if (token_parts[1] == "DANO") tokenTraduzido += "DAMAGE";
-                                        else if (token_parts[1] == "DEF") tokenTraduzido += "ACTUAL_SHIELD";
-                                        else if (token_parts[1] == "CARGA") tokenTraduzido += "ACTUAL_CHARGE";
-                                        else {tokenTraduzido = "ERROR"; break;}
-                                        if (token_parts[token_parts.Count()-1] == "MET") tokenTraduzido += "_HALF";
-                                        else if (token_parts[token_parts.Count() - 1] == "DOBRO") tokenTraduzido += "_DOUBLE";
-                                        else if (token_parts[token_parts.Count() - 1] == "") tokenTraduzido += "";
-                                        else { tokenTraduzido = "ERROR"; break; }
-                                    }
-                                    catch {
-                                        throw new Exception($"ERRO DE COMPILAÇÃO: Em uma condicional o token \"{token}\" não foi reconhecido");
-                                        tokenTraduzido = "ERROR"; 
-                                        break; 
-                                    }
-                                    // Debug.Log("aqui = " + token);
-                                    break;
-
-                            }
-                            // Debug.Log(tokenTraduzido);
-                            lineCommandsCode.Add((Commands)Enum.Parse(typeof(Commands), tokenTraduzido));
-                        }
-                        if (!hasAtLeastOneBool)
-                        {
-                            throw new Exception("ERRO DE COMPILAÇÃO: Condicional sem comparador ou sem TRUE");
-                        }
-                        break;
-                    default:
-                        throw new Exception("ERRO DE COMPILAÇÃO: Não foi possível compilar alguma linha de um bloco CODE");
-                }
-            }
-            else 
-            {
-                throw new Exception("ERRO DE COMPILAÇÃO: Não foi possível compilar alguma linha de um bloco CODE");
-            }
-            commands.Add(lineCommandsCode);
+        codeInputBlockNumber++;
+        Queue<string> written_code = new Queue<string>{};
+        tokens = new Queue<string>();
+        commands = new List<List<Commands>>();
+        numbersQueueConditionals = new Queue<dynamic>();    
+        foreach (char c in codeBlock.CodeWithin) {
+            written_code.Enqueue(c.ToString());
         }
+        
+        while(written_code.Count > 0)
+        {
+            string current_char = written_code.Dequeue();
+            // Debug.Log(current_char);
+            if (Regex.IsMatch(current_char, "/"))
+            {
+                if (written_code.Peek() == "/"){
+                    written_code.Dequeue();
+                    while(written_code.Count > 0 && written_code.Dequeue() != "\n"){
+                        continue;
+                    }
+                    // codeCompilerLine++;
+                }
 
-        // foreach (List<Commands> commands1 in commands)
-        // {
-        //     Debug.Log(commands1[0].ToString());
+            }
+            if (Regex.IsMatch(current_char, "[\n\r]"))
+            {
+                current_token = current_char;
+                codeCompilerLine++;
+
+            }
+            else if(Regex.IsMatch(current_char,"[ \t]"))
+            {
+                continue;
+            }
+            else if(Regex.IsMatch(current_char, "[0-9]")){
+                current_token = current_char;
+                checkTokenContinuation(ref written_code, ref current_token, "[0-9]");
+            }
+            else if (Regex.IsMatch(current_char, "[A-z_]"))
+            {
+                current_token = current_char;
+                checkTokenContinuation(ref written_code, ref current_token, "[A-z0-9_]");
+            }
+            else if (Regex.IsMatch(current_char, "[\\W]"))
+            {
+            // reading_symbol = true;
+            current_token = current_char;
+            checkTokenContinuation(ref written_code, ref current_token, "[\\W]");
+
+            }
+            tokens.Enqueue(current_token);
+            current_token = "";
+        }  
+
+        parser();
+
+        // foreach (List<Commands> commands1 in commands){
+        //     Debug.Log("-------------------------------");
+        //     foreach (Commands command in commands1){
+        //         Debug.Log(command.ToString());
+        //     }
         // }
-        if (structures.Count != 0)
-        {
-            throw new Exception("ERRO DE COMPILAÇÃO: Alguma estrutura existente em um bloco CODE não foi aberta ou fechada corretamente");
-        }
         return commands;
     }
 
-    //em desuso
-    // public bool Compile(List<BlockController> blocks, ref string compileResult)
-    // {
-    //     List<List<Commands>> commands = GetCommands(blocks);
-    //     return Compile(commands, ref compileResult);
-    // }
-
     public bool Compile(List<BlockController> blocks, ref string compileResult)
     {
+        codeInputBlockNumber = 0;
         // lastBreakIndex = -1;
         if (blocks.Count > maxBlocks)
         {
@@ -586,31 +612,20 @@ public class Compiler : MonoBehaviour
                 List<List<Commands>> codeCommands = null;
                 try
                 {
-                    codeCommands = GetCodeCommands(block as CodeController);
+                    Debug.Log("chamei o newcompiler");
+                    codeCommands = newCodeCompiler(block as CodeController);
+                    Debug.Log("saí do newcompiler" + codeCommands.Count);
                 }
                 catch (Exception e)
                 {
                     compileResult = e.Message;
                     return false;
                 }
-                Stack<int> aux = new Stack<int>();
-                // Debug.Log($"embaixo daqui  {intsStackConditionals.Count} {intsStackConditionals.Peek()}");
-                foreach (int _ in intsStackConditionals)
-                {
-                    Debug.Log(_);
-                }
-                Debug.Log("__________________________");
-                // Debug.Log($"embaixo daqui2  {intsStackConditionals.Count} {intsStackConditionals.Peek()}");
+                // Stack<int> stack_conditionals_inverted = new Stack<int>();
+
                 //Inverte a pilha de conndicionais
-                int tamIntsStackConditionalsAUX = intsStackConditionals.Count;
-                for (int k = 0; k <tamIntsStackConditionalsAUX ; k++)
-                {
-                    Debug.Log("k" + k);
-                    int auxaa = intsStackConditionals.Pop();
-                    aux.Push(auxaa);
-                }
-                intsStackConditionals = aux;
-                // Debug.Log("stack e tal né " + intsStackConditionals.Count);
+                // int tamIntsStackConditionalsAUX = numbersQueueConditionals.Count;
+                // Debug.Log("stack e tal né " + numbersQueueConditionals.Count);
                 bool ret = CompileCode(codeCommands, ref compileResult, ref PC, ref hasAction);
                 // Debug.Log("PC DEPOIS DO CODE = " + PC);
                 if(!ret) { return false; }
@@ -709,12 +724,7 @@ public class Compiler : MonoBehaviour
                 continue;
             }
             //passou daqui é porque é ou if ou while
-            //todo ao inves de pegar line commands[1] tenho que ver o tamanho do line commands
-            //todo o line commands vai vai com tudo separadinho
-            //todo fazer um for(int i == 1, i< lineCommands.Count, i++) que leia de 1 em um bloquinho
-            //todo sendo '>','<','=='... lê os próximos dois 
-            //todo sendo '&&','||' levanta flag de calcular quando o próximo estiver pronto
-            //todo sendo '(' segura os resultados até achar um ')'
+
             List<ConditionalCell> conditionalList = new List<ConditionalCell>();
             ComparatorController comparator = (block as StructureController).comparatorSlot.childBlock as ComparatorController;
             Commands comparatorCommand = comparator.commandName;
@@ -795,7 +805,7 @@ public class Compiler : MonoBehaviour
                     }
                     break;
             }
-            // Debug.Log(conditionalCell.tipo);
+            // Debug.Log(conditionalCell.type);
             conditionalList.Add(conditionalCell);
             // }
             // if(parentesisStack.Count > 0)
@@ -842,6 +852,7 @@ public class Compiler : MonoBehaviour
                 Debug.Log(cell.ToString());
             }
         }
+        codeInputBlockNumber = 0;
         return true;
     }
 
@@ -852,15 +863,7 @@ public class Compiler : MonoBehaviour
         Stack<int> structuresStack = new Stack<int>();
         Stack<int> breakStackIndexes = new Stack<int>();
         List<int> whilesAndForsList = new List<int> { };
-        Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        foreach (List<Commands> a in blockCommands){
-            Debug.Log("------");
-            foreach(Commands caaa in a){
-                Debug.Log("" + caaa);
-            }
-            Debug.Log("------");
-        }
-        Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
         foreach (List<Commands> lineCommands in blockCommands)
         {
             // Debug.Log(lineCommands);
@@ -876,6 +879,7 @@ public class Compiler : MonoBehaviour
             PC++;
             Debug.Log("pc dentro do code = " + PC);
             Commands mainCommand = lineCommands[0];
+            Debug.Log(mainCommand.ToString());
             switch (mainCommand)
             {
                 case Commands.ATTACK:
@@ -932,6 +936,7 @@ public class Compiler : MonoBehaviour
             {
                 if (structuresStack.Count == 0)
                 {
+                    Debug.Log("tinha nada");
                     compileResult = "ERRO DE COMPILAÇÃO: Bloco ELSE sem IF correspondente";
                     return false;
                 }
@@ -940,6 +945,7 @@ public class Compiler : MonoBehaviour
                 Cell lastStructure = memory[lastStructureIndex];
                 if (!(lastStructure is IfCell))
                 {
+                    Debug.Log("nao era if");
                     compileResult = "ERRO DE COMPILAÇÃO: Bloco ELSE sem IF correspondente";
                     return false;
                 }
@@ -971,8 +977,12 @@ public class Compiler : MonoBehaviour
                     compileResult = "ERRO DE COMPILAÇÃO: Bloco FOR deve ter número de repetições maior que zero";
                     return false;
                 }
+                if (variableName == Commands.NUMBER)
+                {
+                    
+                }
 
-                memory[PC] = new ForCell(variableName);
+                memory[PC] = new ForCell(variableName,numbersQueueConditionals.Dequeue());
                 structuresStack.Push(PC);
                 continue;
             }
@@ -1057,6 +1067,9 @@ public class Compiler : MonoBehaviour
                     case Commands.TRUE:
                         conditionalCell = new ConditionalCell(typeof(bool), resultado: true);
                         break;
+                    case Commands.NEGATIVE:
+                        conditionalCell = new ConditionalCell(typeof(bool), resultado: true);
+                        break;
                     case Commands.EVEN:
                         if (lineCommands[i + 1] != Commands.OPEN_PARENTHESIS || lineCommands[i + 3] != Commands.CLOSE_PARENTHESIS)
                         {
@@ -1076,7 +1089,7 @@ public class Compiler : MonoBehaviour
                             return false;
                         }
                         i += 3;
-                        int aux = variableName == Commands.NUMBER ? intsStackConditionals.Pop() : -1;
+                        dynamic aux = variableName == Commands.NUMBER ? numbersQueueConditionals.Dequeue() : -1;
                         comparatorCell = new EvenCell(variableName, variableINT: aux);
                         conditionalCell = new ConditionalCell(typeof(EvenCell), comparator: comparatorCell);
                         break;
@@ -1098,33 +1111,33 @@ public class Compiler : MonoBehaviour
                             return false;
                         }
 
-                        int aux1 = variable1Name == Commands.NUMBER ? intsStackConditionals.Pop() : -1;
-                        int aux2 = variable2Name == Commands.NUMBER ? intsStackConditionals.Pop() : -1;
+                        dynamic aux1 = variable1Name == Commands.NUMBER ? numbersQueueConditionals.Dequeue() : -1;
+                        dynamic aux2 = variable2Name == Commands.NUMBER ? numbersQueueConditionals.Dequeue() : -1;
                         Debug.Log($"vars for {comparatorCommand.ToString()} are {aux1} and {aux2}");
                         switch (comparatorCommand)
                         {
                             case Commands.EQUALS:
-                                comparatorCell = new EqualsCell(variable1Name, variable2Name, variable1INT: aux1, variable2INT: aux2);
+                                comparatorCell = new EqualsCell(variable1Name, variable2Name, variable1NUMBER: aux1, variable2NUMBER: aux2);
                                 conditionalCell = new ConditionalCell(typeof(EqualsCell), comparator: comparatorCell);
                                 break;
                             case Commands.NOT_EQUALS:
-                                comparatorCell = new NotEqualsCell(variable1Name, variable2Name, variable1INT: aux1, variable2INT: aux2);
+                                comparatorCell = new NotEqualsCell(variable1Name, variable2Name, variable1NUMBER: aux1, variable2NUMBER: aux2);
                                 conditionalCell = new ConditionalCell(typeof(NotEqualsCell), comparator: comparatorCell);
                                 break;
                             case Commands.GREATER:
-                                comparatorCell = new GreaterCell(variable1Name, variable2Name, variable1INT: aux1, variable2INT: aux2);
+                                comparatorCell = new GreaterCell(variable1Name, variable2Name, variable1NUMBER: aux1, variable2NUMBER: aux2);
                                 conditionalCell = new ConditionalCell(typeof(GreaterCell), comparator: comparatorCell);
                                 break;
                             case Commands.GREATER_EQUALS:
-                                comparatorCell = new GreaterEqualsCell(variable1Name, variable2Name, variable1INT: aux1, variable2INT: aux2);
+                                comparatorCell = new GreaterEqualsCell(variable1Name, variable2Name, variable1NUMBER: aux1, variable2NUMBER: aux2);
                                 conditionalCell = new ConditionalCell(typeof(GreaterEqualsCell), comparator: comparatorCell);
                                 break;
                             case Commands.LESSER:
-                                comparatorCell = new LesserCell(variable1Name, variable2Name, variable1INT: aux1, variable2INT: aux2);
+                                comparatorCell = new LesserCell(variable1Name, variable2Name, variable1NUMBER: aux1, variable2NUMBER: aux2);
                                 conditionalCell = new ConditionalCell(typeof(LesserCell), comparator: comparatorCell);
                                 break;
                             case Commands.LESSER_EQUALS:
-                                comparatorCell = new LesserEqualsCell(variable1Name, variable2Name, variable1INT: aux1, variable2INT: aux2);
+                                comparatorCell = new LesserEqualsCell(variable1Name, variable2Name, variable1NUMBER: aux1, variable2NUMBER: aux2);
                                 conditionalCell = new ConditionalCell(typeof(LesserEqualsCell), comparator: comparatorCell);
                                 break;
                             default:
@@ -1133,7 +1146,7 @@ public class Compiler : MonoBehaviour
                         }
                         break;
                 }
-                // Debug.Log(conditionalCell.tipo);
+                // Debug.Log(conditionalCell.type);
                 conditionalList.Add(conditionalCell);
             }
             if (parentesisStack.Count > 0)
@@ -1145,6 +1158,7 @@ public class Compiler : MonoBehaviour
             IConditionCell structureStart = null;
             if (mainCommand == Commands.IF)
             {
+                Debug.Log("colocou um if ");
                 structureStart = new IfCell(conditionalList);
             }
             else
@@ -1153,6 +1167,7 @@ public class Compiler : MonoBehaviour
                 whilesAndForsList.Add(PC);
             }
             memory[PC] = (Cell)structureStart;
+            Debug.Log("colocou um if 2");
             structuresStack.Push(PC);
         }
         Debug.Log($"PC LOGO DEPOIS DO COMPILE CODE = {PC}");

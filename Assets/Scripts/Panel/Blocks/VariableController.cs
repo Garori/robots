@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,8 +11,8 @@ public class VariableController : BlockController
     protected override void OnBeginDragAction()
     {
         Debug.Log("OnBeginDragAction");
-        TooltipTrigger TooltipTrigger = GetComponent<TooltipTrigger>();
-        TooltipTrigger.isTooltipEnabled = false;
+        // TooltipTrigger TooltipTrigger = GetComponent<TooltipTrigger>();
+        // TooltipTrigger.isTooltipEnabled = false;
         GetComponent<CircleCollider2D>().enabled = false;
         EventManager.onVariableExit(this);
     }
@@ -19,8 +20,11 @@ public class VariableController : BlockController
     protected override void OnEndDragAction()
     {
         Debug.Log("OnEndDragAction");
-        TooltipTrigger TooltipTrigger = GetComponent<TooltipTrigger>();
-        TooltipTrigger.isTooltipEnabled = true;
+        // try{
+        //     TooltipTrigger TooltipTrigger = GetComponent<TooltipTrigger>();
+        //     TooltipTrigger.isTooltipEnabled = true;
+        // }
+        // catch(Exception e){}    
         GetComponent<CircleCollider2D>().enabled = true;
         // EventManager.onVariableEnter(this, colliding.GetComponent<BlockSlotController>());
     }

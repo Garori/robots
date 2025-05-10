@@ -8,7 +8,7 @@ public class CodeController : BlockController
 	public string CodeWithin;
 	protected override void OnBeginDragAction()
 	{
-		Debug.Log("on begin drag de code");
+		// Debug.Log("on begin drag de code");
 		EventManager.onCodeExit(this);
 	}
 

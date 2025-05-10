@@ -238,6 +238,8 @@ public class PanelManager : MonoBehaviour
             codeInput.GetComponent<CodeInputController>().SetInputField(codeWithin);
         }
 
+        code.transform.parent.Find("Text Area").Find("CodeText").GetComponent<TMP_Text>().enableWordWrapping = false;
+
 
         OrganizeBlocks();
     }
@@ -397,7 +399,7 @@ public class PanelManager : MonoBehaviour
             try
             {
                 Commands mainCommand = cell.GetCommand();
-                Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaa"  +mainCommand);
+                // Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaa"  +mainCommand);
             }
             catch
             {
@@ -430,7 +432,7 @@ public class PanelManager : MonoBehaviour
 
 
             Commands mainCommand = cell.GetCommand();
-            Debug.Log(mainCommand);
+            // Debug.Log(mainCommand);
             switch (mainCommand)
             {
                 case Commands.NONE:
@@ -468,7 +470,7 @@ public class PanelManager : MonoBehaviour
                     {
                         comparator = (cell as IConditionCell).conditionalList[0].comparator;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //só serve para as primeiras 8 fases criadas para o tcc do Carlos, Lucas e Francisco
                         comparator = (cell as IConditionCell).comparatorCell;
@@ -563,6 +565,9 @@ public class PanelManager : MonoBehaviour
                 return null;
         }
         SetBlockAsOld(code);
+        // Debug.Log(code.transform.parent.gameObject.GetComponentInChildren<TMP_Text>(true).text);
+        // Debug.Log(code.transform.GetChild(0).name);
+        // code.gameObject.transform.Find("CodeText").GetComponent<TMP_Text>().enableWordWrapping = false;
         return code;
     }
 
