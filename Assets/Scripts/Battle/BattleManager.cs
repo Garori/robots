@@ -13,7 +13,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("Battle Parameters")]
     [SerializeField] private int maxRounds;
-    private int round;
+    public int round;
+    private int wonOnRound = -1;
     private int isOver;
 
     public int IsOver { get => isOver; }
@@ -27,6 +28,7 @@ public class BattleManager : MonoBehaviour
     {
         isOver = 0;
         round = 1;
+        wonOnRound = -1;
         player.Init(playerAttributes);
         enemy.Init(enemyAttributes);
         return new BattleStatus(player, enemy);
@@ -43,6 +45,9 @@ public class BattleManager : MonoBehaviour
         player.PassTurn();
         enemy.PassTurn();
         checkWin();
+        Debug.Log(player.GetLifePoints());
+        Debug.Log($"enemy lp = {enemy.GetLifePoints()}");
+        Debug.Log($"isover = {isOver}");
 
         return new BattleStatus(player, enemy, round, isOver, playerAction, enemyAction, attacks[0], attacks[1]);
     }
@@ -68,11 +73,16 @@ public class BattleManager : MonoBehaviour
     }
 
     public bool checkWin()
-    {   
+    {
         //O RETORNO DESSA FUNÇÃO NÃO SIGNIFICA QUE ALGUÉM GANHOU MAS SIM SE ALGUÉM GANHOU E FOI INVALIDADO POR AINDA ESTAR DENTRO DE UM WHILE
 
         if (enemy.isDead() && currentlyWhileLoop) //checar se está dentro de um while
         {
+            if (wonOnRound == -1)
+            {
+                wonOnRound = round;
+            }
+            Debug.Log("invalidado");
             return true;
         }
 
@@ -80,7 +90,16 @@ public class BattleManager : MonoBehaviour
 
 
         if (player.isDead()) isOver = -1;
-        else isOver = 1;
+        else
+        {
+            isOver = 1;
+            if (wonOnRound != -1)
+            {
+                round = wonOnRound;
+            }
+        }
         return false;
     }
+    
+    
 }

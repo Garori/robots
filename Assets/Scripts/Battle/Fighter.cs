@@ -14,6 +14,7 @@ public class Fighter : MonoBehaviour, IFighter
     private int attackPoints;
     private int defensePoints;
     private int chargePoints;
+    private int remaingCharges;
     private bool isDefending;
     private bool isDodging;
     private bool dodgedLastRound;
@@ -35,6 +36,7 @@ public class Fighter : MonoBehaviour, IFighter
         attackPoints = minAttackPoints;
         defensePoints = maxDefensePoints;
         chargePoints = 0;
+        remaingCharges = maxChargePoints;
         healedLastRound = chargedLastRound = isDefending = isDodging = dodgedLastRound = false;
     }
 
@@ -68,10 +70,12 @@ public class Fighter : MonoBehaviour, IFighter
     }
 
     public bool charge()
-    {
+    {   
+        if (remaingCharges==0) return false;
+        remaingCharges -= 1;
         chargePoints += chargedLastRound ? 2 : 1;
         chargePoints = Mathf.Min(chargePoints, maxChargePoints);
-        chargedLastRound = !chargedLastRound;
+        chargedLastRound = true;
         return true;
     }
     public bool dodge()
@@ -85,7 +89,7 @@ public class Fighter : MonoBehaviour, IFighter
         if(lifePoints<=0) return true; //impede que se cure depois de derrotado enquanto espera por um break em um while
         lifePoints += healedLastRound ? 2 : 1;
         lifePoints = Mathf.Min(lifePoints, maxLifePoints);
-        healedLastRound = !healedLastRound;
+        healedLastRound = true;
         return true;
     }
 
@@ -141,6 +145,10 @@ public class Fighter : MonoBehaviour, IFighter
     public int GetChargePoints()
     {
         return chargePoints;
+    }
+    public int GetRemainingCharges()
+    {
+        return remaingCharges;
     }
 
     public int GetLifePoints()

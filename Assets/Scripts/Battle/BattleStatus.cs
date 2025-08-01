@@ -50,6 +50,7 @@ public class BattleStatus
         values[Commands.PLAYER_ACTUAL_CHARGE] = player.GetChargePoints();
         values[Commands.PLAYER_ACTUAL_CHARGE_HALF] = player.GetChargePoints() / 2;
         values[Commands.PLAYER_ACTUAL_CHARGE_DOUBLE] = player.GetChargePoints() * 2;
+        values[Commands.PLAYER_REMAINING_CHARGES] = player.GetRemainingCharges();
 
         values[Commands.ENEMY_DAMAGE] = enemy.GetDamage();
         values[Commands.ENEMY_DAMAGE_HALF] = enemy.GetDamage() / 2;
@@ -66,6 +67,7 @@ public class BattleStatus
         values[Commands.ENEMY_ACTUAL_CHARGE] = enemy.GetChargePoints();
         values[Commands.ENEMY_ACTUAL_CHARGE_HALF] = enemy.GetChargePoints() / 2;
         values[Commands.ENEMY_ACTUAL_CHARGE_DOUBLE] = enemy.GetChargePoints() * 2;
+        values[Commands.ENEMY_REMAINING_CHARGES] = enemy.GetRemainingCharges();
 
         this.isOver = isOver;
         this.playerAction = playerAction;

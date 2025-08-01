@@ -104,9 +104,11 @@ public class GameManager : MonoBehaviour
                 // memory.enemyFighterAttributes = memory.testesEnemy[i];
                 Debug.Log("Carregando teste: " + i);
                 Debug.Log(battleManager.enemy.getMaxLifePoints());
+                Debug.Log(battleManager.enemy.GetDamage());
 
-                if (RunBattle(lastStatus, "teste",i))
+                if (RunBattle(lastStatus, "teste", i))
                 {
+                    Debug.Log("deu erro true");
                     return;
                 }
             }
@@ -116,6 +118,7 @@ public class GameManager : MonoBehaviour
             memory.playerFighterAttributes,
             memory.enemyFighterAttributes
         );
+        Debug.Log("Carregando principal");
         RunBattle(lastStatus, "principal");
 
     }
@@ -155,7 +158,7 @@ public class GameManager : MonoBehaviour
                 // Debug.Log("player");
                 actions[0] = playerCompiler.Run(lastStatus,battleManager);
                 // Debug.Log("inimigo");
-                actions[1] = enemyCompiler.Run(lastStatus);
+                actions[1] = enemyCompiler.Run(lastStatus, battleManager.enemy.GetLifePoints());
                 newStatus = battleManager.PlayRound(actions);
                 if(newStatus.isOver == 0 && !battleManager.checkWin())
                 {
@@ -269,7 +272,8 @@ public class GameManager : MonoBehaviour
         {
             animationManager.StartAnimation(battleStatuses);
         }
-        if (tipo == "teste" && deuErro){
+        if (tipo == "teste" && deuErro)
+        {
             var texto = actualRoundPanelTransform
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
@@ -277,7 +281,16 @@ public class GameManager : MonoBehaviour
             actualRoundPanelTransform
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
-                .SetText($"Durante o caso de teste {testeNum} ocorreu o seguinte erro\n\n{texto}");
+                .SetText($"Durante o teste de nº {testeNum} ocorreu o seguinte erro:\n\n{texto}");
+            return false;
+        }
+        else if (tipo == "teste" && lastStatus.isOver == -1)
+        {
+            actualRoundPanelTransform
+                .GetChild(0)
+                .GetComponent<TMPro.TextMeshProUGUI>()
+                .SetText($"Você perdeu a batalha no\nteste de nº {testeNum}");
+            return false;
         }
         return deuErro;
     }
@@ -317,7 +330,8 @@ public class GameManager : MonoBehaviour
         return $"COMANDO:\n{newStatus.playerAction}\n"
             + $"VIDA: {lastStatus.values[Commands.PLAYER_ACTUAL_HEALTH]} -> {newStatus.values[Commands.PLAYER_ACTUAL_HEALTH]}\n"
             + $"ESCUDOS: {lastStatus.values[Commands.PLAYER_ACTUAL_SHIELD]} -> {newStatus.values[Commands.PLAYER_ACTUAL_SHIELD]}\n"
-            + $"CARGAS: {lastStatus.values[Commands.PLAYER_ACTUAL_CHARGE]} -> {newStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
+            + $"CARGAS: {lastStatus.values[Commands.PLAYER_REMAINING_CHARGES]} -> {newStatus.values[Commands.PLAYER_REMAINING_CHARGES]}\n"
+            + $"DANO: {lastStatus.values[Commands.PLAYER_DAMAGE] + lastStatus.values[Commands.PLAYER_ACTUAL_CHARGE]} -> {newStatus.values[Commands.PLAYER_DAMAGE] + newStatus.values[Commands.PLAYER_ACTUAL_CHARGE]}\n";
     }
 
     private string EnemyStatus(BattleStatus lastStatus, BattleStatus newStatus)
@@ -325,7 +339,8 @@ public class GameManager : MonoBehaviour
         return $"COMANDO:\n{newStatus.enemyAction}\n"
             + $"VIDA: {lastStatus.values[Commands.ENEMY_ACTUAL_HEALTH]} -> {newStatus.values[Commands.ENEMY_ACTUAL_HEALTH]}\n"
             + $"ESCUDOS: {lastStatus.values[Commands.ENEMY_ACTUAL_SHIELD]} -> {newStatus.values[Commands.ENEMY_ACTUAL_SHIELD]}\n"
-            + $"CARGAS: {lastStatus.values[Commands.ENEMY_ACTUAL_CHARGE]} -> {newStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
+            + $"CARGAS: {lastStatus.values[Commands.ENEMY_REMAINING_CHARGES]} -> {newStatus.values[Commands.ENEMY_REMAINING_CHARGES]}\n"
+            + $"DANO: {lastStatus.values[Commands.ENEMY_DAMAGE] + lastStatus.values[Commands.ENEMY_ACTUAL_CHARGE]} -> {lastStatus.values[Commands.ENEMY_DAMAGE] + newStatus.values[Commands.ENEMY_ACTUAL_CHARGE]}\n";
     }
 
     public void QuitGame()
