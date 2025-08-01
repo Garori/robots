@@ -71,5 +71,7 @@ public enum Commands
     OR,
     NOT,
     NUMBER,
-    NEGATIVE
+    NEGATIVE,
+    PLAYER_REMAINING_CHARGES,
+    ENEMY_REMAINING_CHARGES
 }

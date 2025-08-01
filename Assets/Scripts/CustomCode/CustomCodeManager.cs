@@ -75,12 +75,17 @@ public class CustomCodeManager : MonoBehaviour
             if (!Memories.getNewLevel() && !Memories.getToEdit())
             {
                 Debug.Log("entrou no if not new level e not to edit");
-                GameObject botaoExport = GameObject.Find("ExportButton");
-                Debug.Log(botaoExport);
-                botaoExport.GetComponentInChildren<TMP_Text>().text = "Salvar";
+                // GameObject botaoExport = GameObject.Find("ExportButton");
+                // Debug.Log(botaoExport);
+                // botaoExport.GetComponentInChildren<TMP_Text>().text = "Salvar";
                 BattleData.levelMemory = Memories.GetMemory(BattleData.selectedLevel);
                 // BattleData.levelBlocks = compiler.Decompile(BattleData.levelMemory.memory);
                 Memories.setToEdit(true);
+            }
+            if (!Memories.getNewLevel()){
+                GameObject botaoExport = GameObject.Find("ExportButton");
+                Debug.Log(botaoExport);
+                botaoExport.GetComponentInChildren<TMP_Text>().text = "Salvar";
             }
             caseVariablesContainer.SetActive(true);
             saveCaseButton.SetActive(true);

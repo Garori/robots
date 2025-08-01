@@ -252,7 +252,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Code here...
+  m_text: Codar aqui!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ecc4d2fceb1b7c84d9e7710671074ab6, type: 2}
   m_sharedMaterial: {fileID: 664633266327681669, guid: ecc4d2fceb1b7c84d9e7710671074ab6, type: 2}

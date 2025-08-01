@@ -68,7 +68,7 @@ public class Compiler : MonoBehaviour
         {"\n",              new Dictionary<string,dynamic>(){{"t", "newLine"},     {"reserved", true},{"Commands",""}}},
         {"if",              new Dictionary<string,dynamic>(){{"t", "conditional_structure"},   {"reserved", true}, {"Commands",Commands.IF}}},
         {"while",           new Dictionary<string,dynamic>(){{"t", "conditional_structure"},   {"reserved", true},{"Commands",Commands.WHILE}}},
-        {"for",             new Dictionary<string,dynamic>(){{"t", "for"},   {"reserved", true},  {"Commands",Commands.FOR}}},
+        {"for",             new Dictionary<string,dynamic>(){{"t", "for"},         {"reserved", true},  {"Commands",Commands.FOR}}},
         {"else",            new Dictionary<string,dynamic>(){{"t", "else"},        {"reserved", true},  {"Commands",Commands.ELSE}}},
         {"break",           new Dictionary<string,dynamic>(){{"t", "instruction"}, {"reserved", true},  {"Commands",Commands.BREAK}}},
         {"(",               new Dictionary<string,dynamic>(){{"t", "("},           {"reserved", true}, {"Commands",Commands.OPEN_PARENTHESIS}}},
@@ -398,7 +398,7 @@ public class Compiler : MonoBehaviour
         {
             lineCommands = new List<Commands>();
             tk = tokens.Dequeue();
-            Debug.Log($"desinfileirei '{tk}'");
+            Debug.Log($"desenfileirei '{tk}'");
             if (tk == "\n"){
                 codeCompilerLine++ ;
                 continue;
@@ -444,24 +444,31 @@ public class Compiler : MonoBehaviour
         // written_code.Peek();
         if (pattern == "[\\W]" && written_code.Count > 0 && known_tokens.ContainsKey(tk+written_code.Peek()))
         {
-            while (written_code.Count > 0 && known_tokens.ContainsKey(tk + written_code.Peek())){
+            //simbolos com mais de um caracter
+            while (written_code.Count > 0 && known_tokens.ContainsKey(tk + written_code.Peek()))
+            {
                 tk += written_code.Dequeue();
             }
             return;
         }
         else if(pattern == "[\\W]" && written_code.Count > 0 && ! known_tokens.ContainsKey(tk + written_code.Peek()) && known_tokens.ContainsKey(tk))
         {
-            //trata de números negativos
-            if (tk != "-"){
+            //simbolos com um único caracter e números negativos
+            if (tk != "-")
+            {
+                //return direto pq não tem mais nada que colocar no token
                 return;
             }
-            while(Regex.IsMatch(written_code.Peek(), "[0-9]")){
+            while(written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), "[0-9]")){
+                // lendo o número negativo
                 tk += written_code.Dequeue();
             }
             if(written_code.Peek() == "."){
+                //caso haja um ponto (se for um não inteiro negativo)
                 tk += written_code.Dequeue();
                 while (written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), "[0-9]"))
                 {
+                    // lê a parce fracionaria do número negativo
                     tk += written_code.Dequeue();
                 }
             }
@@ -469,9 +476,10 @@ public class Compiler : MonoBehaviour
         }
         else if(pattern == "[\\W]" && written_code.Count > 0 && !known_tokens.ContainsKey(tk + written_code.Peek()) && !known_tokens.ContainsKey(tk))
         {
-            if (Regex.IsMatch(written_code.Peek(), pattern))
+            //se o simbolo não é conhecido
+            if (written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), pattern))
             {
-                throw new Exception($"ERRO DE COMPIILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} token '{tk+written_code.Peek()}' não reconhecido");
+                throw new Exception($"ERRO DE COMPIILAÇÃO: No {codeInputBlockNumber}o bloco de código escrito, na linha {codeCompilerLine} token '{tk + written_code.Peek()}' não reconhecido");
 
             }
             else
@@ -481,11 +489,12 @@ public class Compiler : MonoBehaviour
         }
         while (written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), pattern))
         {
+            //enquanto o que vai ser desenfileirado batter com a pattern significa que o token continua
             tk += written_code.Dequeue();
         }
-        // Isso aqui me ajuda a ter um ponto só em números
         if (written_code.Count > 0 && pattern == "[0-9]" && written_code.Peek() == ".")
         {
+            // Isso aqui me ajuda a ter um ponto só em números
             tk += written_code.Dequeue();
             while (written_code.Count > 0 && Regex.IsMatch(written_code.Peek(), pattern))
             {
@@ -532,19 +541,22 @@ public class Compiler : MonoBehaviour
                 continue;
             }
             else if(Regex.IsMatch(current_char, "[0-9]")){
+                //chrcs números
                 current_token = current_char;
                 checkTokenContinuation(ref written_code, ref current_token, "[0-9]");
             }
             else if (Regex.IsMatch(current_char, "[A-z_]"))
             {
+                //checa strings/variaveis
                 current_token = current_char;
                 checkTokenContinuation(ref written_code, ref current_token, "[A-z0-9_]");
             }
             else if (Regex.IsMatch(current_char, "[\\W]"))
             {
-            // reading_symbol = true;
-            current_token = current_char;
-            checkTokenContinuation(ref written_code, ref current_token, "[\\W]");
+                //checa simbolos
+                // reading_symbol = true;
+                current_token = current_char;
+                checkTokenContinuation(ref written_code, ref current_token, "[\\W]");
 
             }
             tokens.Enqueue(current_token);
@@ -1208,46 +1220,57 @@ public class Compiler : MonoBehaviour
             if (PC >= totalCells) throw new PlayerOutOfActionsException();
             Cell cell = memory[PC];
             if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
-            // Debug.Log($"Entering cell {cell} at index {PC}");
+            Debug.Log($"PC {PC} total cells {totalCells}");
+            Debug.Log($"Entering cell {cell} at index {PC}");
+            if (battleManager.player.GetLifePoints() <= 0)
+            {
+                return Commands.NONE;
+            }
 
             switch (cell)
-            {   
-                case CodeCell c:
-                    iter --;
-                    continue;
-                case ActionCell c:
-                    return c.action;
-                case AfterEndCell c:
-                    iter--;
-                    battleManager.currentlyWhileLoop = false;
-                    battleManager.checkWin();
-                    if(battleManager.IsOver != 0) return Commands.NONE;
-                    break;
-                case BreakCell c:
-                    battleManager.currentlyWhileLoop = false;
-                    Jump(c);
-                    break;
-                case WhileCell c:
-                    runStructureStack.Push("WhileCell");
-                    battleManager.currentlyWhileLoop = true;
-                    JumpCond(c, status);
-                    break;
-                case IConditionCell c:
-                    runStructureStack.Push("NotWhileCell");
-                    JumpCond(c, status);
-                    break;
-                case EndCell c:
-                    Jump(c);
-                    break;
-                case ElseCell c:
-                    Jump(c);
-                    break;
-            }
+                {
+                    case CodeCell c:
+                        iter--;
+                        continue;
+                    case ActionCell c:
+                        return c.action;
+                    case AfterEndCell c:
+                        iter--;
+                        battleManager.currentlyWhileLoop = false;
+                        battleManager.checkWin();
+                        if (battleManager.IsOver == 1)
+                        {
+                            Debug.Log($"round {battleManager.round}");
+                            battleManager.round = battleManager.round - 1;
+                            Debug.Log($"round {battleManager.round}");
+                        }
+                        if (battleManager.IsOver != 0) return Commands.NONE;
+                        break;
+                    case BreakCell c:
+                        battleManager.currentlyWhileLoop = false;
+                        Jump(c);
+                        break;
+                    case WhileCell c:
+                        runStructureStack.Push("WhileCell");
+                        battleManager.currentlyWhileLoop = true;
+                        JumpCond(c, status);
+                        break;
+                    case IConditionCell c:
+                        runStructureStack.Push("NotWhileCell");
+                        JumpCond(c, status);
+                        break;
+                    case EndCell c:
+                        Jump(c);
+                        break;
+                    case ElseCell c:
+                        Jump(c);
+                        break;
+                }
         }
         throw new ActionTookTooLongException();
     }
 
-    public Commands Run(BattleStatus status)
+    public Commands Run(BattleStatus status, int lp= -1)
     {
         // this.battleManager = battleManager;
         for (int iter = 0; iter < maxIterations; iter++)
@@ -1256,7 +1279,11 @@ public class Compiler : MonoBehaviour
             if (PC >= totalCells) throw new PlayerOutOfActionsException();
             Cell cell = memory[PC];
             if (debug) Debug.Log($"Entering cell {cell} at index {PC}");
-            Debug.Log($"Entering cell {cell} at index {PC}");
+            // Debug.Log($"Entering cell {cell} at index {PC}");
+            if (lp == 0)
+            {
+                return Commands.NONE;
+            }
 
             switch (cell)
             {
@@ -1315,113 +1342,6 @@ public class Compiler : MonoBehaviour
         if (debug) Debug.Log($"Jumping {cell.jmp} cells");
         PC += cell.jmp;
     }
-
-    // public List<BlockController> Decompile(Cell[] cells)
-    // //TODO Fazer com que o bloco de CODE volte como um bloco de CODE
-    // {
-    //     List<BlockController> decompilado = new List<BlockController>();
-    //     bool breakForEach = false;
-    //     foreach (Cell cell in cells)
-    //     {
-    //         if(cell.isFromACodeBlock)
-    //         {
-    //             continue;
-    //         }
-    //         List<Commands> cmds = new List<Commands>();
-    //         switch (cell)
-    //         {
-    //             case WhileCell c:
-    //                 cmds.Add(Commands.WHILE);
-    //                 cmds = GetInsides(c,cmds);
-    //                 break;
-    //             case IfCell c:
-    //                 cmds.Add(Commands.IF);
-    //                 cmds = GetInsides(c, cmds);
-    //                 break;
-    //             case ForCell c:
-    //                 // Debug.Log(c.ToString());
-    //                 cmds.Add(Commands.FOR);
-    //                 // Debug.Log(c.GetVariable());
-    //                 cmds.Add((Commands)Enum.Parse(typeof(Commands), c.GetVariable().ToString().Replace("Cell", "").ToUpper()));
-    //                 break;
-    //             case IConditionCell c:
-    //                 Debug.Log("iCOND");
-    //                 Debug.Log(c.ToString());
-    //                 Debug.Log("Não sei o que é isso nem o que fazer com isso");
-    //                 break;
-    //             default:
-    //                 try
-    //                 {
-    //                     // Debug.Log(cell.ToString());
-    //                     cmds.Add((Commands)Enum.Parse(typeof(Commands), cell.ToString().Replace("Cell", "").ToUpper()));
-    //                 }
-    //                 catch
-    //                 {
-    //                     if (cell == null)
-    //                     {
-    //                         // Debug.Log("Nulooooo");
-    //                         breakForEach = true;
-    //                     }
-    //                 }
-    //                 break;
-    //         }
-    //         if (breakForEach)
-    //         {
-    //             break;
-    //         }
-    //         decompilado.Add(cmds);
-    //     }
-    //     return decompilado;
-    // }
-
-    // private List<Commands> GetInsides(WhileCell c, List<Commands> cmds)
-    // {
-    //     switch (c.comparatorCell)
-    //     {
-    //         case TrueCell c2:
-    //             // Debug.Log(c2.ToString());
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c2.ToString().Replace("Cell", "").ToUpper()));
-    //             break;
-    //         case EvenCell c2:
-    //             // Debug.Log(c2.ToString());
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c2.ToString().Replace("Cell", "").ToUpper()));
-    //             // Debug.Log(c2.GetVariable());
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c2.GetVariable().ToString().Replace("Cell", "").ToUpper()));
-    //             break;
-    //         default:
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c.comparatorCell.ToString().Replace("Cell", "").ToUpper()));
-    //             // Debug.Log(c.comparatorCell.GetVariables()[0]);
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c.comparatorCell.GetVariables()[0].ToString().Replace("Cell", "").ToUpper()));
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c.comparatorCell.GetVariables()[1].ToString().Replace("Cell", "").ToUpper()));
-    //             break;
-    //     }
-    //     return cmds;
-    // }
-
-    // private List<Commands> GetInsides(IfCell c, List<Commands> cmds)
-    // {
-    //     switch (c.comparatorCell)
-    //     {
-    //         case TrueCell c2:
-    //             // Debug.Log(c2.ToString());
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c2.ToString().Replace("Cell", "").ToUpper()));
-    //             break;
-    //         case EvenCell c2:
-    //             // Debug.Log(c2.ToString());
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c2.ToString().Replace("Cell", "").ToUpper()));
-    //             // Debug.Log(c2.GetVariable());
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c2.GetVariable().ToString().Replace("Cell", "").ToUpper()));
-    //             break;
-    //         default:
-    //             // Debug.Log(c.comparatorCell.ToString());
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c.comparatorCell.ToString().Replace("Cell", "").ToUpper()));
-    //             // Debug.Log(c.comparatorCell.GetVariables()[0]);
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c.comparatorCell.GetVariables()[0].ToString().Replace("Cell", "").ToUpper()));
-    //             cmds.Add((Commands)Enum.Parse(typeof(Commands), c.comparatorCell.GetVariables()[1].ToString().Replace("Cell", "").ToUpper()));
-    //             break;
-    //     }
-    //     return cmds;
-    // }
 
 }
 
