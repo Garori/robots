@@ -536,11 +536,12 @@ public class Compiler : MonoBehaviour
                 codeCompilerLine++;
 
             }
-            else if(Regex.IsMatch(current_char,"[ \t]"))
+            else if (Regex.IsMatch(current_char, "[ \t]"))
             {
                 continue;
             }
-            else if(Regex.IsMatch(current_char, "[0-9]")){
+            else if (Regex.IsMatch(current_char, "[0-9]"))
+            {
                 //chrcs números
                 current_token = current_char;
                 checkTokenContinuation(ref written_code, ref current_token, "[0-9]");
@@ -559,9 +560,12 @@ public class Compiler : MonoBehaviour
                 checkTokenContinuation(ref written_code, ref current_token, "[\\W]");
 
             }
+            Debug.Log(current_token);
             tokens.Enqueue(current_token);
             current_token = "";
-        }  
+        }
+
+        Debug.Log(tokens);
 
         parser();
 
@@ -577,6 +581,8 @@ public class Compiler : MonoBehaviour
     public bool Compile(List<BlockController> blocks, ref string compileResult)
     {
         codeInputBlockNumber = 0;
+        stack_parenthesis = new Stack<string>();
+        stack_braces = new Stack<string>();
         // lastBreakIndex = -1;
         if (blocks.Count > maxBlocks)
         {
