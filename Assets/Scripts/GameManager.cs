@@ -282,7 +282,6 @@ public class GameManager : MonoBehaviour
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
                 .SetText($"Durante o teste de nº {testeNum} ocorreu o seguinte erro:\n\n{texto}");
-            return false;
         }
         else if (tipo == "teste" && lastStatus.isOver == -1)
         {
@@ -290,7 +289,7 @@ public class GameManager : MonoBehaviour
                 .GetChild(0)
                 .GetComponent<TMPro.TextMeshProUGUI>()
                 .SetText($"Você perdeu a batalha no\nteste de nº {testeNum}");
-            return false;
+            deuErro = true;
         }
         return deuErro;
     }
