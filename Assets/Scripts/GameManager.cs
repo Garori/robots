@@ -44,7 +44,9 @@ public class GameManager : MonoBehaviour
         if (BattleData.isTest)
         {
             // Debug.Log("istest");
+            Debug.Log("vai carregar memory");
             memory = BattleData.levelMemory;
+            Debug.Log("carregou memory");
             SetTestMedalsText(int.MaxValue, int.MaxValue);
         }
         else
@@ -344,14 +346,20 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
+        Debug.Log("vai dar kill events para voltar");
         panelManager.KillEvents();
+        Debug.Log("vai dar kill events para voltar");
         if (BattleData.isTest)
         {
+            Debug.Log("vai carregar o custom code");
             SceneManager.LoadScene("CustomCode");
+            Debug.Log("vai carregar o custom code");
         }
         else
         {
+            Debug.Log("vai carregar o level select");
             SceneManager.LoadScene("LevelSelect");
+            Debug.Log("vai carregar o level select");
         }
     }
 

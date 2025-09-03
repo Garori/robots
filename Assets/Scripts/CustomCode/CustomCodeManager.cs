@@ -62,10 +62,6 @@ public class CustomCodeManager : MonoBehaviour
 
     void Start()
     {
-
-        Debug.Log(Memories.getToEdit());
-        Debug.Log(Memories.getNewLevel());
-        Debug.Log("é teste? " + BattleData.isTest);
         caseVariablesContainer  =    casesPopUp.gameObject.transform.GetChild(0).Find("caseVariables").gameObject;
         textoCasoNumero         =    casesPopUp.gameObject.transform.GetChild(0).Find("textoCasoNumero").gameObject.GetComponent<TMP_Text>();
         saveCaseButton          =    casesPopUp.gameObject.transform.GetChild(0).Find("salvarCaseBTN").gameObject;
@@ -74,7 +70,6 @@ public class CustomCodeManager : MonoBehaviour
         {
             if (!Memories.getNewLevel() && !Memories.getToEdit())
             {
-                Debug.Log("entrou no if not new level e not to edit");
                 // GameObject botaoExport = GameObject.Find("ExportButton");
                 // Debug.Log(botaoExport);
                 // botaoExport.GetComponentInChildren<TMP_Text>().text = "Salvar";
@@ -82,7 +77,8 @@ public class CustomCodeManager : MonoBehaviour
                 // BattleData.levelBlocks = compiler.Decompile(BattleData.levelMemory.memory);
                 Memories.setToEdit(true);
             }
-            if (!Memories.getNewLevel()){
+            if (!Memories.getNewLevel())
+            {
                 GameObject botaoExport = GameObject.Find("ExportButton");
                 Debug.Log(botaoExport);
                 botaoExport.GetComponentInChildren<TMP_Text>().text = "Salvar";
@@ -91,8 +87,9 @@ public class CustomCodeManager : MonoBehaviour
             saveCaseButton.SetActive(true);
             deleteCaseButton.SetActive(true);
             carregandoDepoisDoTesteDaBatalha = true;
-            Debug.Log(BattleData.levelMemory.memory.ToList().Count());
+            Debug.Log("vai carregar os comandos");
             panelManager.LoadCommands(BattleData.levelMemory.memory.ToList());
+            Debug.Log("vai carregar os comandos");
             foreach (TMP_InputField inputField in inputFields)
             {
                 switch (inputField.name)
@@ -129,7 +126,7 @@ public class CustomCodeManager : MonoBehaviour
                         break;
                 }
             }
-            
+
             try
             {
                 for (int i = 0; i < BattleData.levelMemory.testesPlayer.Count; i++)
@@ -140,23 +137,25 @@ public class CustomCodeManager : MonoBehaviour
                 }
             }
             catch
-            {}
-            
+            { }
+
             hintField.text = BattleData.levelMemory.hint;
             DisableBlocks(BattleData.levelMemory.enabledBlocks);
             BattleData.isTest = false;
             carregandoDepoisDoTesteDaBatalha = false;
+            Debug.Log("vai setar as coisas ativas");
             caseVariablesContainer.SetActive(false);
             saveCaseButton.SetActive(false);
             deleteCaseButton.SetActive(false);
+            Debug.Log("vai setar as coisas ativas");
 
         }
-        
+#if !UNITY_WEBGL
         if (!Directory.Exists("CustomMemories"))
         {
             Directory.CreateDirectory("CustomMemories");
         }
-
+#endif
         if (casos.Count == 0)
         {
             caseVariablesContainer.SetActive(false);
@@ -176,25 +175,58 @@ public class CustomCodeManager : MonoBehaviour
         if (!Compile()) return;
 
         CellsContainer cellsContainer = CreateCellsContainer();
-
-        int memoryCount = Directory.GetFiles(folderName).Length;
         string fileName = "";
-        Debug.Log(Memories.getNewLevel());
+#if UNITY_WEBGL
+        int level_number = 0;
+        string[] fileNames = new string[0];
+        while (true)
+        {
+            level_number++;
+            Debug.Log("levelnumber = " + level_number);
+            if (PlayerPrefs.HasKey($"{folderName}/{level_number}"))
+            {
+                Debug.Log("haskey = " + level_number);
+                fileNames = fileNames.Append($"{folderName}/{level_number}").ToArray();
+            }
+            else
+            {
+                break;
+            }
+        }
+        int memoryCount = fileNames.Length;
+        Debug.Log("memorycount = " + memoryCount);
+#else
+        int memoryCount = Directory.GetFiles(folderName).Length;
+#endif
         if (Memories.getNewLevel())
         {
-            fileName = (memoryCount + 1) + ".bin";
-            cellsContainer.Serialize(folderName + "/" + fileName);
+            fileName = $"{memoryCount + 1}";
+            cellsContainer.fileName = fileName;
+#if UNITY_WEBGL
+                cellsContainer.Serialize(folderName + "/" + fileName);
+#else
+            fileName += ".bin";
+            cellsContainer.fileName = fileName;
+            cellsContainer.Serialize(folderName + "/" + fileName + ".bin");
+#endif
+            Debug.Log("filename = " + fileName);
             Debug.Log("Código exportado");
             Memories.setNewLevel(false);
             GameObject botaoExport = GameObject.Find("ExportButton");
-            Debug.Log(botaoExport);
             botaoExport.GetComponentInChildren<TMP_Text>().text = "Salvar";
-            BattleData.levelMemory.fileName = fileName;
+            // BattleData.levelMemory.fileName = fileName;
         }
         else
         {
-            cellsContainer.fileName = BattleData.levelMemory.fileName;
-            cellsContainer.UpdateFile();
+
+// #if UNITY_WEBGL
+                cellsContainer.Serialize(folderName + "/" + cellsContainer.fileName);
+// #else
+//                 cellsContainer.Serialize(folderName + "/" + cellsContainer.fileName + ".bin");
+// #endif
+            // cellsContainer.fileName = fileName;
+            // BattleData.levelMemory.fileName = fileName;
+            // cellsContainer.UpdateFile();
             // Debug.Log(BattleData.levelMemory.fileName);
         }
     }
@@ -250,36 +282,28 @@ public class CustomCodeManager : MonoBehaviour
 
     public void LoadTestBattle()
     {
+        Debug.Log("entrou no load test");
         if (!Compile()) return;
 
-        foreach(Cell c in compiler.Memory)
-        {
-            try
-            {
-                Debug.Log("--" + c.ToString());
-
-            }
-            catch
-            {
-
-            }
-        }
         BattleData.isTest = true;
         BattleData.levelMemory = CreateCellsContainer();
-        foreach(Cell c in BattleData.levelMemory.memory.ToList())
-        {
-            // Debug.Log("--" + c);
-        }
+        Debug.Log("criou cells container");
         try
         {
+            Debug.Log("vai pegar filename");
             BattleData.levelMemory.fileName = Memories.GetMemory(BattleData.selectedLevel).fileName;
+            Debug.Log("pegou filename");
         }
         catch (Exception ex)
-        {}
+        {
+            Debug.Log(ex);
+        }
         // BattleData.levelCommands = compiler.GetCommands(panelManager.blocks);
-
+        Debug.Log("vai dar kill events");
         panelManager.KillEvents();
+        Debug.Log("vai dar load scene");
         SceneManager.LoadScene("Battle");
+        Debug.Log("carregou a cena");
     }
 
     private bool Compile()

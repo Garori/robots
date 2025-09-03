@@ -53,35 +53,53 @@ public class CellsContainer
     public void Serialize(string fileName)
     {
         IFormatter formatter = new BinaryFormatter();
-        // Debug.Log(fileName);
-        // Debug.Log(FileMode.Create);
-        // Debug.Log(FileAccess.Write);
-        // fileName = fileName ?? "CustomMemories/testeBatalha";
+#if UNITY_WEBGL
+            using (MemoryStream ms = new MemoryStream())
+            {
+                formatter.Serialize(ms, this);
+                string save_string64 = System.Convert.ToBase64String(ms.ToArray());
+                Debug.Log(fileName);
+                PlayerPrefs.SetString(fileName, save_string64);
+                PlayerPrefs.Save();
+            }
+#else
         using (Stream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-        {
-            formatter.Serialize(stream, this);
-        }
+            {
+                formatter.Serialize(stream, this);
+            }
+#endif
     }
 
     public static CellsContainer Deserialize(string fileName)
     {
         IFormatter formatter = new BinaryFormatter();
-        // Debug.Log(fileName);
-        // Debug.Log(FileMode.Open);
-        // Debug.Log(FileAccess.Read);
-        using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+#if UNITY_WEBGL
+        try
         {
-            CellsContainer memory = (CellsContainer)formatter.Deserialize(stream);
-            memory.fileName = fileName;
-            // if (memory.testesEnemy != null)
-            // {
-            //     foreach (var cell in memory.testesEnemy)
-            //     {
-            //         Debug.Log(cell);
-            //     }
-            // }
-            return memory;
+            string save_string64 = PlayerPrefs.GetString(fileName); ;
+            byte[] save_bytes = System.Convert.FromBase64String(save_string64);
+            using (MemoryStream ms = new MemoryStream(save_bytes))
+            {
+                ms.Position = 0;
+                CellsContainer memory = (CellsContainer)formatter.Deserialize(ms);
+                return memory;
+            }
         }
+        catch (Exception ex)
+        {
+            return null;    
+        }
+            
+#else
+        using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                CellsContainer memory = (CellsContainer)formatter.Deserialize(stream);
+                memory.fileName = fileName;
+
+                return memory;
+            }
+#endif
+
     }
 
     public void UpdateFile()

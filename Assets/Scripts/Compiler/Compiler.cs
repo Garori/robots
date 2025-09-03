@@ -857,19 +857,8 @@ public class Compiler : MonoBehaviour
             return false;
         }
         totalCells = PC + 1;
-        // foreach (Cell cell in memory)
-        // {
-        //     Debug.Log("bbbb" + cell);
-        // }
         ResetAttributes();
         compileResult = "COMPILAÇÃO BEM SUCEDIDA!!!";
-        foreach (Cell cell in memory)
-        {
-            if(cell != null)
-            {
-                Debug.Log(cell.ToString());
-            }
-        }
         codeInputBlockNumber = 0;
         return true;
     }
